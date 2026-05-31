@@ -20,6 +20,7 @@ import {
   clearPendingCard,
 } from "@/lib/pending-card-storage"
 import { apiPost } from "@/lib/api-client"
+import { captureAuthEvent } from "@/lib/posthog-client"
 
 function LoginForm() {
   const router = useRouter()
@@ -88,6 +89,8 @@ function LoginForm() {
       const savedCardId = await savePendingCard()
       if (cancelled) return
 
+      captureAuthEvent("user_logged_in", { provider: oauthParam }, user)
+
       if (savedCardId) {
         router.replace(`/dashboard/cards/${savedCardId}`)
         return
@@ -151,6 +154,13 @@ function LoginForm() {
       // Check for pending card and save it
       const savedCardId = await savePendingCard()
 
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+      if (user) {
+        captureAuthEvent("user_logged_in", { provider: "email" }, user)
+      }
+
       if (savedCardId) {
         // Redirect to the saved card
         router.push(`/dashboard/cards/${savedCardId}`)
@@ -170,7 +180,7 @@ function LoginForm() {
   return (
     <>
       <div className="mb-8">
-        <h1 className="mb-1.5 text-3xl font-semibold tracking-[-0.025em]">
+        <h1 className="mb-1.5 text-3xl font-semibold tracking-tight">
           Welcome back.
         </h1>
         <p className="text-sm text-muted-foreground">

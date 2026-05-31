@@ -11,6 +11,7 @@ import {
   MAX_CONTRIBUTOR_EMAILS_ERROR,
 } from "@/lib/email/constants"
 import { checkFixedWindowRateLimit } from "@/lib/request-rate-limit"
+import { captureServerEvent } from "@/lib/posthog-server"
 
 const CONTRIBUTOR_EMAIL_CONCURRENCY = 5
 
@@ -290,6 +291,11 @@ export async function POST(
         }
       }
 
+      await captureServerEvent(user.id, "card_sent", {
+        card_id: id,
+        is_first_send: !card.sent_at,
+      })
+
       return jsonWithRateLimit(
         {
           ok: true,
@@ -320,6 +326,15 @@ export async function POST(
 
     const succeeded = results.filter((entry) => entry.result.ok)
     const failed = results.filter((entry) => !entry.result.ok)
+
+    if (succeeded.length > 0) {
+      await captureServerEvent(user.id, "contributor_invite_sent", {
+        card_id: id,
+        invite_count: succeeded.length,
+        partial: failed.length > 0,
+        failed_count: failed.length,
+      })
+    }
 
     if (failed.length === 0) {
       return jsonWithRateLimit(

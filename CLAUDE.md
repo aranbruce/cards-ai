@@ -77,17 +77,20 @@ supabase/migrations/  # Database migration history
 
 Copy `.env.local` from a team member or pull via `vercel env pull`. Key variables:
 
-| Variable                        | Purpose                                                                           |
-| ------------------------------- | --------------------------------------------------------------------------------- |
-| `NEXT_PUBLIC_SUPABASE_URL`      | Supabase project URL                                                              |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase public key                                                               |
-| `SUPABASE_SERVICE_ROLE_KEY`     | Server-side Supabase admin key                                                    |
-| `POSTGRES_URL`                  | Database connection string                                                        |
-| `GIPHY_API_KEY`                 | Giphy API for GIF search                                                          |
-| `AI_GATEWAY_API_KEY`            | Vercel AI Gateway key                                                             |
-| `AI_TEXT_MODEL`                 | Override default text model (optional, defaults to `openai/gpt-4o`)               |
-| `AI_IMAGE_GATEWAY_MODEL`        | Override card cover image model (default `google/gemini-3.1-flash-image-preview`) |
-| `E2E_EMAIL` / `E2E_PASSWORD`    | Test account credentials for Playwright                                           |
+| Variable                            | Purpose                                                                           |
+| ----------------------------------- | --------------------------------------------------------------------------------- |
+| `NEXT_PUBLIC_SUPABASE_URL`          | Supabase project URL                                                              |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY`     | Supabase public key                                                               |
+| `SUPABASE_SERVICE_ROLE_KEY`         | Server-side Supabase admin key                                                    |
+| `POSTGRES_URL`                      | Database connection string                                                        |
+| `GIPHY_API_KEY`                     | Giphy API for GIF search                                                          |
+| `AI_GATEWAY_API_KEY`                | Vercel AI Gateway key                                                             |
+| `AI_TEXT_MODEL`                     | Override default text model (optional, defaults to `openai/gpt-4o`)               |
+| `AI_IMAGE_GATEWAY_MODEL`            | Override card cover image model (default `google/gemini-3.1-flash-image-preview`) |
+| `E2E_EMAIL` / `E2E_PASSWORD`        | Test account credentials for Playwright                                           |
+| `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN` | PostHog project API key (EU Cloud)                                                |
+| `NEXT_PUBLIC_POSTHOG_HOST`          | PostHog ingest API for server-side SDK (`https://eu.i.posthog.com`)               |
+| `NEXT_PUBLIC_POSTHOG_API_HOST`      | Client proxy: `/t` locally, `https://t.cardshare.ai` in production                |
 
 ## Key Architecture Notes
 

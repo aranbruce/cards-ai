@@ -1,6 +1,10 @@
 import { timingSafeEqual } from "crypto"
 import { NextRequest, NextResponse } from "next/server"
 import { v4 as uuidv4 } from "uuid"
+import {
+  captureServerEvent,
+  normalizePostHogDistinctId,
+} from "@/lib/posthog-server"
 import { CONTRIBUTION_PUBLIC_COLUMNS } from "@/lib/contribution-public-columns"
 import { normalizeGiphyUrl } from "@/lib/giphy-url"
 import { normalizeContributionTextColor } from "@/lib/contribution-text-color"
@@ -39,6 +43,8 @@ export async function POST(
     const rotationDegreesRaw = (body.rotationDegrees ??
       body.rotation_degrees) as unknown
     const fontFamilyRaw = (body.fontFamily ?? body.font_family) as unknown
+
+    const posthogDistinctIdRaw = body.posthogDistinctId as unknown
 
     const msg = typeof message === "string" ? message.trim() : ""
     const giphy_url = normalizeGiphyUrl(giphyUrlRaw)
@@ -146,6 +152,17 @@ export async function POST(
     }
 
     // editToken is only ever returned here — not in GET — so only the browser that added the message can PATCH.
+    const distinctId =
+      normalizePostHogDistinctId(posthogDistinctIdRaw) ??
+      "anonymous_contributor"
+
+    await captureServerEvent(distinctId, "contribution_added", {
+      card_id: cardData.id,
+      contribution_id: contribution.id,
+      has_message: Boolean(msg),
+      has_gif: Boolean(giphy_url),
+    })
+
     try {
       const { contributions, extra_pages } = await compactCardPages(
         supabase,

@@ -18,6 +18,7 @@ import { savePendingCard, type PendingCard } from "@/lib/pending-card-storage"
 import { Paperclip, Sparkles, X } from "lucide-react"
 import { handleImageFileChange } from "@/lib/handle-image-file-change"
 import { sourceImageUrlForRefineRequest } from "@/lib/source-image-limits"
+import posthog from "posthog-js"
 
 const TYPE_HUE: Record<string, number> = {
   birthday: 18,
@@ -77,6 +78,7 @@ export default function CreateCardPage() {
   const handleCardTypeSelect = (type: string) => {
     setSelectedType(type)
     setStep("details")
+    posthog.capture("card_type_selected", { card_type: type })
   }
 
   const handleDetailsSubmit = async (details: {
@@ -145,9 +147,16 @@ export default function CreateCardPage() {
       const { imageUrl } = await imageResponse.json()
 
       setCardData((prev) => (prev ? { ...prev, imageUrl } : null))
+      posthog.capture("card_generated", {
+        card_type: details.cardType,
+        has_custom_message: Boolean(details.customMessage),
+        has_attached_image: Boolean(details.attachedImageUrl),
+      })
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred")
+      const message = err instanceof Error ? err.message : "An error occurred"
+      setError(message)
       setCardData(null)
+      posthog.captureException(err instanceof Error ? err : new Error(message))
     } finally {
       setIsGeneratingCopy(false)
       setIsGeneratingImage(false)
@@ -181,6 +190,9 @@ export default function CreateCardPage() {
       setCardData({
         ...cardData,
         headline: text,
+      })
+      posthog.capture("card_headline_regenerated", {
+        card_type: cardData.cardType,
       })
     } catch (err) {
       setError(
@@ -221,6 +233,11 @@ export default function CreateCardPage() {
       setCardData((prev) =>
         prev ? { ...prev, imageUrl: imageUrl ?? prev.imageUrl } : null,
       )
+      posthog.capture("card_image_regenerated", {
+        card_type: cardData.cardType,
+        has_prompt: Boolean(prompt),
+        has_attached_image: Boolean(attachedImageUrl),
+      })
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Failed to regenerate image",

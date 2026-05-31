@@ -21,6 +21,7 @@ import {
   type MessageFontPresetId,
 } from "@/lib/message-font-presets"
 import { createContributionSaveGenerationTracker } from "@/lib/contribution-save-generation"
+import posthog from "posthog-js"
 
 function readContributeTokensFromStorage(
   linkId: string,
@@ -551,6 +552,7 @@ function ContributeCardPageInner({ linkId }: { linkId: string }) {
           textColor: draft.textColor,
           fontFamily: draft.fontFamily,
           rotationDegrees: draft.rotationDegrees,
+          posthogDistinctId: posthog.get_distinct_id(),
         }),
       })
 

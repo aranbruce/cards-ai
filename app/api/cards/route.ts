@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { createClient } from "@/lib/supabase/server"
 import { createCardForUser } from "@/lib/create-card"
+import { captureServerEvent } from "@/lib/posthog-server"
 
 export async function POST(request: NextRequest) {
   try {
@@ -37,6 +38,12 @@ export async function POST(request: NextRequest) {
       console.error("Error creating card:", result.error)
       return NextResponse.json({ error: result.error }, { status: 400 })
     }
+
+    captureServerEvent(user.id, "card_created", {
+      card_id: result.card.id,
+      card_type: cardType,
+      has_recipient_email: Boolean(recipientEmail),
+    })
 
     return NextResponse.json({ card: result.card })
   } catch (error) {

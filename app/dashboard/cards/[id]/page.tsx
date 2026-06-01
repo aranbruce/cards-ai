@@ -39,6 +39,7 @@ import {
 import { handleImageFileChange } from "@/lib/handle-image-file-change"
 import { NotePanel } from "@/components/note-panel"
 import { MessageFontVariables } from "@/components/message-font-variables"
+import posthog from "posthog-js"
 
 interface CardData {
   id: string
@@ -310,7 +311,12 @@ function CardDetailInner() {
                     <Button
                       size="default"
                       variant="outline"
-                      onClick={() => setShowContributorShareModal(true)}
+                      onClick={() => {
+                        setShowContributorShareModal(true)
+                        posthog.capture("contributor_share_modal_opened", {
+                          card_id: cardId,
+                        })
+                      }}
                       className="w-full"
                     >
                       <UserPlus />
@@ -318,7 +324,12 @@ function CardDetailInner() {
                     </Button>
                     <Button
                       size="default"
-                      onClick={() => setShowRecipientShareModal(true)}
+                      onClick={() => {
+                        setShowRecipientShareModal(true)
+                        posthog.capture("recipient_share_modal_opened", {
+                          card_id: cardId,
+                        })
+                      }}
                       className="w-full"
                     >
                       <Send />

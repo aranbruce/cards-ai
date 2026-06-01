@@ -21,6 +21,7 @@ import {
 } from "@/lib/pending-card-storage"
 import { apiPost } from "@/lib/api-client"
 import { resolveSafePostAuthRedirectPath } from "@/lib/safe-redirect-path"
+import { captureAuthEvent } from "@/lib/posthog-client"
 
 function SignUpForm() {
   const [email, setEmail] = useState("")
@@ -79,6 +80,8 @@ function SignUpForm() {
 
       const savedCardId = await savePendingCard()
       if (cancelled) return
+
+      captureAuthEvent("user_signed_up", { provider: oauthParam }, user)
 
       if (savedCardId) {
         router.replace(`/dashboard/cards/${savedCardId}`)
@@ -151,6 +154,12 @@ function SignUpForm() {
         data.user.identities.length > 0
       ) {
         // User is auto-confirmed (dev mode or email confirmation disabled)
+        captureAuthEvent(
+          "user_signed_up",
+          { provider: "email" },
+          { id: data.user.id, email: data.user.email },
+        )
+
         // Try to save pending card
         const savedCardId = await savePendingCard()
 
@@ -161,6 +170,16 @@ function SignUpForm() {
         }
       } else {
         // Email confirmation required - store pending card info and redirect to success
+        if (data.user) {
+          captureAuthEvent(
+            "user_signed_up",
+            {
+              provider: "email",
+              email_confirmation_required: true,
+            },
+            { id: data.user.id, email: data.user.email },
+          )
+        }
         router.push("/sign-up-success")
       }
     } catch {
@@ -172,7 +191,7 @@ function SignUpForm() {
   return (
     <>
       <div className="mb-8">
-        <h1 className="mb-1.5 text-3xl font-semibold tracking-[-0.025em]">
+        <h1 className="mb-1.5 text-3xl font-semibold tracking-tight">
           Create an account.
         </h1>
         <p className="text-sm text-muted-foreground">

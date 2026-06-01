@@ -25,7 +25,7 @@ An AI-powered app for creating and sharing personalized virtual greeting cards w
 
 ### Prerequisites
 
-- Node.js 20.19 or later
+- Node.js 20.20.x or 22.22+ (Node 21 is not supported by `posthog-node`)
 - Supabase project
 
 ### Environment Variables
@@ -43,7 +43,31 @@ SEND_EMAIL_HOOK_SECRET="v1,whsec_<secret-from-supabase-dashboard>"
 
 # Optional: text routes (`generate-card-copy`, `regenerate-text`). Defaults to openai/gpt-4o via the gateway.
 # AI_TEXT_MODEL=openai/gpt-4o
+
+# PostHog (EU Cloud) — project API key from eu.posthog.com project settings
+NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN=phc_your_project_token
+NEXT_PUBLIC_POSTHOG_HOST=https://eu.i.posthog.com
+# Client reverse proxy: /t for local dev; https://t.cardshare.ai in production (see PostHog proxy below)
+NEXT_PUBLIC_POSTHOG_API_HOST=/t
 ```
+
+### PostHog reverse proxy (EU, ad-blocker safe)
+
+Analytics uses a first-party reverse proxy to PostHog EU (`eu.i.posthog.com`), not third-party tracking domains.
+
+- **Local**: `NEXT_PUBLIC_POSTHOG_API_HOST=/t` — browser sends events to `/t/e/` on the dev server.
+- **Production**: `NEXT_PUBLIC_POSTHOG_API_HOST=https://t.cardshare.ai` — use a generic subdomain (not `analytics`, `posthog`, or `ph`).
+
+**Vercel + DNS (production, one-time):**
+
+1. Vercel → Project → **Domains** → add `t.cardshare.ai` to this project.
+2. At your DNS provider, add the CNAME record Vercel shows (usually `t` → `cname.vercel-dns.com`).
+3. Set `NEXT_PUBLIC_POSTHOG_API_HOST=https://t.cardshare.ai` in Vercel env for Production (and Preview if desired).
+4. Redeploy. Confirm `POST https://t.cardshare.ai/e/` returns 200 in the browser network tab.
+
+Server-side events (`posthog-node` in API routes) use `NEXT_PUBLIC_POSTHOG_HOST` directly and do not use the proxy path.
+
+Proxying is implemented in [`proxy.ts`](proxy.ts) via [`lib/posthog-proxy.ts`](lib/posthog-proxy.ts) (sets the `Host` header PostHog requires). Restart the dev server after changing `proxy.ts`.
 
 ### Enable Google and GitHub login in Supabase
 

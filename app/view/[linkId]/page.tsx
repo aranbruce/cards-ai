@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useMemo } from "react"
 import { useParams } from "next/navigation"
+import posthog from "posthog-js"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Button } from "@/components/ui/button"
 import { Card3D } from "@/components/card-3d"
@@ -46,6 +47,10 @@ export default function PublicCardPage() {
           await response.json()
         setCard(cardData)
         setContributions(fetchedContributions)
+        posthog.capture("card_viewed", {
+          link_id: linkId,
+          contribution_count: (fetchedContributions as unknown[]).length,
+        })
       } catch (err) {
         console.error("Error loading card:", err)
         setError("Failed to load card")

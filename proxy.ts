@@ -1,7 +1,13 @@
 import { type NextRequest, NextResponse } from "next/server"
+import { tryPostHogProxy } from "@/lib/posthog-proxy"
 import { updateSession } from "@/lib/supabase/middleware"
 
 export async function proxy(request: NextRequest) {
+  const posthogResponse = tryPostHogProxy(request)
+  if (posthogResponse) {
+    return posthogResponse
+  }
+
   // PKCE recovery links often land here as /reset-password?code=…
   // The code must be exchanged on /recovery-callback or there is no session for updateUser.
   const url = request.nextUrl

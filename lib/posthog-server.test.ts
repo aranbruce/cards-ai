@@ -5,6 +5,10 @@ const { mockCapture, mockFlush } = vi.hoisted(() => ({
   mockFlush: vi.fn().mockResolvedValue(undefined),
 }))
 
+vi.mock("next/server", () => ({
+  after: (fn: () => void | Promise<void>) => fn(),
+}))
+
 vi.mock("posthog-node", () => ({
   PostHog: vi.fn().mockImplementation(() => ({
     capture: mockCapture,
@@ -12,7 +16,11 @@ vi.mock("posthog-node", () => ({
   })),
 }))
 
-import { captureServerEvent, normalizePostHogDistinctId } from "./posthog-server"
+import {
+  captureServerEvent,
+  normalizePostHogDistinctId,
+  resetPostHogClientForTests,
+} from "./posthog-server"
 
 describe("normalizePostHogDistinctId", () => {
   it("accepts non-empty strings", () => {
@@ -34,16 +42,26 @@ describe("captureServerEvent", () => {
     mockCapture.mockClear()
     mockFlush.mockReset()
     mockFlush.mockResolvedValue(undefined)
-    vi.restoreAllMocks()
+    resetPostHogClientForTests()
+    vi.unstubAllEnvs()
+  })
+
+  it("no-ops when project token is missing", () => {
+    vi.stubEnv("NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN", "")
+
+    captureServerEvent("user-1", "card_created", { card_id: "abc" })
+
+    expect(mockCapture).not.toHaveBeenCalled()
+    expect(mockFlush).not.toHaveBeenCalled()
   })
 
   it("does not throw when flush fails", async () => {
+    vi.stubEnv("NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN", "phc_test")
     mockFlush.mockRejectedValue(new Error("network error"))
     const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {})
 
-    await expect(
-      captureServerEvent("user-1", "card_created", { card_id: "abc" }),
-    ).resolves.toBeUndefined()
+    captureServerEvent("user-1", "card_created", { card_id: "abc" })
+    await Promise.resolve()
 
     expect(mockCapture).toHaveBeenCalledWith({
       distinctId: "user-1",
@@ -51,9 +69,10 @@ describe("captureServerEvent", () => {
       properties: { card_id: "abc" },
     })
     expect(consoleSpy).toHaveBeenCalledWith(
-      "[posthog] Failed to capture server event:",
+      "[posthog] Failed to flush server event:",
       "card_created",
       expect.any(Error),
     )
+    consoleSpy.mockRestore()
   })
 })

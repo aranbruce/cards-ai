@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: result.error }, { status: 400 })
     }
 
-    await captureServerEvent(user.id, "card_created", {
+    captureServerEvent(user.id, "card_created", {
       card_id: result.card.id,
       card_type: cardType,
       has_recipient_email: Boolean(recipientEmail),

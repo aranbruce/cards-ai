@@ -152,16 +152,15 @@ export async function POST(
     }
 
     // editToken is only ever returned here — not in GET — so only the browser that added the message can PATCH.
-    const distinctId =
-      normalizePostHogDistinctId(posthogDistinctIdRaw) ??
-      "anonymous_contributor"
-
-    await captureServerEvent(distinctId, "contribution_added", {
-      card_id: cardData.id,
-      contribution_id: contribution.id,
-      has_message: Boolean(msg),
-      has_gif: Boolean(giphy_url),
-    })
+    const distinctId = normalizePostHogDistinctId(posthogDistinctIdRaw)
+    if (distinctId) {
+      captureServerEvent(distinctId, "contribution_added", {
+        card_id: cardData.id,
+        contribution_id: contribution.id,
+        has_message: Boolean(msg),
+        has_gif: Boolean(giphy_url),
+      })
+    }
 
     try {
       const { contributions, extra_pages } = await compactCardPages(

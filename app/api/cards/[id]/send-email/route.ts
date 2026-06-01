@@ -291,7 +291,7 @@ export async function POST(
         }
       }
 
-      await captureServerEvent(user.id, "card_sent", {
+      captureServerEvent(user.id, "card_sent", {
         card_id: id,
         is_first_send: !card.sent_at,
       })
@@ -328,7 +328,7 @@ export async function POST(
     const failed = results.filter((entry) => !entry.result.ok)
 
     if (succeeded.length > 0) {
-      await captureServerEvent(user.id, "contributor_invite_sent", {
+      captureServerEvent(user.id, "contributor_invite_sent", {
         card_id: id,
         invite_count: succeeded.length,
         partial: failed.length > 0,

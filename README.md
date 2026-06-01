@@ -25,7 +25,7 @@ An AI-powered app for creating and sharing personalized virtual greeting cards w
 
 ### Prerequisites
 
-- Node.js 20.19 or later
+- Node.js 20.20 or later
 - Supabase project
 
 ### Environment Variables

@@ -3,7 +3,7 @@ import posthog from "posthog-js"
 const POSTHOG_DISTINCT_ID_HEADER = "X-POSTHOG-DISTINCT-ID"
 
 /** Headers linking server-side AI calls to the current PostHog distinct ID. */
-export function posthogAiHeaders(): HeadersInit {
+export function posthogAiHeaders(): Record<string, string> {
   if (typeof window === "undefined") return {}
   try {
     const distinctId = posthog.get_distinct_id?.()

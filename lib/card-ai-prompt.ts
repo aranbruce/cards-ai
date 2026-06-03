@@ -4,6 +4,7 @@ export type CardAiPromptFields = {
   tone?: string
   cardType: string
   addressedTo: string
+  userContext?: string
   userPrompt?: string
   cardTitle?: string
   previousUserMessage?: string
@@ -34,12 +35,10 @@ export function resolvePromptFields(params: {
     tone: params.tone?.trim() || undefined,
     cardType: params.cardType.trim(),
     addressedTo: params.recipientName.trim(),
+    userContext: params.userContext?.trim() || undefined,
     userPrompt: params.userPrompt?.trim() || undefined,
     cardTitle: params.cardTitle?.trim() || undefined,
-    previousUserMessage:
-      params.previousUserMessage?.trim() ||
-      params.userContext?.trim() ||
-      undefined,
+    previousUserMessage: params.previousUserMessage?.trim() || undefined,
   }
 }
 
@@ -64,6 +63,7 @@ function coreContextFields(fields: CardAiPromptFields): LabeledField[] {
     { label: "Tone", value: fields.tone },
     { label: "Card type", value: fields.cardType },
     { label: "Addressed to", value: fields.addressedTo },
+    { label: "User context", value: fields.userContext },
     { label: "User prompt", value: fields.userPrompt },
     { label: "Card title", value: fields.cardTitle },
     { label: "Previous user message", value: fields.previousUserMessage },

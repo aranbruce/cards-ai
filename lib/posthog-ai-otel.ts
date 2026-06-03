@@ -16,7 +16,7 @@ function getPostHogHost(): string {
 }
 
 /** Starts OpenTelemetry export to PostHog AI observability. No-op without project token. */
-export function startPostHogAiOtel(): void {
+export async function startPostHogAiOtel(): Promise<void> {
   if (sdk) return
 
   const apiKey = getPostHogToken()
@@ -35,7 +35,7 @@ export function startPostHogAiOtel(): void {
   })
 
   try {
-    instance.start()
+    await instance.start()
     sdk = instance
   } catch (error) {
     console.error("Failed to start PostHog AI OpenTelemetry:", error)

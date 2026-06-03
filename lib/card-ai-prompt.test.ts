@@ -26,7 +26,23 @@ describe("resolvePromptFields", () => {
       tone: "Dry",
       cardType: "birthday",
       addressedTo: "Alex",
-      previousUserMessage: "Loves hiking",
+      userContext: "Loves hiking",
+    })
+  })
+
+  it("keeps userContext and previousUserMessage separate", () => {
+    expect(
+      resolvePromptFields({
+        cardType: "birthday",
+        recipientName: "Alex",
+        userContext: "Loves hiking",
+        previousUserMessage: "Old note",
+      }),
+    ).toEqual({
+      cardType: "birthday",
+      addressedTo: "Alex",
+      userContext: "Loves hiking",
+      previousUserMessage: "Old note",
     })
   })
 })
@@ -38,10 +54,10 @@ describe("formatContextBlock", () => {
         tone: "Warm",
         cardType: "birthday",
         addressedTo: "Alex",
-        previousUserMessage: "Loves hiking",
+        userContext: "Loves hiking",
       }),
     ).toBe(
-      "Tone: Warm\nCard type: birthday\nAddressed to: Alex\nPrevious user message: Loves hiking",
+      "Tone: Warm\nCard type: birthday\nAddressed to: Alex\nUser context: Loves hiking",
     )
   })
 

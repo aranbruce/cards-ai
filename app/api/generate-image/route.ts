@@ -88,6 +88,13 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    if (previousResult && !previousResult.ok) {
+      return NextResponse.json(
+        { error: previousResult.message },
+        { status: 400, headers: rate.headers },
+      )
+    }
+
     const source: Uint8Array | undefined = sourceResult?.ok
       ? sourceResult.bytes
       : undefined

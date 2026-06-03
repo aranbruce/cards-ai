@@ -4,7 +4,7 @@ import { getDistinctIdFromRequest } from "./posthog-distinct-id-from-request"
 
 describe("getDistinctIdFromRequest", () => {
   it("prefers X-POSTHOG-DISTINCT-ID header over body", () => {
-    const request = new NextRequest("http://localhost/api/regenerate-text", {
+    const request = new NextRequest("http://localhost/api/generate-message", {
       headers: { "X-POSTHOG-DISTINCT-ID": "from-header" },
     })
 
@@ -16,7 +16,7 @@ describe("getDistinctIdFromRequest", () => {
   })
 
   it("falls back to posthogDistinctId in body", () => {
-    const request = new NextRequest("http://localhost/api/regenerate-text")
+    const request = new NextRequest("http://localhost/api/generate-message")
 
     expect(
       getDistinctIdFromRequest(request, {
@@ -26,7 +26,7 @@ describe("getDistinctIdFromRequest", () => {
   })
 
   it("returns null when neither header nor body is valid", () => {
-    const request = new NextRequest("http://localhost/api/regenerate-text")
+    const request = new NextRequest("http://localhost/api/generate-message")
 
     expect(getDistinctIdFromRequest(request)).toBeNull()
     expect(

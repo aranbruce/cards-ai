@@ -19,10 +19,10 @@ describe("aiTelemetry", () => {
   it("enables telemetry when project token is set", () => {
     vi.stubEnv("NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN", "phc_test")
 
-    const { experimental_telemetry } = aiTelemetry("api-regenerate-text")
+    const { experimental_telemetry } = aiTelemetry("api-generate-message")
 
     expect(experimental_telemetry.isEnabled).toBe(true)
-    expect(experimental_telemetry.functionId).toBe("api-regenerate-text")
+    expect(experimental_telemetry.functionId).toBe("api-generate-message")
   })
 
   it("includes posthog_distinct_id when distinct id is valid", () => {

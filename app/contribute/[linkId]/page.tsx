@@ -429,18 +429,17 @@ function ContributeCardPageInner({ linkId }: { linkId: string }) {
         contributions.find((c) => c.id === contributionId)?.message ?? ""
       setRegeneratingContributionId(contributionId)
       try {
-        const response = await fetch("/api/regenerate-text", {
+        const response = await fetch("/api/generate-message", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             ...posthogAiHeaders(),
           },
           body: JSON.stringify({
-            field: "contribution_message",
             cardType: card.card_type || "custom",
             recipientName: card.recipient_name,
-            senderName: card.sender_name,
-            currentValue: current,
+            cardTitle: card.copy_headline,
+            previousUserMessage: current,
             userPrompt: prompt,
           }),
         })
@@ -476,18 +475,17 @@ function ContributeCardPageInner({ linkId }: { linkId: string }) {
         composeDraftRef.current?.message ?? preComposeDraftRef.current.message
       setComposeDraftRegenerating(true)
       try {
-        const response = await fetch("/api/regenerate-text", {
+        const response = await fetch("/api/generate-message", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             ...posthogAiHeaders(),
           },
           body: JSON.stringify({
-            field: "contribution_message",
             cardType: card.card_type || "custom",
             recipientName: card.recipient_name,
-            senderName: card.sender_name,
-            currentValue: current,
+            cardTitle: card.copy_headline,
+            previousUserMessage: current,
             userPrompt: prompt,
           }),
         })
@@ -746,7 +744,6 @@ function ContributeCardPageInner({ linkId }: { linkId: string }) {
               imageUrl={card.image_url}
               headline={card.copy_headline}
               message={bodyMessage}
-              senderName={card.sender_name || "Someone special"}
               recipientName={card.recipient_name || "You"}
               contributions={displayContributions}
               extraPages={card.extra_pages || 0}

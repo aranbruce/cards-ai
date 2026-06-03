@@ -18,7 +18,8 @@ interface CardDetailsFormProps {
     cardType: string
     senderName: string
     recipientName: string
-    customMessage?: string
+    tone?: string
+    userContext?: string
     attachedImageUrl?: string
   }) => Promise<void>
   isLoading?: boolean
@@ -79,18 +80,13 @@ export function CardDetailsForm({
       return
     }
 
-    // Prepend tone to context so the AI uses it
-    const tonePrefix = `Tone: ${tone}.`
-    const context = customMessage.trim()
-      ? `${tonePrefix} ${customMessage.trim()}`
-      : tonePrefix
-
     try {
       await onSubmit({
         cardType,
         senderName,
         recipientName,
-        customMessage: context,
+        tone,
+        userContext: customMessage.trim() || undefined,
         attachedImageUrl: attachedImageDataUrl ?? undefined,
       })
     } catch (err) {

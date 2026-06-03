@@ -41,7 +41,7 @@ RESEND_API_KEY=your_resend_api_key
 RESEND_FROM_EMAIL="CardShareAI <noreply@your-domain.com>"
 SEND_EMAIL_HOOK_SECRET="v1,whsec_<secret-from-supabase-dashboard>"
 
-# Optional: text routes (`generate-card-copy`, `regenerate-text`). Defaults to openai/gpt-4o via the gateway.
+# Optional: text model for generate-headline / generate-message. Defaults to openai/gpt-4o via the gateway.
 # AI_TEXT_MODEL=openai/gpt-4o
 
 # PostHog (EU Cloud) — project API key from eu.posthog.com project settings
@@ -71,7 +71,7 @@ Proxying is implemented in [`proxy.ts`](proxy.ts) via [`lib/posthog-proxy.ts`](l
 
 ### PostHog AI observability
 
-LLM calls (card copy, image generation, text regeneration) send OpenTelemetry spans to PostHog when `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN` is set. Uses the same token and `NEXT_PUBLIC_POSTHOG_HOST` as product analytics (no extra env vars).
+LLM calls (headline, message, and image generation) send OpenTelemetry spans to PostHog when `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN` is set. Uses the same token and `NEXT_PUBLIC_POSTHOG_HOST` as product analytics (no extra env vars).
 
 - Bootstrap: [`instrumentation.ts`](instrumentation.ts) → [`lib/posthog-ai-otel.ts`](lib/posthog-ai-otel.ts)
 - Per-call telemetry: [`lib/ai-telemetry.ts`](lib/ai-telemetry.ts) on each Vercel AI SDK `generateText` call

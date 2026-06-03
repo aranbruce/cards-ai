@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { generateCardCoverArt } from "@/lib/generate-card-cover-art"
+import { buildCardCoverArtContext } from "@/lib/generate-card-image"
 import { getDistinctIdFromRequest } from "@/lib/posthog-distinct-id-from-request"
 import { resolveSourceImage } from "@/lib/resolve-image-for-model"
 import { checkFixedWindowRateLimit } from "@/lib/request-rate-limit"
@@ -18,32 +19,34 @@ export async function POST(request: NextRequest) {
   }
   try {
     const body = (await request.json()) as {
-      imagePrompt?: string
-      /** User-uploaded style/subject reference image. */
+      userPrompt?: string
       attachedImageUrl?: string
-      /** Existing card cover image to refine. */
       existingCardCoverImageUrl?: string
-      /** Current card headline — guides mood/theme; must not appear as text in the image. */
       coverHeadline?: string
       cardType?: string
-      customMessage?: string
+      recipientName?: string
+      tone?: string
+      userContext?: string
       posthogDistinctId?: unknown
     }
     const {
-      imagePrompt,
+      userPrompt,
       attachedImageUrl,
       existingCardCoverImageUrl,
       coverHeadline,
       cardType,
-      customMessage,
+      recipientName,
+      tone,
+      userContext,
     } = body
     const distinctId = getDistinctIdFromRequest(request, body)
 
     const trimmedPrompt =
-      typeof imagePrompt === "string" ? imagePrompt.trim() : ""
+      typeof userPrompt === "string" ? userPrompt.trim() : ""
     const trimmedCardType = typeof cardType === "string" ? cardType.trim() : ""
-    const trimmedCustomMessage =
-      typeof customMessage === "string" ? customMessage.trim() : ""
+    const resolvedTone = typeof tone === "string" ? tone.trim() : ""
+    const resolvedContext =
+      typeof userContext === "string" ? userContext.trim() : ""
 
     const sourceRaw =
       typeof attachedImageUrl === "string" && attachedImageUrl.trim().length > 0
@@ -59,14 +62,15 @@ export async function POST(request: NextRequest) {
     const hasAnyContext =
       trimmedPrompt ||
       trimmedCardType ||
-      trimmedCustomMessage ||
+      resolvedTone ||
+      resolvedContext ||
       sourceRaw ||
       previousRaw
     if (!hasAnyContext) {
       return NextResponse.json(
         {
           error:
-            "At least one of cardType, imagePrompt, customMessage, attachedImageUrl, or existingCardCoverImageUrl is required",
+            "At least one of cardType, tone, userContext, userPrompt, attachedImageUrl, or existingCardCoverImageUrl is required",
         },
         { status: 400, headers: rate.headers },
       )
@@ -87,7 +91,6 @@ export async function POST(request: NextRequest) {
     const source: Uint8Array | undefined = sourceResult?.ok
       ? sourceResult.bytes
       : undefined
-    // Soft-fail: if the existing cover can't be resolved, proceed without it
     const previous: Uint8Array | undefined = previousResult?.ok
       ? previousResult.bytes
       : undefined
@@ -95,17 +98,22 @@ export async function POST(request: NextRequest) {
     const headline =
       typeof coverHeadline === "string" ? coverHeadline.trim() : ""
 
-    const imageUrl = await generateCardCoverArt(
-      {
-        imagePrompt: trimmedPrompt,
-        cardType: trimmedCardType,
-        customMessage: trimmedCustomMessage,
-        coverHeadline: headline,
-        source,
-        previous,
-      },
-      { persist: true, distinctId },
-    )
+    const ctx = buildCardCoverArtContext({
+      cardType: trimmedCardType,
+      recipientName:
+        typeof recipientName === "string" ? recipientName.trim() : undefined,
+      tone: resolvedTone,
+      userContext: resolvedContext,
+      userPrompt: trimmedPrompt,
+      coverHeadline: headline,
+      source,
+      previous,
+    })
+
+    const imageUrl = await generateCardCoverArt(ctx, {
+      persist: true,
+      distinctId,
+    })
 
     return NextResponse.json({ imageUrl }, { headers: rate.headers })
   } catch (error) {

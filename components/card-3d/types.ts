@@ -8,7 +8,6 @@ type Card3DCoreProps = {
   imageUrl: string
   headline: string
   message: string
-  senderName: string
   recipientName: string
   contributions?: Contribution[]
   extraPages?: number

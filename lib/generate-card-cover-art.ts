@@ -1,7 +1,7 @@
 import { Buffer } from "node:buffer"
 import { generateText, type GeneratedFile, type ModelMessage } from "ai"
 import { aiTelemetry } from "@/lib/ai-telemetry"
-import { coverArtInstructionBlock } from "@/lib/card-image-prompt"
+import { buildMultimodalUserMessage } from "@/lib/card-ai-prompt"
 import { getCardCoverImageModel } from "@/lib/card-cover-image-model"
 import { persistGeneratedCardImage } from "@/lib/persist-generated-card-image"
 
@@ -9,10 +9,10 @@ import { persistGeneratedCardImage } from "@/lib/persist-generated-card-image"
 const CARD_COVER_ASPECT_RATIO = "4:5" as const
 
 export type CardCoverArtContext = {
-  imagePrompt: string
-  cardType: string
-  customMessage: string
-  coverHeadline: string
+  /** Full user prompt text, assembled by the API route prompt module. */
+  userScene: string
+  /** Optional leading instruction when reference images are attached. */
+  leadingText?: string
   source?: Uint8Array
   previous?: Uint8Array
 }
@@ -28,88 +28,22 @@ function generatedCoverImageToDataUrl(file: GeneratedFile): string {
   throw new Error("Generated image has no uint8Array or base64 payload")
 }
 
-function buildUserScene(ctx: CardCoverArtContext): string {
-  const trimmedPrompt = ctx.imagePrompt.trim()
-  const trimmedCardType = ctx.cardType.trim()
-  const trimmedCustomMessage = ctx.customMessage.trim()
-
-  const headline = ctx.coverHeadline.trim()
-  const constraints = coverArtInstructionBlock(
-    headline.length > 0 ? headline : undefined,
-  )
-  const contextLines: string[] = []
-  if (trimmedCardType) contextLines.push(`Card type: ${trimmedCardType}`)
-  if (trimmedCustomMessage)
-    contextLines.push(`Additional context: ${trimmedCustomMessage}`)
-  if (trimmedPrompt) contextLines.push(trimmedPrompt)
-  return contextLines.length > 0
-    ? `${constraints}\n\n${contextLines.join("\n")}`
-    : constraints
-}
-
-type ImagePart = { type: "image"; image: string | Uint8Array }
-type TextPart = { type: "text"; text: string }
-
-function buildMultimodalMessages(
-  ctx: CardCoverArtContext,
-  userScene: string,
-): ModelMessage[] {
-  const previous = ctx.previous
-  const source = ctx.source
-
-  let content: string | Array<ImagePart | TextPart>
-
-  if (previous && source) {
-    content = [
-      { type: "text", text: "Existing card cover image (refine this):" },
-      { type: "image", image: previous },
-      {
-        type: "text",
-        text: "Attached reference image (use its style, mood, and subject as inspiration):",
-      },
-      { type: "image", image: source },
-      {
-        type: "text",
-        text: `Refine the existing card cover using the attached image as inspiration. Follow the instructions; keep layout and subject unless asked to change them.\n\n${userScene}`,
-      },
-    ]
-  } else if (previous) {
-    content = [
-      { type: "text", text: "Existing card cover image (refine this):" },
-      { type: "image", image: previous },
-      {
-        type: "text",
-        text: `Refine this existing card cover image. Follow the instructions; keep layout and subject unless asked to change them.\n\n${userScene}`,
-      },
-    ]
-  } else if (source) {
-    content = [
-      {
-        type: "text",
-        text: "Attached reference image (use its style, mood, and subject as inspiration to generate a new card cover):",
-      },
-      { type: "image", image: source },
-      {
-        type: "text",
-        text: `Generate a new greeting card cover inspired by the attached image.\n\n${userScene}`,
-      },
-    ]
-  } else {
-    content = userScene
-  }
-
-  return [{ role: "user", content }]
+function buildMultimodalMessages(ctx: CardCoverArtContext): ModelMessage[] {
+  return buildMultimodalUserMessage(ctx.userScene, {
+    previous: ctx.previous,
+    attached: ctx.source,
+    leadingText: ctx.leadingText,
+  })
 }
 
 async function generateCardCoverViaGateway(
   model: string,
   ctx: CardCoverArtContext,
-  userScene: string,
   distinctId?: string | null,
 ): Promise<GeneratedFile> {
   const { files } = await generateText({
     model,
-    prompt: buildMultimodalMessages(ctx, userScene),
+    prompt: buildMultimodalMessages(ctx),
     providerOptions: {
       google: {
         responseModalities: ["TEXT", "IMAGE"],
@@ -134,13 +68,11 @@ export async function generateCardCoverArt(
   options?: { persist?: boolean; distinctId?: string | null },
 ): Promise<string> {
   const persist = options?.persist !== false
-  const userScene = buildUserScene(ctx)
   const model = getCardCoverImageModel()
 
   const imageFile = await generateCardCoverViaGateway(
     model,
     ctx,
-    userScene,
     options?.distinctId,
   )
 

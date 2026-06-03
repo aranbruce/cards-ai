@@ -42,7 +42,7 @@ pnpm fix              # Auto-fix formatting and lint issues
 
 ```
 app/
-  api/                # API routes (cards, generate-card-copy, generate-image, giphy, contribute)
+  api/                # API routes (cards, generate-headline, generate-message, generate-image, giphy, contribute)
   (auth)/             # Auth pages at /login, /sign-up, /callback, etc. (route group)
   create/             # Card creation flow
   dashboard/          # User dashboard and card management

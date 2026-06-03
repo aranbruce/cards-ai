@@ -56,13 +56,21 @@ export async function generateHeadline(
   params: {
     cardType: string
     recipientName: string
-    senderName: string
-    customMessage?: string
+    tone?: string
+    userContext?: string
   },
   options?: { distinctId?: string | null },
 ): Promise<string> {
   try {
-    return await generateCardHeadline(params, options)
+    return await generateCardHeadline(
+      {
+        cardType: params.cardType,
+        recipientName: params.recipientName,
+        tone: params.tone,
+        userContext: params.userContext,
+      },
+      options,
+    )
   } catch (err) {
     console.error("[bot/generateHeadline] FAIL:", err)
     return "Wishing you all the best!"
@@ -72,8 +80,10 @@ export async function generateHeadline(
 export async function generateImageUrl(
   params: {
     cardType: string
+    recipientName: string
     coverHeadline: string
-    customMessage?: string
+    tone?: string
+    userContext?: string
   },
   options?: { distinctId?: string | null },
 ): Promise<string> {

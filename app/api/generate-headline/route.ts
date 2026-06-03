@@ -30,7 +30,8 @@ export async function POST(request: NextRequest) {
       posthogDistinctId?: unknown
     }
 
-    const { cardType, recipientName } = body
+    const cardType = body.cardType?.trim() ?? ""
+    const recipientName = body.recipientName?.trim() ?? ""
     const distinctId = getDistinctIdFromRequest(request, body)
 
     if (!cardType || !recipientName) {

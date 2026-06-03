@@ -9,14 +9,13 @@ vi.mock("next/server", () => ({
   after: (fn: () => void | Promise<void>) => fn(),
 }))
 
-vi.mock("posthog-node", () => ({
-  PostHog: vi.fn(
-    class MockPostHog {
-      capture = mockCapture
-      flush = mockFlush
-    },
-  ),
-}))
+vi.mock("posthog-node", () => {
+  class MockPostHog {
+    capture = mockCapture
+    flush = mockFlush
+  }
+  return { PostHog: MockPostHog }
+})
 
 import {
   captureServerEvent,

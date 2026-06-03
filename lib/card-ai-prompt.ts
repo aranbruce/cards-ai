@@ -31,14 +31,20 @@ export function resolvePromptFields(params: {
   cardTitle?: string
   previousUserMessage?: string
 }): CardAiPromptFields {
+  const tone = params.tone?.trim()
+  const userContext = params.userContext?.trim()
+  const userPrompt = params.userPrompt?.trim()
+  const cardTitle = params.cardTitle?.trim()
+  const previousUserMessage = params.previousUserMessage?.trim()
+
   return {
-    tone: params.tone?.trim() || undefined,
+    ...(tone ? { tone } : {}),
     cardType: params.cardType.trim(),
     addressedTo: params.recipientName.trim(),
-    userContext: params.userContext?.trim() || undefined,
-    userPrompt: params.userPrompt?.trim() || undefined,
-    cardTitle: params.cardTitle?.trim() || undefined,
-    previousUserMessage: params.previousUserMessage?.trim() || undefined,
+    ...(userContext ? { userContext } : {}),
+    ...(userPrompt ? { userPrompt } : {}),
+    ...(cardTitle ? { cardTitle } : {}),
+    ...(previousUserMessage ? { previousUserMessage } : {}),
   }
 }
 

@@ -26,8 +26,10 @@ export async function POST(request: NextRequest) {
       posthogDistinctId?: unknown
     }
 
-    const cardType = body.cardType?.trim() ?? ""
-    const recipientName = body.recipientName?.trim() ?? ""
+    const cardType =
+      typeof body.cardType === "string" ? body.cardType.trim() : ""
+    const recipientName =
+      typeof body.recipientName === "string" ? body.recipientName.trim() : ""
     const distinctId = getDistinctIdFromRequest(request, body)
 
     if (!cardType || !recipientName) {
@@ -41,9 +43,14 @@ export async function POST(request: NextRequest) {
       {
         cardType,
         recipientName,
-        userPrompt: body.userPrompt?.trim(),
-        cardTitle: body.cardTitle?.trim(),
-        previousUserMessage: body.previousUserMessage?.trim(),
+        userPrompt:
+          typeof body.userPrompt === "string" ? body.userPrompt.trim() : undefined,
+        cardTitle:
+          typeof body.cardTitle === "string" ? body.cardTitle.trim() : undefined,
+        previousUserMessage:
+          typeof body.previousUserMessage === "string"
+            ? body.previousUserMessage.trim()
+            : undefined,
       },
       { distinctId },
     )

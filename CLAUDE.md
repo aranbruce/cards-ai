@@ -10,7 +10,7 @@ CardShareAI is an AI-powered virtual greeting card creator. Users create persona
 - **Auth**: Supabase Auth (Google + GitHub OAuth)
 - **AI**: Vercel AI SDK 6.x (`ai` package); Vercel AI Gateway for text (`openai/gpt-4o` by default), Gemini for image generation
 - **Styling**: Tailwind CSS 4.2.4, shadcn/ui (Radix UI primitives, Lucide icons)
-- **Testing**: Vitest 4.x (unit), Playwright 1.59.x (E2E)
+- **Testing**: Vitest 4.x (unit), Playwright 1.60.x (E2E)
 
 ## Before Pushing Changes
 

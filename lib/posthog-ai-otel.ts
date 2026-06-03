@@ -3,7 +3,6 @@ import { resourceFromAttributes } from "@opentelemetry/resources"
 import { PostHogSpanProcessor } from "@posthog/ai/otel"
 
 let sdk: NodeSDK | null = null
-let startInFlight: Promise<void> | null = null
 
 function getPostHogToken(): string | null {
   const token = process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN?.trim()
@@ -18,7 +17,7 @@ function getPostHogHost(): string {
 
 /** Starts OpenTelemetry export to PostHog AI observability. No-op without project token. */
 export function startPostHogAiOtel(): void {
-  if (sdk || startInFlight) return
+  if (sdk) return
 
   const apiKey = getPostHogToken()
   if (!apiKey) return
@@ -35,15 +34,10 @@ export function startPostHogAiOtel(): void {
     ],
   })
 
-  startInFlight = instance
-    .start()
-    .then(() => {
-      sdk = instance
-    })
-    .catch((error) => {
-      console.error("Failed to start PostHog AI OpenTelemetry:", error)
-    })
-    .finally(() => {
-      startInFlight = null
-    })
+  try {
+    instance.start()
+    sdk = instance
+  } catch (error) {
+    console.error("Failed to start PostHog AI OpenTelemetry:", error)
+  }
 }

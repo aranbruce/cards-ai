@@ -1,5 +1,6 @@
 import { Buffer } from "node:buffer"
 import { generateText, type GeneratedFile, type ModelMessage } from "ai"
+import { aiTelemetry } from "@/lib/ai-telemetry"
 import { coverArtInstructionBlock } from "@/lib/card-image-prompt"
 import { getCardCoverImageModel } from "@/lib/card-cover-image-model"
 import { persistGeneratedCardImage } from "@/lib/persist-generated-card-image"
@@ -104,6 +105,7 @@ async function generateCardCoverViaGateway(
   model: string,
   ctx: CardCoverArtContext,
   userScene: string,
+  distinctId?: string | null,
 ): Promise<GeneratedFile> {
   const { files } = await generateText({
     model,
@@ -114,6 +116,7 @@ async function generateCardCoverViaGateway(
         imageConfig: { aspectRatio: CARD_COVER_ASPECT_RATIO },
       },
     },
+    ...aiTelemetry("generate-card-cover-art", distinctId),
   })
 
   const imageFile = files.find((f) => f.mediaType.startsWith("image/"))
@@ -128,13 +131,18 @@ async function generateCardCoverViaGateway(
  */
 export async function generateCardCoverArt(
   ctx: CardCoverArtContext,
-  options?: { persist?: boolean },
+  options?: { persist?: boolean; distinctId?: string | null },
 ): Promise<string> {
   const persist = options?.persist !== false
   const userScene = buildUserScene(ctx)
   const model = getCardCoverImageModel()
 
-  const imageFile = await generateCardCoverViaGateway(model, ctx, userScene)
+  const imageFile = await generateCardCoverViaGateway(
+    model,
+    ctx,
+    userScene,
+    options?.distinctId,
+  )
 
   let imageUrl: string | null = null
   if (persist) {

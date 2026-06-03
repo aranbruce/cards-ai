@@ -22,6 +22,7 @@ import {
 } from "@/lib/message-font-presets"
 import { createContributionSaveGenerationTracker } from "@/lib/contribution-save-generation"
 import posthog from "posthog-js"
+import { posthogAiHeaders } from "@/lib/posthog-client"
 
 function readContributeTokensFromStorage(
   linkId: string,
@@ -430,7 +431,10 @@ function ContributeCardPageInner({ linkId }: { linkId: string }) {
       try {
         const response = await fetch("/api/regenerate-text", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            ...posthogAiHeaders(),
+          },
           body: JSON.stringify({
             field: "contribution_message",
             cardType: card.card_type || "custom",
@@ -474,7 +478,10 @@ function ContributeCardPageInner({ linkId }: { linkId: string }) {
       try {
         const response = await fetch("/api/regenerate-text", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            ...posthogAiHeaders(),
+          },
           body: JSON.stringify({
             field: "contribution_message",
             cardType: card.card_type || "custom",

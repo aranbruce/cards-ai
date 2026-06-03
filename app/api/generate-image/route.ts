@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { generateCardCoverArt } from "@/lib/generate-card-cover-art"
+import { getDistinctIdFromRequest } from "@/lib/posthog-distinct-id-from-request"
 import { resolveSourceImage } from "@/lib/resolve-image-for-model"
 import { checkFixedWindowRateLimit } from "@/lib/request-rate-limit"
 
@@ -16,14 +17,7 @@ export async function POST(request: NextRequest) {
     )
   }
   try {
-    const {
-      imagePrompt,
-      attachedImageUrl,
-      existingCardCoverImageUrl,
-      coverHeadline,
-      cardType,
-      customMessage,
-    } = (await request.json()) as {
+    const body = (await request.json()) as {
       imagePrompt?: string
       /** User-uploaded style/subject reference image. */
       attachedImageUrl?: string
@@ -33,7 +27,17 @@ export async function POST(request: NextRequest) {
       coverHeadline?: string
       cardType?: string
       customMessage?: string
+      posthogDistinctId?: unknown
     }
+    const {
+      imagePrompt,
+      attachedImageUrl,
+      existingCardCoverImageUrl,
+      coverHeadline,
+      cardType,
+      customMessage,
+    } = body
+    const distinctId = getDistinctIdFromRequest(request, body)
 
     const trimmedPrompt =
       typeof imagePrompt === "string" ? imagePrompt.trim() : ""
@@ -100,7 +104,7 @@ export async function POST(request: NextRequest) {
         source,
         previous,
       },
-      { persist: true },
+      { persist: true, distinctId },
     )
 
     return NextResponse.json({ imageUrl }, { headers: rate.headers })

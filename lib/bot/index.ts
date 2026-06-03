@@ -40,17 +40,24 @@ async function generateAndCreateCard(
   senderName: string,
   customMessage?: string,
 ): Promise<CardRow | null> {
-  const headline = await generateHeadline({
-    cardType,
-    recipientName,
-    senderName,
-    customMessage,
-  })
-  const imageUrl = await generateImageUrl({
-    cardType,
-    coverHeadline: headline,
-    customMessage,
-  })
+  const telemetryOptions = { distinctId: supabaseUserId }
+  const headline = await generateHeadline(
+    {
+      cardType,
+      recipientName,
+      senderName,
+      customMessage,
+    },
+    telemetryOptions,
+  )
+  const imageUrl = await generateImageUrl(
+    {
+      cardType,
+      coverHeadline: headline,
+      customMessage,
+    },
+    telemetryOptions,
+  )
 
   return createBotCard(supabaseUserId, {
     cardType,

@@ -69,6 +69,16 @@ Server-side events (`posthog-node` in API routes) use `NEXT_PUBLIC_POSTHOG_HOST`
 
 Proxying is implemented in [`proxy.ts`](proxy.ts) via [`lib/posthog-proxy.ts`](lib/posthog-proxy.ts) (sets the `Host` header PostHog requires). Restart the dev server after changing `proxy.ts`.
 
+### PostHog AI observability
+
+LLM calls (card copy, image generation, text regeneration) send OpenTelemetry spans to PostHog when `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN` is set. Uses the same token and `NEXT_PUBLIC_POSTHOG_HOST` as product analytics (no extra env vars).
+
+- Bootstrap: [`instrumentation.ts`](instrumentation.ts) → [`lib/posthog-ai-otel.ts`](lib/posthog-ai-otel.ts)
+- Per-call telemetry: [`lib/ai-telemetry.ts`](lib/ai-telemetry.ts) on each Vercel AI SDK `generateText` call
+- User linking: browser sends `X-POSTHOG-DISTINCT-ID` on AI API requests (see [`lib/posthog-client.ts`](lib/posthog-client.ts))
+
+After generating a card locally, confirm events under **AI Observability → Traces / Generations** in the PostHog EU project. Restart the dev server after changing instrumentation.
+
 ### Enable Google and GitHub login in Supabase
 
 1. **Google**: In [Google Cloud Console](https://console.cloud.google.com/), create OAuth 2.0 credentials (Web application) with:

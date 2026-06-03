@@ -92,6 +92,8 @@ Copy `.env.local` from a team member or pull via `vercel env pull`. Key variable
 | `NEXT_PUBLIC_POSTHOG_HOST`          | PostHog ingest API for server-side SDK (`https://eu.i.posthog.com`)               |
 | `NEXT_PUBLIC_POSTHOG_API_HOST`      | Client proxy: `/t` locally, `https://t.cardshare.ai` in production                |
 
+PostHog **AI observability** reuses `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN` and `NEXT_PUBLIC_POSTHOG_HOST`. OpenTelemetry starts in `instrumentation.ts`; AI routes enable `experimental_telemetry` via `lib/ai-telemetry.ts`. See README “PostHog AI observability”.
+
 ## Key Architecture Notes
 
 - **Card states**: Draft → Collecting → Sent
@@ -99,4 +101,5 @@ Copy `.env.local` from a team member or pull via `vercel env pull`. Key variable
 - **Image handling**: `lib/resolve-image-for-model.ts` centralises image validation and normalisation before passing to AI models; multiple source types (upload, URL, base64) are handled here alongside `lib/source-image-limits.ts`
 - **Pending card storage**: `lib/pending-card-storage.ts` preserves in-progress card state across auth redirects
 - **AI text model**: Configured via `lib/ai-text-model.ts`; reads `AI_TEXT_MODEL` env var
+- **PostHog AI observability**: `instrumentation.ts` + `lib/posthog-ai-otel.ts` export LLM spans; `lib/ai-telemetry.ts` on `generateText`; distinct ID via `X-POSTHOG-DISTINCT-ID` from the client
 - **Supabase RLS**: All database access enforces Row Level Security; use the service role key only in API routes, never client-side

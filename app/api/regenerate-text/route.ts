@@ -1,6 +1,8 @@
 import { generateText } from "ai"
 import { NextRequest, NextResponse } from "next/server"
+import { aiTelemetry } from "@/lib/ai-telemetry"
 import { getTextModel } from "@/lib/ai-text-model"
+import { getDistinctIdFromRequest } from "@/lib/posthog-distinct-id-from-request"
 import { checkFixedWindowRateLimit } from "@/lib/request-rate-limit"
 import { stripSurroundingQuotes } from "@/lib/strip-surrounding-quotes"
 import { resolveImageForModel } from "@/lib/resolve-image-for-model"
@@ -31,6 +33,17 @@ export async function POST(request: NextRequest) {
     )
   }
   try {
+    const body = (await request.json()) as {
+      field?: string
+      cardType?: string
+      recipientName?: string
+      senderName?: string
+      currentValue?: string
+      userPrompt?: string
+      attachedImageUrl?: string
+      existingCardCoverImageUrl?: string
+      posthogDistinctId?: unknown
+    }
     const {
       field,
       cardType,
@@ -40,16 +53,8 @@ export async function POST(request: NextRequest) {
       userPrompt,
       attachedImageUrl,
       existingCardCoverImageUrl,
-    } = (await request.json()) as {
-      field?: string
-      cardType?: string
-      recipientName?: string
-      senderName?: string
-      currentValue?: string
-      userPrompt?: string
-      attachedImageUrl?: string
-      existingCardCoverImageUrl?: string
-    }
+    } = body
+    const distinctId = getDistinctIdFromRequest(request, body)
 
     if (!field || !cardType) {
       return NextResponse.json(
@@ -157,6 +162,7 @@ Rewrite the note to be warm and personal. Keep it concise.`
           content: userMessageContent,
         },
       ],
+      ...aiTelemetry("api-regenerate-text", distinctId),
     })
 
     return NextResponse.json(

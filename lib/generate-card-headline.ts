@@ -1,5 +1,6 @@
 import { generateText, Output } from "ai"
 import { z } from "zod"
+import { aiTelemetry } from "@/lib/ai-telemetry"
 import { getTextModel } from "@/lib/ai-text-model"
 import { stripSurroundingQuotes } from "@/lib/strip-surrounding-quotes"
 
@@ -11,12 +12,15 @@ const cardCopySchema = z.object({
     ),
 })
 
-export async function generateCardHeadline(params: {
-  cardType: string
-  recipientName: string
-  senderName: string
-  customMessage?: string
-}): Promise<string> {
+export async function generateCardHeadline(
+  params: {
+    cardType: string
+    recipientName: string
+    senderName: string
+    customMessage?: string
+  },
+  options?: { distinctId?: string | null },
+): Promise<string> {
   const { cardType, recipientName, senderName, customMessage } = params
 
   const systemPrompt = `You are a creative greeting card writer. Generate a single punchy headline for a ${cardType} greeting card.
@@ -33,6 +37,7 @@ Output only the headline — no other fields, no surrounding quotation marks.`
     output: Output.object({ schema: cardCopySchema }),
     messages: [{ role: "user", content: userMessage }],
     system: systemPrompt,
+    ...aiTelemetry("generate-card-headline", options?.distinctId),
   })
 
   return stripSurroundingQuotes(output.headline)

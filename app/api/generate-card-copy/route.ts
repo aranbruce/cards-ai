@@ -1,7 +1,9 @@
 import { generateText, Output } from "ai"
 import { z } from "zod"
 import { NextRequest, NextResponse } from "next/server"
+import { aiTelemetry } from "@/lib/ai-telemetry"
 import { getTextModel } from "@/lib/ai-text-model"
+import { getDistinctIdFromRequest } from "@/lib/posthog-distinct-id-from-request"
 import { checkFixedWindowRateLimit } from "@/lib/request-rate-limit"
 import { stripSurroundingQuotes } from "@/lib/strip-surrounding-quotes"
 import { resolveImageForModel } from "@/lib/resolve-image-for-model"
@@ -28,6 +30,7 @@ export async function POST(request: NextRequest) {
   }
 
   try {
+    const body = await request.json()
     const {
       cardType,
       recipientName,
@@ -35,7 +38,8 @@ export async function POST(request: NextRequest) {
       customMessage,
       attachedImageUrl,
       existingCardCoverImageUrl,
-    } = await request.json()
+    } = body
+    const distinctId = getDistinctIdFromRequest(request, body)
 
     if (!cardType || !recipientName || !senderName) {
       return NextResponse.json(
@@ -109,6 +113,7 @@ Output only the headline — no other fields, no surrounding quotation marks.`
         },
       ],
       system: systemPrompt,
+      ...aiTelemetry("api-generate-card-copy", distinctId),
     })
 
     const cardCopy = {

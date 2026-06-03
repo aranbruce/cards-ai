@@ -19,6 +19,7 @@ import { Paperclip, Sparkles, X } from "lucide-react"
 import { handleImageFileChange } from "@/lib/handle-image-file-change"
 import { sourceImageUrlForRefineRequest } from "@/lib/source-image-limits"
 import posthog from "posthog-js"
+import { posthogAiHeaders } from "@/lib/posthog-client"
 
 const TYPE_HUE: Record<string, number> = {
   birthday: 18,
@@ -102,7 +103,10 @@ export default function CreateCardPage() {
     try {
       const copyResponse = await fetch("/api/generate-card-copy", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...posthogAiHeaders(),
+        },
         body: JSON.stringify({
           cardType: details.cardType,
           recipientName: details.recipientName,
@@ -127,7 +131,10 @@ export default function CreateCardPage() {
 
       const imageResponse = await fetch("/api/generate-image", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...posthogAiHeaders(),
+        },
         body: JSON.stringify({
           cardType: details.cardType,
           coverHeadline: cardCopy.headline,
@@ -170,7 +177,10 @@ export default function CreateCardPage() {
     try {
       const response = await fetch("/api/regenerate-text", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...posthogAiHeaders(),
+        },
         body: JSON.stringify({
           field: "headline",
           cardType: cardData.cardType,
@@ -214,7 +224,10 @@ export default function CreateCardPage() {
       const existingCover = sourceImageUrlForRefineRequest(cardData.imageUrl)
       const response = await fetch("/api/generate-image", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...posthogAiHeaders(),
+        },
         body: JSON.stringify({
           cardType: cardData.cardType,
           coverHeadline: cardData.headline,

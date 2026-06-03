@@ -1,7 +1,4 @@
-import {
-  formatContextBlock,
-  type CardAiPromptFields,
-} from "./card-ai-prompt"
+import { formatContextBlock, type CardAiPromptFields } from "./card-ai-prompt"
 
 export const MESSAGE_SYSTEM_PROMPT = `You help write short personal notes for someone signing a group greeting card. Output only the note: plain text, no markdown, no labels, no leading or trailing quotation marks. Keep it warm, personal, and concise.`
 

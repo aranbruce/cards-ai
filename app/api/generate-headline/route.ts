@@ -55,9 +55,13 @@ export async function POST(request: NextRequest) {
             ? body.userContext.trim()
             : undefined,
         userPrompt:
-          typeof body.userPrompt === "string" ? body.userPrompt.trim() : undefined,
+          typeof body.userPrompt === "string"
+            ? body.userPrompt.trim()
+            : undefined,
         cardTitle:
-          typeof body.cardTitle === "string" ? body.cardTitle.trim() : undefined,
+          typeof body.cardTitle === "string"
+            ? body.cardTitle.trim()
+            : undefined,
         attached,
         previous,
       },

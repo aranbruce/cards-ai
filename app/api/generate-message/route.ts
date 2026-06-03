@@ -44,9 +44,13 @@ export async function POST(request: NextRequest) {
         cardType,
         recipientName,
         userPrompt:
-          typeof body.userPrompt === "string" ? body.userPrompt.trim() : undefined,
+          typeof body.userPrompt === "string"
+            ? body.userPrompt.trim()
+            : undefined,
         cardTitle:
-          typeof body.cardTitle === "string" ? body.cardTitle.trim() : undefined,
+          typeof body.cardTitle === "string"
+            ? body.cardTitle.trim()
+            : undefined,
         previousUserMessage:
           typeof body.previousUserMessage === "string"
             ? body.previousUserMessage.trim()

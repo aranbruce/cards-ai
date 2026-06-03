@@ -1,7 +1,7 @@
 import {
   assembleImageLeadingText,
   assembleImageUserPrompt,
-} from "@/app/api/generate-image/prompt"
+} from "@/lib/generate-image-prompt"
 import { resolvePromptFields } from "@/lib/card-ai-prompt"
 import { generateCardCoverArt } from "@/lib/generate-card-cover-art"
 

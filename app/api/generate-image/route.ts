@@ -7,7 +7,7 @@ import { checkFixedWindowRateLimit } from "@/lib/request-rate-limit"
 
 export async function POST(request: NextRequest) {
   const rate = checkFixedWindowRateLimit(request, {
-    namespace: "api-generate-image",
+    namespace: "api:generate-image",
     maxRequests: 20,
     windowMs: 10 * 60 * 1000,
   })

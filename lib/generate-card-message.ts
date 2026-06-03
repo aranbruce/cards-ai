@@ -2,7 +2,7 @@ import { generateText } from "ai"
 import {
   assembleMessageUserPrompt,
   MESSAGE_SYSTEM_PROMPT,
-} from "@/app/api/generate-message/prompt"
+} from "@/lib/generate-message-prompt"
 import { aiTelemetry } from "@/lib/ai-telemetry"
 import { getTextModel } from "@/lib/ai-text-model"
 import { resolvePromptFields } from "@/lib/card-ai-prompt"

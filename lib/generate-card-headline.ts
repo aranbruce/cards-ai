@@ -3,7 +3,7 @@ import { z } from "zod"
 import {
   assembleHeadlineUserPrompt,
   HEADLINE_SYSTEM_PROMPT,
-} from "@/app/api/generate-headline/prompt"
+} from "@/lib/generate-headline-prompt"
 import { aiTelemetry } from "@/lib/ai-telemetry"
 import { getTextModel } from "@/lib/ai-text-model"
 import {

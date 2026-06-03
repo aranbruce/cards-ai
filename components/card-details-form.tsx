@@ -40,7 +40,7 @@ export function CardDetailsForm({
 }: CardDetailsFormProps) {
   const [senderName, setSenderName] = useState("")
   const [recipientName, setRecipientName] = useState("")
-  const [customMessage, setCustomMessage] = useState("")
+  const [userContext, setUserContext] = useState("")
   const [tone, setTone] = useState("Warm")
   const [formError, setFormError] = useState("")
   const [uploadError, setUploadError] = useState("")
@@ -86,7 +86,7 @@ export function CardDetailsForm({
         senderName,
         recipientName,
         tone,
-        userContext: customMessage.trim() || undefined,
+        userContext: userContext.trim() || undefined,
         attachedImageUrl: attachedImageDataUrl ?? undefined,
       })
     } catch (err) {
@@ -179,8 +179,8 @@ export function CardDetailsForm({
           </label>
           <Textarea
             id="context"
-            value={customMessage}
-            onChange={(e) => setCustomMessage(e.target.value)}
+            value={userContext}
+            onChange={(e) => setUserContext(e.target.value)}
             placeholder="Any details to personalise the card? e.g. loves botanical illustration, just got promoted, turning 30."
             disabled={isLoading}
             variant="card"

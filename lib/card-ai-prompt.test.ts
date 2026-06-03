@@ -2,15 +2,15 @@ import { describe, expect, it } from "vitest"
 import {
   assembleHeadlineUserPrompt,
   HEADLINE_SYSTEM_PROMPT,
-} from "@/app/api/generate-headline/prompt"
+} from "@/lib/generate-headline-prompt"
 import {
   assembleMessageUserPrompt,
   MESSAGE_SYSTEM_PROMPT,
-} from "@/app/api/generate-message/prompt"
+} from "@/lib/generate-message-prompt"
 import {
   assembleImageLeadingText,
   assembleImageUserPrompt,
-} from "@/app/api/generate-image/prompt"
+} from "@/lib/generate-image-prompt"
 import { formatContextBlock, resolvePromptFields } from "@/lib/card-ai-prompt"
 
 describe("resolvePromptFields", () => {

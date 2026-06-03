@@ -10,10 +10,12 @@ vi.mock("next/server", () => ({
 }))
 
 vi.mock("posthog-node", () => ({
-  PostHog: vi.fn().mockImplementation(() => ({
-    capture: mockCapture,
-    flush: mockFlush,
-  })),
+  PostHog: vi.fn(
+    class MockPostHog {
+      capture = mockCapture
+      flush = mockFlush
+    },
+  ),
 }))
 
 import {

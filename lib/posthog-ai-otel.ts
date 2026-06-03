@@ -10,7 +10,9 @@ function getPostHogToken(): string | null {
 }
 
 function getPostHogHost(): string {
-  return process.env.NEXT_PUBLIC_POSTHOG_HOST?.trim() || "https://eu.i.posthog.com"
+  return (
+    process.env.NEXT_PUBLIC_POSTHOG_HOST?.trim() || "https://eu.i.posthog.com"
+  )
 }
 
 /** Starts OpenTelemetry export to PostHog AI observability. No-op without project token. */

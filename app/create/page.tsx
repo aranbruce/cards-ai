@@ -138,7 +138,9 @@ export default function CreateCardPage() {
         },
       )
 
-      setCardData((prev) => (prev ? { ...prev, imageUrl } : null))
+      setCardData((prev) =>
+        prev ? { ...prev, imageUrl: imageUrl ?? "" } : null,
+      )
       posthog.capture("card_generated", {
         card_type: details.cardType,
         has_custom_message: Boolean(details.userContext),
@@ -389,7 +391,9 @@ export default function CreateCardPage() {
                         </ChipButton>
                         <ChipButton
                           onClick={() => setOpenAiPanel("title")}
-                          disabled={isRegeneratingHeadline || isGeneratingHeadline}
+                          disabled={
+                            isRegeneratingHeadline || isGeneratingHeadline
+                          }
                           className="text-xs"
                         >
                           {isRegeneratingHeadline ? (

@@ -2,7 +2,7 @@ import {
   formatContextBlock,
   type CardAiPromptFields,
   type ImagePromptFlags,
-} from "@/lib/card-ai-prompt"
+} from "./card-ai-prompt"
 
 export const HEADLINE_SYSTEM_PROMPT = `You are a creative greeting card writer. Generate a single punchy headline for the greeting card described in the user's message.
 

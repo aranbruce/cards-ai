@@ -2,7 +2,7 @@ import {
   formatContextBlock,
   type CardAiPromptFields,
   type ImagePromptFlags,
-} from "@/lib/card-ai-prompt"
+} from "./card-ai-prompt"
 
 const MAX_HEADLINE_CHARS = 300
 

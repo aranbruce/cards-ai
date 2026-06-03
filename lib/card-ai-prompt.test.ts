@@ -87,7 +87,17 @@ describe("assembleHeadlineUserPrompt", () => {
 })
 
 describe("assembleMessageUserPrompt", () => {
-  it("appends regen suffix", () => {
+  it("uses create suffix when no regen fields", () => {
+    expect(
+      assembleMessageUserPrompt({
+        cardType: "birthday",
+        addressedTo: "Alex",
+        cardTitle: "Happy Birthday Alex",
+      }),
+    ).toContain("Write a short personal note for this card.")
+  })
+
+  it("uses regen suffix when userPrompt present", () => {
     expect(
       assembleMessageUserPrompt({
         cardType: "birthday",
@@ -95,6 +105,16 @@ describe("assembleMessageUserPrompt", () => {
         cardTitle: "Happy Birthday Alex",
         previousUserMessage: "Old note",
         userPrompt: "Warmer tone",
+      }),
+    ).toContain("Rewrite the note based on the user's request.")
+  })
+
+  it("uses regen suffix when previousUserMessage present", () => {
+    expect(
+      assembleMessageUserPrompt({
+        cardType: "birthday",
+        addressedTo: "Alex",
+        previousUserMessage: "Old note",
       }),
     ).toContain("Rewrite the note based on the user's request.")
   })

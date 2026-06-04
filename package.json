@@ -20,6 +20,7 @@
     "fix": "prettier --write . && eslint . --fix"
   },
   "dependencies": {
+    "@ai-sdk/gateway": "^3.0.123",
     "@chat-adapter/slack": "^4.30.0",
     "@chat-adapter/state-pg": "^4.30.0",
     "@opentelemetry/resources": "^2.7.1",

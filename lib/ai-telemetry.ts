@@ -1,5 +1,8 @@
 import type { TelemetrySettings } from "ai"
+import { registerAiGatewayProvider } from "@/lib/ai-gateway-provider"
 import { normalizePostHogDistinctId } from "@/lib/posthog-distinct-id"
+
+registerAiGatewayProvider()
 
 function isPostHogAiTelemetryEnabled(): boolean {
   return Boolean(process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN?.trim())

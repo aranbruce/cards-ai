@@ -118,7 +118,7 @@ describe("waitForAuthUser", () => {
     const supabase = mockSupabaseGetUser([{ user: { id: "u1" } }])
     await expect(
       waitForAuthUser(supabase as never, { maxAttempts: 3, delayMs: 1 }),
-    ).resolves.toEqual({ id: "u1" })
+    ).resolves.toEqual({ ok: true, user: { id: "u1" } })
   })
 
   it("retries after AuthSessionMissingError then returns user", async () => {
@@ -129,24 +129,28 @@ describe("waitForAuthUser", () => {
     ])
     await expect(
       waitForAuthUser(supabase as never, { maxAttempts: 4, delayMs: 1 }),
-    ).resolves.toEqual({ id: "u1" })
+    ).resolves.toEqual({ ok: true, user: { id: "u1" } })
     expect(supabase.auth.getUser).toHaveBeenCalledTimes(3)
   })
 
-  it("returns null when session never appears", async () => {
+  it("returns session_missing when session never appears", async () => {
     const supabase = mockSupabaseGetUser(["missing", "missing", "missing"])
     await expect(
       waitForAuthUser(supabase as never, { maxAttempts: 3, delayMs: 1 }),
-    ).resolves.toBeNull()
+    ).resolves.toEqual({ ok: false, reason: "session_missing" })
   })
 
-  it("returns null immediately on non-retryable auth errors", async () => {
+  it("returns error immediately on non-retryable auth errors", async () => {
     const supabase = mockSupabaseGetUser([
       { user: null, error: new Error("Invalid JWT") },
     ])
     await expect(
       waitForAuthUser(supabase as never, { maxAttempts: 3, delayMs: 1 }),
-    ).resolves.toBeNull()
+    ).resolves.toEqual({
+      ok: false,
+      reason: "error",
+      error: "Invalid JWT",
+    })
     expect(supabase.auth.getUser).toHaveBeenCalledTimes(1)
   })
 })

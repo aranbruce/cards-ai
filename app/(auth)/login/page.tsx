@@ -7,11 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import Link from "next/link"
-import {
-  isOAuthProviderId,
-  oauthProviderLabel,
-  type OAuthProviderId,
-} from "@/lib/oauth-auth"
+import { isOAuthProviderId, type OAuthProviderId } from "@/lib/oauth-auth"
 import { resolveSafePostAuthRedirectPath } from "@/lib/safe-redirect-path"
 import { hasPendingCard as checkHasPendingCard } from "@/lib/pending-card-storage"
 import {
@@ -67,18 +63,24 @@ function LoginForm() {
       setLoading(true)
       setError("")
 
-      const user = await waitForAuthUser(supabase)
+      const authResult = await waitForAuthUser(supabase)
 
       if (cancelled) return
 
-      if (!user) {
+      if (!authResult.ok) {
         setLoading(false)
+        if (authResult.reason === "error") {
+          setError(authResult.error)
+          return
+        }
         setError(AUTH_SESSION_NOT_READY_MESSAGE)
         if (hasPendingCard) {
           router.replace("/create?action=save")
         }
         return
       }
+
+      const user = authResult.user
 
       const { cardId, error: persistError } = await tryPersistPendingCard()
       if (cancelled) return
@@ -108,7 +110,7 @@ function LoginForm() {
     return () => {
       cancelled = true
     }
-  }, [router, searchParams, supabase, tryPersistPendingCard])
+  }, [hasPendingCard, router, searchParams, supabase, tryPersistPendingCard])
 
   const startOAuthLogin = async (provider: OAuthProviderId) => {
     setLoading(true)

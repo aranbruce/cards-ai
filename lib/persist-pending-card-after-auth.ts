@@ -52,11 +52,16 @@ export async function waitForSession(
   return false
 }
 
+export type WaitForAuthUserResult =
+  | { ok: true; user: User }
+  | { ok: false; reason: "session_missing" }
+  | { ok: false; reason: "error"; error: string }
+
 /** Poll until `getUser()` succeeds after an OAuth redirect. */
 export async function waitForAuthUser(
   supabase: SupabaseClient,
   options?: { maxAttempts?: number; delayMs?: number },
-): Promise<User | null> {
+): Promise<WaitForAuthUserResult> {
   const maxAttempts = options?.maxAttempts ?? 8
   const delayMs = options?.delayMs ?? 150
 
@@ -65,13 +70,19 @@ export async function waitForAuthUser(
       data: { user },
       error,
     } = await supabase.auth.getUser()
-    if (user) return user
-    if (error && !isAuthSessionMissingError(error)) return null
+    if (user) return { ok: true, user }
+    if (error && !isAuthSessionMissingError(error)) {
+      return {
+        ok: false,
+        reason: "error",
+        error: error.message || "Could not complete sign-in.",
+      }
+    }
     if (attempt < maxAttempts - 1) {
       await new Promise((resolve) => setTimeout(resolve, delayMs))
     }
   }
-  return null
+  return { ok: false, reason: "session_missing" }
 }
 
 export function persistPendingCardErrorMessage(

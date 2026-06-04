@@ -25,8 +25,11 @@ import {
 } from "@/lib/persist-pending-card-after-auth"
 import { Paperclip, Sparkles, X } from "lucide-react"
 import { handleImageFileChange } from "@/lib/handle-image-file-change"
-import { sourceImageUrlForRefineRequest } from "@/lib/source-image-limits"
 import { apiPost } from "@/lib/api-client"
+import {
+  regenerateCardHeadline,
+  regenerateCardImage,
+} from "@/lib/regenerate-card-client"
 import posthog from "posthog-js"
 
 const TYPE_HUE: Record<string, number> = {
@@ -205,27 +208,17 @@ export default function CreateCardPage() {
 
     setIsRegeneratingHeadline(true)
     try {
-      const { text } = await apiPost<{ text?: string }>(
-        "/api/generate-headline",
-        {
-          cardType: cardData.cardType,
-          recipientName,
-          cardTitle: cardData.headline,
-          userPrompt: prompt,
-          ...(cardTone ? { tone: cardTone } : {}),
-          ...(cardUserContext ? { userContext: cardUserContext } : {}),
-          existingCardCoverImageUrl: sourceImageUrlForRefineRequest(
-            cardData.imageUrl,
-          ),
-        },
-      )
-      setCardData({
-        ...cardData,
-        headline: text ?? "",
+      const headline = await regenerateCardHeadline({
+        page: "create",
+        cardType: cardData.cardType,
+        recipientName,
+        cardTitle: cardData.headline,
+        coverImageUrl: cardData.imageUrl,
+        userPrompt: prompt,
+        tone: cardTone,
+        userContext: cardUserContext,
       })
-      posthog.capture("card_headline_regenerated", {
-        card_type: cardData.cardType,
-      })
+      setCardData({ ...cardData, headline })
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Failed to regenerate headline",
@@ -243,31 +236,20 @@ export default function CreateCardPage() {
 
     setIsRegeneratingImage(true)
     try {
-      const existingCover = sourceImageUrlForRefineRequest(cardData.imageUrl)
-      const { imageUrl } = await apiPost<{ imageUrl?: string }>(
-        "/api/generate-image",
-        {
-          cardType: cardData.cardType,
-          recipientName,
-          coverHeadline: cardData.headline,
-          ...(prompt ? { userPrompt: prompt } : {}),
-          ...(cardTone ? { tone: cardTone } : {}),
-          ...(cardUserContext ? { userContext: cardUserContext } : {}),
-          ...(existingCover &&
-          (!attachedImageUrl || !existingCover.startsWith("data:"))
-            ? { existingCardCoverImageUrl: existingCover }
-            : {}),
-          ...(attachedImageUrl ? { attachedImageUrl } : {}),
-        },
-      )
+      const imageUrl = await regenerateCardImage({
+        page: "create",
+        cardType: cardData.cardType,
+        recipientName,
+        coverHeadline: cardData.headline,
+        coverImageUrl: cardData.imageUrl,
+        userPrompt: prompt,
+        attachedImageUrl,
+        tone: cardTone,
+        userContext: cardUserContext,
+      })
       setCardData((prev) =>
         prev ? { ...prev, imageUrl: imageUrl ?? prev.imageUrl } : null,
       )
-      posthog.capture("card_image_regenerated", {
-        card_type: cardData.cardType,
-        has_prompt: Boolean(prompt),
-        has_attached_image: Boolean(attachedImageUrl),
-      })
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Failed to regenerate image",

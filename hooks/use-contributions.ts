@@ -244,13 +244,12 @@ export function useContributions({
         contributions.find((c) => c.id === contributionId)?.message ?? ""
       try {
         const { text } = await apiPost<{ text?: string }>(
-          "/api/regenerate-text",
+          "/api/generate-message",
           {
-            field: "contribution_message",
             cardType: card.card_type || "custom",
             recipientName: card.recipient_name,
-            senderName: card.sender_name,
-            currentValue: current,
+            cardTitle: card.copy_headline,
+            previousUserMessage: current,
             userPrompt: prompt,
           },
         )

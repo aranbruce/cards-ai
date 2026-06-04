@@ -18,7 +18,8 @@ interface CardDetailsFormProps {
     cardType: string
     senderName: string
     recipientName: string
-    customMessage?: string
+    tone?: string
+    userContext?: string
     attachedImageUrl?: string
   }) => Promise<void>
   isLoading?: boolean
@@ -39,7 +40,7 @@ export function CardDetailsForm({
 }: CardDetailsFormProps) {
   const [senderName, setSenderName] = useState("")
   const [recipientName, setRecipientName] = useState("")
-  const [customMessage, setCustomMessage] = useState("")
+  const [userContext, setUserContext] = useState("")
   const [tone, setTone] = useState("Warm")
   const [formError, setFormError] = useState("")
   const [uploadError, setUploadError] = useState("")
@@ -79,18 +80,13 @@ export function CardDetailsForm({
       return
     }
 
-    // Prepend tone to context so the AI uses it
-    const tonePrefix = `Tone: ${tone}.`
-    const context = customMessage.trim()
-      ? `${tonePrefix} ${customMessage.trim()}`
-      : tonePrefix
-
     try {
       await onSubmit({
         cardType,
         senderName,
         recipientName,
-        customMessage: context,
+        tone,
+        userContext: userContext.trim() || undefined,
         attachedImageUrl: attachedImageDataUrl ?? undefined,
       })
     } catch (err) {
@@ -183,8 +179,8 @@ export function CardDetailsForm({
           </label>
           <Textarea
             id="context"
-            value={customMessage}
-            onChange={(e) => setCustomMessage(e.target.value)}
+            value={userContext}
+            onChange={(e) => setUserContext(e.target.value)}
             placeholder="Any details to personalise the card? e.g. loves botanical illustration, just got promoted, turning 30."
             disabled={isLoading}
             variant="card"

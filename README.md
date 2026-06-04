@@ -25,7 +25,7 @@ An AI-powered app for creating and sharing personalized virtual greeting cards w
 
 ### Prerequisites
 
-- Node.js 20.20.x or 22.22+ (Node 21 is not supported by `posthog-node`)
+- Node.js 24+ (see `.nvmrc`; use `nvm use` in the project root)
 - Supabase project
 
 ### Environment Variables
@@ -41,7 +41,7 @@ RESEND_API_KEY=your_resend_api_key
 RESEND_FROM_EMAIL="CardShareAI <noreply@your-domain.com>"
 SEND_EMAIL_HOOK_SECRET="v1,whsec_<secret-from-supabase-dashboard>"
 
-# Optional: text routes (`generate-card-copy`, `regenerate-text`). Defaults to openai/gpt-4o via the gateway.
+# Optional: text model for generate-headline / generate-message. Defaults to openai/gpt-4o via the gateway.
 # AI_TEXT_MODEL=openai/gpt-4o
 
 # PostHog (EU Cloud) — project API key from eu.posthog.com project settings
@@ -68,6 +68,16 @@ Analytics uses a first-party reverse proxy to PostHog EU (`eu.i.posthog.com`), n
 Server-side events (`posthog-node` in API routes) use `NEXT_PUBLIC_POSTHOG_HOST` directly and do not use the proxy path.
 
 Proxying is implemented in [`proxy.ts`](proxy.ts) via [`lib/posthog-proxy.ts`](lib/posthog-proxy.ts) (sets the `Host` header PostHog requires). Restart the dev server after changing `proxy.ts`.
+
+### PostHog AI observability
+
+LLM calls (headline, message, and image generation) send OpenTelemetry spans to PostHog when `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN` is set. Uses the same token and `NEXT_PUBLIC_POSTHOG_HOST` as product analytics (no extra env vars).
+
+- Bootstrap: [`instrumentation.ts`](instrumentation.ts) → [`lib/posthog-ai-otel.ts`](lib/posthog-ai-otel.ts)
+- Per-call telemetry: [`lib/ai-telemetry.ts`](lib/ai-telemetry.ts) on each Vercel AI SDK `generateText` call
+- User linking: browser sends `X-POSTHOG-DISTINCT-ID` on AI API requests (see [`lib/posthog-client.ts`](lib/posthog-client.ts))
+
+After generating a card locally, confirm events under **AI Observability → Traces / Generations** in the PostHog EU project. Restart the dev server after changing instrumentation.
 
 ### Enable Google and GitHub login in Supabase
 

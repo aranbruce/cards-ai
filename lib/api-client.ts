@@ -1,3 +1,5 @@
+import { posthogAiHeaders } from "@/lib/posthog-client"
+
 export class ApiError extends Error {
   constructor(
     public readonly status: number,
@@ -16,6 +18,9 @@ export class ApiError extends Error {
  */
 export async function apiFetch<T>(url: string, init?: RequestInit): Promise<T> {
   const headers = new Headers(init?.headers)
+  for (const [key, value] of new Headers(posthogAiHeaders())) {
+    headers.set(key, value)
+  }
   if (init?.body) {
     headers.set("Content-Type", "application/json")
   }

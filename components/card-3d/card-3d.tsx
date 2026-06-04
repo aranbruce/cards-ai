@@ -52,7 +52,6 @@ export function Card3D({
   imageUrl,
   headline,
   message,
-  senderName,
   recipientName,
   isGeneratingImage,
   isGeneratingHeadline = false,
@@ -91,7 +90,6 @@ export function Card3D({
   onEditingContributionChange,
   navigateToPage,
 }: Card3DProps) {
-  void senderName
   const [currentPage, setCurrentPage] = useState(coverOnly ? 0 : initialPage)
   const [prevNavigateToPage, setPrevNavigateToPage] = useState(navigateToPage)
   if (navigateToPage !== prevNavigateToPage) {

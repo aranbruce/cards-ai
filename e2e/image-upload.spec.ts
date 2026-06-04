@@ -33,14 +33,12 @@ test.describe("image upload — reference photo", () => {
   test("passes attachedImageUrl to generate-image when a photo is attached", async ({
     page,
   }) => {
-    await page.route("**/api/generate-card-copy", (route) =>
+    await page.route("**/api/generate-headline", (route) =>
       route.fulfill({
         status: 200,
         contentType: "application/json",
         body: JSON.stringify({
-          cardCopy: {
-            headline: "Happy Birthday!",
-          },
+          text: "Happy Birthday!",
         }),
       }),
     )
@@ -94,14 +92,12 @@ test.describe("image upload — reference photo", () => {
   test("omits attachedImageUrl from generate-image when no photo is attached", async ({
     page,
   }) => {
-    await page.route("**/api/generate-card-copy", (route) =>
+    await page.route("**/api/generate-headline", (route) =>
       route.fulfill({
         status: 200,
         contentType: "application/json",
         body: JSON.stringify({
-          cardCopy: {
-            headline: "Happy Birthday!",
-          },
+          text: "Happy Birthday!",
         }),
       }),
     )

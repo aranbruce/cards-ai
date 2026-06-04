@@ -129,7 +129,6 @@ export default function PublicCardPage() {
             imageUrl={card.image_url}
             headline={card.copy_headline}
             message={bodyMessage}
-            senderName={card.sender_name || "Someone special"}
             recipientName={card.recipient_name || "You"}
             contributions={displayContributions}
             extraPages={card.extra_pages || 0}

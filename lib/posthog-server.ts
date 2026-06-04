@@ -1,5 +1,8 @@
 import { PostHog } from "posthog-node"
 import { after } from "next/server"
+import { normalizePostHogDistinctId } from "@/lib/posthog-distinct-id"
+
+export { normalizePostHogDistinctId }
 
 let posthogClient: PostHog | null = null
 
@@ -25,13 +28,6 @@ export function getPostHogClient(): PostHog | null {
     })
   }
   return posthogClient
-}
-
-export function normalizePostHogDistinctId(value: unknown): string | null {
-  if (typeof value !== "string") return null
-  const trimmed = value.trim()
-  if (trimmed.length === 0 || trimmed.length > 200) return null
-  return trimmed
 }
 
 /** Capture a server event; flush runs after the response via after(). Failures are logged, never thrown. */

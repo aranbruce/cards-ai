@@ -392,13 +392,11 @@ export const CardOwnerStudio = forwardRef<
       setIsRegeneratingHeadline(true)
       try {
         const { text } = await apiPost<{ text?: string }>(
-          "/api/regenerate-text",
+          "/api/generate-headline",
           {
-            field: "headline",
             cardType: card.card_type || "custom",
             recipientName: card.recipient_name,
-            senderName: card.sender_name,
-            currentValue: card.copy_headline,
+            cardTitle: card.copy_headline,
             userPrompt: prompt,
             existingCardCoverImageUrl:
               sourceImageUrlForRefineRequest(card.image_url) ?? "",
@@ -427,8 +425,9 @@ export const CardOwnerStudio = forwardRef<
           "/api/generate-image",
           {
             cardType: card.card_type,
+            recipientName: card.recipient_name,
             coverHeadline: card.copy_headline,
-            ...(prompt ? { imagePrompt: prompt } : {}),
+            ...(prompt ? { userPrompt: prompt } : {}),
             ...(existingCover &&
             (!attachedImageUrl || !existingCover.startsWith("data:"))
               ? { existingCardCoverImageUrl: existingCover }
@@ -585,7 +584,6 @@ export const CardOwnerStudio = forwardRef<
         imageUrl={card.image_url}
         headline={card.copy_headline}
         message=""
-        senderName={card.sender_name || "Someone special"}
         recipientName={card.recipient_name || "You"}
         contributions={contributions}
         editable

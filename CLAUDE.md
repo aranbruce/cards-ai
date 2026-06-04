@@ -5,12 +5,12 @@
 CardShareAI is an AI-powered virtual greeting card creator. Users create personalized cards with AI-generated text and images, and can invite group contributions via shareable links.
 
 - **Framework**: Next.js 16.2.5 (App Router), React 19.2.6, TypeScript 6.0.3
-- **Package manager**: pnpm 9.8.0 (Node 20.20.x or 22.22+; see README)
+- **Package manager**: pnpm 9.8.0 (Node 24 LTS via `.nvmrc`; see README)
 - **Database**: Supabase (PostgreSQL with RLS) — `@supabase/supabase-js` 2.x, `@supabase/ssr` 0.10.x
 - **Auth**: Supabase Auth (Google + GitHub OAuth)
 - **AI**: Vercel AI SDK 6.x (`ai` package); Vercel AI Gateway for text (`openai/gpt-4o` by default), Gemini for image generation
 - **Styling**: Tailwind CSS 4.2.4, shadcn/ui (Radix UI primitives, Lucide icons)
-- **Testing**: Vitest 3.x (unit), Playwright 1.59.x (E2E)
+- **Testing**: Vitest 4.x (unit), Playwright 1.60.x (E2E)
 
 ## Before Pushing Changes
 
@@ -42,7 +42,7 @@ pnpm fix              # Auto-fix formatting and lint issues
 
 ```
 app/
-  api/                # API routes (cards, generate-card-copy, generate-image, giphy, contribute)
+  api/                # API routes (cards, generate-headline, generate-message, generate-image, giphy, contribute)
   (auth)/             # Auth pages at /login, /sign-up, /callback, etc. (route group)
   create/             # Card creation flow
   dashboard/          # User dashboard and card management
@@ -92,6 +92,8 @@ Copy `.env.local` from a team member or pull via `vercel env pull`. Key variable
 | `NEXT_PUBLIC_POSTHOG_HOST`          | PostHog ingest API for server-side SDK (`https://eu.i.posthog.com`)               |
 | `NEXT_PUBLIC_POSTHOG_API_HOST`      | Client proxy: `/t` locally, `https://t.cardshare.ai` in production                |
 
+PostHog **AI observability** reuses `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN` and `NEXT_PUBLIC_POSTHOG_HOST`. OpenTelemetry starts in `instrumentation.ts`; AI routes enable `experimental_telemetry` via `lib/ai-telemetry.ts`. See README “PostHog AI observability”.
+
 ## Key Architecture Notes
 
 - **Card states**: Draft → Collecting → Sent
@@ -99,4 +101,5 @@ Copy `.env.local` from a team member or pull via `vercel env pull`. Key variable
 - **Image handling**: `lib/resolve-image-for-model.ts` centralises image validation and normalisation before passing to AI models; multiple source types (upload, URL, base64) are handled here alongside `lib/source-image-limits.ts`
 - **Pending card storage**: `lib/pending-card-storage.ts` preserves in-progress card state across auth redirects
 - **AI text model**: Configured via `lib/ai-text-model.ts`; reads `AI_TEXT_MODEL` env var
+- **PostHog AI observability**: `instrumentation.ts` + `lib/posthog-ai-otel.ts` export LLM spans; `lib/ai-telemetry.ts` on `generateText`; distinct ID via `X-POSTHOG-DISTINCT-ID` from the client
 - **Supabase RLS**: All database access enforces Row Level Security; use the service role key only in API routes, never client-side

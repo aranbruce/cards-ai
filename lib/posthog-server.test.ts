@@ -9,18 +9,16 @@ vi.mock("next/server", () => ({
   after: (fn: () => void | Promise<void>) => fn(),
 }))
 
-vi.mock("posthog-node", () => ({
-  PostHog: vi.fn().mockImplementation(() => ({
-    capture: mockCapture,
-    flush: mockFlush,
-  })),
-}))
+vi.mock("posthog-node", () => {
+  class MockPostHog {
+    capture = mockCapture
+    flush = mockFlush
+  }
+  return { PostHog: MockPostHog }
+})
 
-import {
-  captureServerEvent,
-  normalizePostHogDistinctId,
-  resetPostHogClientForTests,
-} from "./posthog-server"
+import { normalizePostHogDistinctId } from "./posthog-distinct-id"
+import { captureServerEvent, resetPostHogClientForTests } from "./posthog-server"
 
 describe("normalizePostHogDistinctId", () => {
   it("accepts non-empty strings", () => {

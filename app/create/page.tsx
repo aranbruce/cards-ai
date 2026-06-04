@@ -18,6 +18,7 @@ import { savePendingCard, type PendingCard } from "@/lib/pending-card-storage"
 import { Paperclip, Sparkles, X } from "lucide-react"
 import { handleImageFileChange } from "@/lib/handle-image-file-change"
 import { sourceImageUrlForRefineRequest } from "@/lib/source-image-limits"
+import { apiPost } from "@/lib/api-client"
 import posthog from "posthog-js"
 
 const TYPE_HUE: Record<string, number> = {
@@ -45,7 +46,7 @@ export default function CreateCardPage() {
   const [senderName, setSenderName] = useState("")
   const [recipientName, setRecipientName] = useState("")
   const [cardData, setCardData] = useState<CardData | null>(null)
-  const [isGeneratingCopy, setIsGeneratingCopy] = useState(false)
+  const [isGeneratingHeadline, setIsGeneratingHeadline] = useState(false)
   const [isGeneratingImage, setIsGeneratingImage] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
   const [isRegeneratingHeadline, setIsRegeneratingHeadline] = useState(false)
@@ -63,6 +64,8 @@ export default function CreateCardPage() {
   const [editImageError, setEditImageError] = useState("")
   const [isGuest, setIsGuest] = useState(true)
   const [showAuthModal, setShowAuthModal] = useState(false)
+  const [cardTone, setCardTone] = useState<string | undefined>()
+  const [cardUserContext, setCardUserContext] = useState<string | undefined>()
 
   // Check if user is logged in
   useEffect(() => {
@@ -85,71 +88,62 @@ export default function CreateCardPage() {
     cardType: string
     senderName: string
     recipientName: string
-    customMessage?: string
+    tone?: string
+    userContext?: string
     attachedImageUrl?: string
   }) => {
     setError("")
     setSenderName(details.senderName)
     setRecipientName(details.recipientName)
+    setCardTone(details.tone)
+    setCardUserContext(details.userContext)
     setCardData({
       cardType: details.cardType,
       headline: "",
       imageUrl: "",
     })
-    setIsGeneratingCopy(true)
+    setIsGeneratingHeadline(true)
     setIsGeneratingImage(true)
 
     try {
-      const copyResponse = await fetch("/api/generate-card-copy", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      const { text: headline } = await apiPost<{ text?: string }>(
+        "/api/generate-headline",
+        {
           cardType: details.cardType,
           recipientName: details.recipientName,
-          senderName: details.senderName,
-          customMessage: details.customMessage,
+          ...(details.tone ? { tone: details.tone } : {}),
+          ...(details.userContext ? { userContext: details.userContext } : {}),
           ...(details.attachedImageUrl
             ? { attachedImageUrl: details.attachedImageUrl }
             : {}),
-        }),
-      })
-
-      if (!copyResponse.ok) {
-        throw new Error("Failed to generate card copy")
-      }
-
-      const { cardCopy } = await copyResponse.json()
-
-      setIsGeneratingCopy(false)
-      setCardData((prev) =>
-        prev ? { ...prev, headline: cardCopy.headline } : null,
+        },
       )
 
-      const imageResponse = await fetch("/api/generate-image", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      setIsGeneratingHeadline(false)
+      setCardData((prev) =>
+        prev ? { ...prev, headline: headline ?? "" } : null,
+      )
+
+      const { imageUrl } = await apiPost<{ imageUrl?: string }>(
+        "/api/generate-image",
+        {
           cardType: details.cardType,
-          coverHeadline: cardCopy.headline,
-          ...(details.customMessage
-            ? { customMessage: details.customMessage }
-            : {}),
+          recipientName: details.recipientName,
+          coverHeadline: headline ?? "",
+          ...(details.tone ? { tone: details.tone } : {}),
+          ...(details.userContext ? { userContext: details.userContext } : {}),
           ...(details.attachedImageUrl
             ? { attachedImageUrl: details.attachedImageUrl }
             : {}),
-        }),
-      })
+        },
+      )
 
-      if (!imageResponse.ok) {
-        throw new Error("Failed to generate image")
-      }
-
-      const { imageUrl } = await imageResponse.json()
-
-      setCardData((prev) => (prev ? { ...prev, imageUrl } : null))
+      setCardData((prev) =>
+        prev ? { ...prev, imageUrl: imageUrl ?? "" } : null,
+      )
       posthog.capture("card_generated", {
         card_type: details.cardType,
-        has_custom_message: Boolean(details.customMessage),
+        has_custom_message: Boolean(details.userContext),
         has_attached_image: Boolean(details.attachedImageUrl),
       })
     } catch (err) {
@@ -158,7 +152,7 @@ export default function CreateCardPage() {
       setCardData(null)
       posthog.captureException(err instanceof Error ? err : new Error(message))
     } finally {
-      setIsGeneratingCopy(false)
+      setIsGeneratingHeadline(false)
       setIsGeneratingImage(false)
     }
   }
@@ -168,28 +162,23 @@ export default function CreateCardPage() {
 
     setIsRegeneratingHeadline(true)
     try {
-      const response = await fetch("/api/regenerate-text", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          field: "headline",
+      const { text } = await apiPost<{ text?: string }>(
+        "/api/generate-headline",
+        {
           cardType: cardData.cardType,
           recipientName,
-          senderName,
-          currentValue: cardData.headline,
+          cardTitle: cardData.headline,
           userPrompt: prompt,
+          ...(cardTone ? { tone: cardTone } : {}),
+          ...(cardUserContext ? { userContext: cardUserContext } : {}),
           existingCardCoverImageUrl: sourceImageUrlForRefineRequest(
             cardData.imageUrl,
           ),
-        }),
-      })
-
-      if (!response.ok) throw new Error("Failed to regenerate headline")
-
-      const { text } = await response.json()
+        },
+      )
       setCardData({
         ...cardData,
-        headline: text,
+        headline: text ?? "",
       })
       posthog.capture("card_headline_regenerated", {
         card_type: cardData.cardType,
@@ -212,24 +201,22 @@ export default function CreateCardPage() {
     setIsRegeneratingImage(true)
     try {
       const existingCover = sourceImageUrlForRefineRequest(cardData.imageUrl)
-      const response = await fetch("/api/generate-image", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      const { imageUrl } = await apiPost<{ imageUrl?: string }>(
+        "/api/generate-image",
+        {
           cardType: cardData.cardType,
+          recipientName,
           coverHeadline: cardData.headline,
-          ...(prompt ? { imagePrompt: prompt } : {}),
+          ...(prompt ? { userPrompt: prompt } : {}),
+          ...(cardTone ? { tone: cardTone } : {}),
+          ...(cardUserContext ? { userContext: cardUserContext } : {}),
           ...(existingCover &&
           (!attachedImageUrl || !existingCover.startsWith("data:"))
             ? { existingCardCoverImageUrl: existingCover }
             : {}),
           ...(attachedImageUrl ? { attachedImageUrl } : {}),
-        }),
-      })
-
-      if (!response.ok) throw new Error("Failed to regenerate image")
-
-      const { imageUrl } = (await response.json()) as { imageUrl?: string }
+        },
+      )
       setCardData((prev) =>
         prev ? { ...prev, imageUrl: imageUrl ?? prev.imageUrl } : null,
       )
@@ -363,7 +350,7 @@ export default function CreateCardPage() {
           <CardDetailsForm
             cardType={selectedType}
             onSubmit={handleDetailsSubmit}
-            isLoading={isGeneratingCopy || isGeneratingImage}
+            isLoading={isGeneratingHeadline || isGeneratingImage}
             onBack={handleBackToType}
             hasGenerated={!!cardData}
             onContinue={handleSaveCard}
@@ -378,7 +365,7 @@ export default function CreateCardPage() {
               </p>
 
               <div className="mx-auto mt-5 flex justify-center">
-                {cardData && isGeneratingCopy ? (
+                {cardData && isGeneratingHeadline ? (
                   <div className="w-full max-w-md">
                     <div className="mb-12 flex justify-center gap-2">
                       <Skeleton className="h-8 w-24 rounded-full" />
@@ -404,7 +391,9 @@ export default function CreateCardPage() {
                         </ChipButton>
                         <ChipButton
                           onClick={() => setOpenAiPanel("title")}
-                          disabled={isRegeneratingHeadline || isGeneratingCopy}
+                          disabled={
+                            isRegeneratingHeadline || isGeneratingHeadline
+                          }
                           className="text-xs"
                         >
                           {isRegeneratingHeadline ? (
@@ -577,10 +566,9 @@ export default function CreateCardPage() {
                       imageUrl={cardData.imageUrl}
                       headline={cardData.headline}
                       message=""
-                      senderName={senderName}
                       recipientName={recipientName}
                       isGeneratingImage={isGeneratingImage}
-                      isGeneratingHeadline={isGeneratingCopy}
+                      isGeneratingHeadline={isGeneratingHeadline}
                       editable
                       coverOnly
                       onHeadlineChange={(value) =>

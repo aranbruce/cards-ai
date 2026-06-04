@@ -38,19 +38,29 @@ async function generateAndCreateCard(
   cardType: string,
   recipientName: string,
   senderName: string,
-  customMessage?: string,
+  tone?: string,
+  userContext?: string,
 ): Promise<CardRow | null> {
-  const headline = await generateHeadline({
-    cardType,
-    recipientName,
-    senderName,
-    customMessage,
-  })
-  const imageUrl = await generateImageUrl({
-    cardType,
-    coverHeadline: headline,
-    customMessage,
-  })
+  const telemetryOptions = { distinctId: supabaseUserId }
+  const headline = await generateHeadline(
+    {
+      cardType,
+      recipientName,
+      tone,
+      userContext,
+    },
+    telemetryOptions,
+  )
+  const imageUrl = await generateImageUrl(
+    {
+      cardType,
+      recipientName,
+      coverHeadline: headline,
+      tone,
+      userContext,
+    },
+    telemetryOptions,
+  )
 
   return createBotCard(supabaseUserId, {
     cardType,
@@ -328,10 +338,7 @@ function registerHandlers(bot: Chat<BotAdapters>): void {
     const recipientName = (values.recipient_name || "").trim()
     const senderName = (values.sender_name || "").trim()
     const tone = values.tone || "Warm"
-    const context = (values.context || "").trim()
-    const customMessage = context
-      ? `Tone: ${tone}. ${context}`
-      : `Tone: ${tone}.`
+    const userContext = (values.context || "").trim() || undefined
 
     if (!recipientName || !senderName) {
       return {
@@ -394,7 +401,8 @@ function registerHandlers(bot: Chat<BotAdapters>): void {
           cardType,
           recipientName,
           senderName,
-          customMessage,
+          tone,
+          userContext,
         )
         if (!card) {
           await notify(

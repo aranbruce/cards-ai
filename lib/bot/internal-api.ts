@@ -52,27 +52,43 @@ export async function createLinkUrl(
   return `${appUrl}/link-chat?token=${encodeURIComponent(token)}`
 }
 
-export async function generateHeadline(params: {
-  cardType: string
-  recipientName: string
-  senderName: string
-  customMessage?: string
-}): Promise<string> {
+export async function generateHeadline(
+  params: {
+    cardType: string
+    recipientName: string
+    tone?: string
+    userContext?: string
+  },
+  options?: { distinctId?: string | null },
+): Promise<string> {
   try {
-    return await generateCardHeadline(params)
+    return await generateCardHeadline(
+      {
+        cardType: params.cardType,
+        recipientName: params.recipientName,
+        tone: params.tone,
+        userContext: params.userContext,
+      },
+      options,
+    )
   } catch (err) {
     console.error("[bot/generateHeadline] FAIL:", err)
     return "Wishing you all the best!"
   }
 }
 
-export async function generateImageUrl(params: {
-  cardType: string
-  coverHeadline: string
-  customMessage?: string
-}): Promise<string> {
+export async function generateImageUrl(
+  params: {
+    cardType: string
+    recipientName: string
+    coverHeadline: string
+    tone?: string
+    userContext?: string
+  },
+  options?: { distinctId?: string | null },
+): Promise<string> {
   try {
-    return await generateCardCoverImage(params)
+    return await generateCardCoverImage(params, options)
   } catch (err) {
     console.error("[bot/generateImageUrl] FAIL:", err)
     return ""

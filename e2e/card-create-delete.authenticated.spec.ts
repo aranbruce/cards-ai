@@ -12,14 +12,12 @@ test.describe("card create and delete", () => {
 
     // Mock the slow AI routes so the test runs in seconds, not minutes.
     // The card save (POST /api/cards) is NOT mocked so the card is real in DB.
-    await page.route("**/api/generate-card-copy", (route) =>
+    await page.route("**/api/generate-headline", (route) =>
       route.fulfill({
         status: 200,
         contentType: "application/json",
         body: JSON.stringify({
-          cardCopy: {
-            headline: "Happy Birthday!",
-          },
+          text: "Happy Birthday!",
         }),
       }),
     )

@@ -1,9 +1,18 @@
 import { generateText, Output } from "ai"
 import { z } from "zod"
+import {
+  assembleHeadlineUserPrompt,
+  HEADLINE_SYSTEM_PROMPT,
+} from "@/lib/generate-headline-prompt"
+import { aiTelemetry } from "@/lib/ai-telemetry"
 import { getTextModel } from "@/lib/ai-text-model"
+import {
+  buildMultimodalUserMessage,
+  resolvePromptFields,
+} from "@/lib/card-ai-prompt"
 import { stripSurroundingQuotes } from "@/lib/strip-surrounding-quotes"
 
-const cardCopySchema = z.object({
+const cardHeadlineSchema = z.object({
   headline: z
     .string()
     .describe(
@@ -11,28 +20,39 @@ const cardCopySchema = z.object({
     ),
 })
 
-export async function generateCardHeadline(params: {
+export type GenerateCardHeadlineParams = {
   cardType: string
   recipientName: string
-  senderName: string
-  customMessage?: string
-}): Promise<string> {
-  const { cardType, recipientName, senderName, customMessage } = params
+  tone?: string
+  userContext?: string
+  userPrompt?: string
+  cardTitle?: string
+  attached?: Uint8Array
+  previous?: Uint8Array
+}
 
-  const systemPrompt = `You are a creative greeting card writer. Generate a single punchy headline for a ${cardType} greeting card.
+export async function generateCardHeadline(
+  params: GenerateCardHeadlineParams,
+  options?: { distinctId?: string | null },
+): Promise<string> {
+  const fields = resolvePromptFields(params)
+  const flags = {
+    hasPreviousImage: Boolean(params.previous),
+    hasAttachedImage: Boolean(params.attached),
+  }
+  const userContent = assembleHeadlineUserPrompt(fields, flags)
 
-The card is from: ${senderName}
-To: ${recipientName}
-${customMessage ? `Additional context: ${customMessage}` : ""}
-Output only the headline — no other fields, no surrounding quotation marks.`
-
-  const userMessage = `Write a headline for a ${cardType} card to ${recipientName} from ${senderName}.${customMessage ? ` Additional context: ${customMessage}` : ""}`
+  const messages = buildMultimodalUserMessage(userContent, {
+    previous: params.previous,
+    attached: params.attached,
+  })
 
   const { output } = await generateText({
     model: getTextModel(),
-    output: Output.object({ schema: cardCopySchema }),
-    messages: [{ role: "user", content: userMessage }],
-    system: systemPrompt,
+    output: Output.object({ schema: cardHeadlineSchema }),
+    messages,
+    system: HEADLINE_SYSTEM_PROMPT,
+    ...aiTelemetry("generate-card-headline", options?.distinctId),
   })
 
   return stripSurroundingQuotes(output.headline)

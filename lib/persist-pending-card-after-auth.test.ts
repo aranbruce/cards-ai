@@ -119,7 +119,9 @@ describe("waitForSession", () => {
   })
 
   it("returns error immediately on non-retryable session errors", async () => {
-    const supabase = mockSupabase([{ error: new Error("Invalid refresh token") }])
+    const supabase = mockSupabase([
+      { error: new Error("Invalid refresh token") },
+    ])
     await expect(
       waitForSession(supabase as never, { maxAttempts: 3, delayMs: 1 }),
     ).resolves.toEqual({
@@ -286,7 +288,9 @@ describe("persistPendingCardAfterAuth", () => {
 
   it("returns error when getSession fails with a non-retryable error", async () => {
     savePendingCard(validCard)
-    const supabase = mockSupabase([{ error: new Error("Invalid refresh token") }])
+    const supabase = mockSupabase([
+      { error: new Error("Invalid refresh token") },
+    ])
     const result = await persistPendingCardAfterAuth(supabase as never)
 
     expect(result).toEqual({

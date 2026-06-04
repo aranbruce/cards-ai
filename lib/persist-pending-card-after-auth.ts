@@ -32,24 +32,37 @@ export function pendingCardToCreatePayload(card: PendingCard) {
 export const AUTH_SESSION_NOT_READY_MESSAGE =
   "We couldn't finish signing you in yet. Please refresh the page or try again."
 
+export type WaitForSessionResult =
+  | { ok: true }
+  | { ok: false; reason: "session_missing" }
+  | { ok: false; reason: "error"; error: string }
+
 /** Poll until OAuth callback cookies are visible to the browser client. */
 export async function waitForSession(
   supabase: SupabaseClient,
   options?: { maxAttempts?: number; delayMs?: number },
-): Promise<boolean> {
+): Promise<WaitForSessionResult> {
   const maxAttempts = options?.maxAttempts ?? 8
   const delayMs = options?.delayMs ?? 150
 
   for (let attempt = 0; attempt < maxAttempts; attempt++) {
     const {
       data: { session },
+      error,
     } = await supabase.auth.getSession()
-    if (session?.user) return true
+    if (session?.user) return { ok: true }
+    if (error && !isAuthSessionMissingError(error)) {
+      return {
+        ok: false,
+        reason: "error",
+        error: error.message || "Could not read auth session.",
+      }
+    }
     if (attempt < maxAttempts - 1) {
       await new Promise((resolve) => setTimeout(resolve, delayMs))
     }
   }
-  return false
+  return { ok: false, reason: "session_missing" }
 }
 
 export type WaitForAuthUserResult =
@@ -103,8 +116,11 @@ export async function persistPendingCardAfterAuth(
   const cardData = loadPendingCard()
   if (!cardData) return { ok: false, reason: "none" }
 
-  const hasSession = await waitForSession(supabase)
-  if (!hasSession) {
+  const sessionResult = await waitForSession(supabase)
+  if (!sessionResult.ok) {
+    if (sessionResult.reason === "error") {
+      return { ok: false, reason: "error", error: sessionResult.error }
+    }
     return { ok: false, reason: "session_timeout" }
   }
 

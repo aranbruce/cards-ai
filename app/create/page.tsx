@@ -107,11 +107,11 @@ export default function CreateCardPage() {
         return
       }
 
-      persistPendingAttemptedRef.current = false
       setIsSaving(false)
       if (result.reason !== "none") {
         setError(persistPendingCardErrorMessage(result))
       }
+      // Ref stays true — effect deps won't change; refresh to retry persist.
     }
 
     void persistDraft()

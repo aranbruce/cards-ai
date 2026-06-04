@@ -36,13 +36,19 @@ const validCard: PendingCard = {
   extraPages: 0,
 }
 
-const mockSupabase = (sessions: Array<{ user: { id: string } } | null>) => {
+const mockSupabase = (
+  outcomes: Array<{ user: { id: string } } | null | { error: Error }>,
+) => {
   let call = 0
   return {
     auth: {
       getSession: vi.fn(async () => {
-        const session = sessions[Math.min(call, sessions.length - 1)] ?? null
+        const outcome = outcomes[Math.min(call, outcomes.length - 1)] ?? null
         call++
+        if (outcome && "error" in outcome) {
+          return { data: { session: null }, error: outcome.error }
+        }
+        const session = outcome ? { user: outcome.user } : null
         return { data: { session }, error: null }
       }),
     },
@@ -98,18 +104,30 @@ describe("pendingCardToCreatePayload", () => {
 })
 
 describe("waitForSession", () => {
-  it("returns true when session is available on first attempt", async () => {
+  it("returns ok when session is available on first attempt", async () => {
     const supabase = mockSupabase([{ user: { id: "u1" } }])
     await expect(
       waitForSession(supabase as never, { maxAttempts: 3, delayMs: 1 }),
-    ).resolves.toBe(true)
+    ).resolves.toEqual({ ok: true })
   })
 
-  it("returns false when session never appears", async () => {
+  it("returns session_missing when session never appears", async () => {
     const supabase = mockSupabase([null, null, null])
     await expect(
       waitForSession(supabase as never, { maxAttempts: 3, delayMs: 1 }),
-    ).resolves.toBe(false)
+    ).resolves.toEqual({ ok: false, reason: "session_missing" })
+  })
+
+  it("returns error immediately on non-retryable session errors", async () => {
+    const supabase = mockSupabase([{ error: new Error("Invalid refresh token") }])
+    await expect(
+      waitForSession(supabase as never, { maxAttempts: 3, delayMs: 1 }),
+    ).resolves.toEqual({
+      ok: false,
+      reason: "error",
+      error: "Invalid refresh token",
+    })
+    expect(supabase.auth.getSession).toHaveBeenCalledTimes(1)
   })
 })
 
@@ -263,6 +281,19 @@ describe("persistPendingCardAfterAuth", () => {
     const result = await resultPromise
 
     expect(result).toEqual({ ok: false, reason: "session_timeout" })
+    expect(apiPost).not.toHaveBeenCalled()
+  })
+
+  it("returns error when getSession fails with a non-retryable error", async () => {
+    savePendingCard(validCard)
+    const supabase = mockSupabase([{ error: new Error("Invalid refresh token") }])
+    const result = await persistPendingCardAfterAuth(supabase as never)
+
+    expect(result).toEqual({
+      ok: false,
+      reason: "error",
+      error: "Invalid refresh token",
+    })
     expect(apiPost).not.toHaveBeenCalled()
   })
 })

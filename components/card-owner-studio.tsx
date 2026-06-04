@@ -425,6 +425,7 @@ export const CardOwnerStudio = forwardRef<
           "/api/generate-image",
           {
             cardType: card.card_type,
+            recipientName: card.recipient_name,
             coverHeadline: card.copy_headline,
             ...(prompt ? { userPrompt: prompt } : {}),
             ...(existingCover &&

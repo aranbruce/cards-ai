@@ -121,19 +121,11 @@ function LoginForm() {
     )
     const action = searchParams.get("action")
 
+    const nextParams = new URLSearchParams({ oauth: provider, redirect })
+    if (action) nextParams.set("action", action)
+
     const callbackUrl = new URL("/callback", window.location.origin)
-    const next =
-      action === "save"
-        ? "/create?action=save"
-        : (() => {
-            const nextParams = new URLSearchParams({
-              oauth: provider,
-              redirect,
-            })
-            if (action) nextParams.set("action", action)
-            return `/login?${nextParams.toString()}`
-          })()
-    callbackUrl.searchParams.set("next", next)
+    callbackUrl.searchParams.set("next", `/login?${nextParams.toString()}`)
 
     const { error } = await supabase.auth.signInWithOAuth({
       provider,

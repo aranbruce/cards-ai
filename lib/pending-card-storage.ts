@@ -43,5 +43,9 @@ export function hasPendingCard(): boolean {
 
 export function clearPendingCard(): void {
   if (typeof window === "undefined") return
-  localStorage.removeItem(KEY)
+  try {
+    localStorage.removeItem(KEY)
+  } catch {
+    // Storage restricted — card was persisted; stale draft may remain locally
+  }
 }

@@ -1,5 +1,5 @@
 // @vitest-environment happy-dom
-import { beforeEach, describe, expect, it } from "vitest"
+import { beforeEach, describe, expect, it, vi } from "vitest"
 
 import {
   clearPendingCard,
@@ -73,5 +73,13 @@ describe("clearPendingCard", () => {
     clearPendingCard()
     expect(hasPendingCard()).toBe(false)
     expect(loadPendingCard()).toBeNull()
+  })
+
+  it("does not throw when localStorage.removeItem fails", () => {
+    savePendingCard(validCard)
+    vi.spyOn(Storage.prototype, "removeItem").mockImplementation(() => {
+      throw new Error("Storage disabled")
+    })
+    expect(() => clearPendingCard()).not.toThrow()
   })
 })

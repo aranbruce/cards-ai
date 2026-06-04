@@ -203,6 +203,19 @@ describe("persistPendingCardAfterAuth", () => {
     expect(localStorage.getItem("pendingCard")).toBeNull()
   })
 
+  it("returns success when localStorage cleanup fails after API success", async () => {
+    savePendingCard(validCard)
+    vi.mocked(apiPost).mockResolvedValue({ card: { id: "card-1" } })
+    vi.spyOn(Storage.prototype, "removeItem").mockImplementation(() => {
+      throw new Error("Storage disabled")
+    })
+
+    const supabase = mockSupabase([{ user: { id: "u1" } }])
+    const result = await persistPendingCardAfterAuth(supabase as never)
+
+    expect(result).toEqual({ ok: true, cardId: "card-1" })
+  })
+
   it("returns session_timeout when API responds with 401", async () => {
     savePendingCard(validCard)
     vi.mocked(apiPost).mockRejectedValue(new ApiError(401, "Unauthorized"))

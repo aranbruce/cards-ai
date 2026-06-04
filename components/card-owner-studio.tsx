@@ -22,13 +22,16 @@ import {
 import { useCardData } from "@/hooks/use-card-data"
 import { useContributions } from "@/hooks/use-contributions"
 import { useDebouncedSave } from "@/hooks/use-debounced-save"
-import { apiPatch, apiPost } from "@/lib/api-client"
+import { apiPatch } from "@/lib/api-client"
+import {
+  regenerateCardHeadline,
+  regenerateCardImage,
+} from "@/lib/regenerate-card-client"
 import { computeNaturalPageSpread } from "@/components/card-3d/card-page-spread"
 import {
   contributionHasCanvasPosition,
   contributionPageIndex,
 } from "@/lib/contribution-layout"
-import { sourceImageUrlForRefineRequest } from "@/lib/source-image-limits"
 
 export type OwnerCard = {
   id: string
@@ -391,18 +394,15 @@ export const CardOwnerStudio = forwardRef<
       if (!card) return
       setIsRegeneratingHeadline(true)
       try {
-        const { text } = await apiPost<{ text?: string }>(
-          "/api/generate-headline",
-          {
-            cardType: card.card_type || "custom",
-            recipientName: card.recipient_name,
-            cardTitle: card.copy_headline,
-            userPrompt: prompt,
-            existingCardCoverImageUrl:
-              sourceImageUrlForRefineRequest(card.image_url) ?? "",
-          },
-        )
-        const next = String(text ?? "").trim()
+        const next = await regenerateCardHeadline({
+          page: "dashboard",
+          cardType: card.card_type || "custom",
+          recipientName: card.recipient_name,
+          cardTitle: card.copy_headline,
+          coverImageUrl: card.image_url,
+          userPrompt: prompt,
+          cardId: card.id,
+        })
         setCard((c) => (c ? { ...c, copy_headline: next } : c))
         await patchCardFields({ copy_headline: next })
         onCardDataChange?.({ copy_headline: next })
@@ -420,21 +420,16 @@ export const CardOwnerStudio = forwardRef<
       if (!card) return
       setIsRegeneratingImage(true)
       try {
-        const existingCover = sourceImageUrlForRefineRequest(card.image_url)
-        const { imageUrl } = await apiPost<{ imageUrl?: string }>(
-          "/api/generate-image",
-          {
-            cardType: card.card_type,
-            recipientName: card.recipient_name,
-            coverHeadline: card.copy_headline,
-            ...(prompt ? { userPrompt: prompt } : {}),
-            ...(existingCover &&
-            (!attachedImageUrl || !existingCover.startsWith("data:"))
-              ? { existingCardCoverImageUrl: existingCover }
-              : {}),
-            ...(attachedImageUrl ? { attachedImageUrl } : {}),
-          },
-        )
+        const imageUrl = await regenerateCardImage({
+          page: "dashboard",
+          cardType: card.card_type || "custom",
+          recipientName: card.recipient_name,
+          coverHeadline: card.copy_headline,
+          coverImageUrl: card.image_url,
+          userPrompt: prompt,
+          attachedImageUrl,
+          cardId: card.id,
+        })
         if (imageUrl) {
           setCard((c) => (c ? { ...c, image_url: imageUrl } : c))
           await patchCardFields({ image_url: imageUrl })

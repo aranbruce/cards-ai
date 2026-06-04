@@ -1,4 +1,5 @@
 import posthog from "posthog-js"
+import { normalizePostHogDistinctId } from "@/lib/posthog-distinct-id"
 
 const POSTHOG_DISTINCT_ID_HEADER = "X-POSTHOG-DISTINCT-ID"
 
@@ -6,7 +7,7 @@ const POSTHOG_DISTINCT_ID_HEADER = "X-POSTHOG-DISTINCT-ID"
 export function posthogAiHeaders(): Record<string, string> {
   if (typeof window === "undefined") return {}
   try {
-    const distinctId = posthog.get_distinct_id?.()
+    const distinctId = normalizePostHogDistinctId(posthog.get_distinct_id?.())
     if (!distinctId) return {}
     return { [POSTHOG_DISTINCT_ID_HEADER]: distinctId }
   } catch {

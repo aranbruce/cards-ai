@@ -1,5 +1,5 @@
 import type { NextRequest } from "next/server"
-import { normalizePostHogDistinctId } from "@/lib/posthog-server"
+import { normalizePostHogDistinctId } from "@/lib/posthog-distinct-id"
 
 const POSTHOG_DISTINCT_ID_HEADER = "x-posthog-distinct-id"
 

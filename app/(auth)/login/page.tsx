@@ -14,18 +14,17 @@ import {
   type OAuthProviderId,
 } from "@/lib/oauth-auth"
 import { resolveSafePostAuthRedirectPath } from "@/lib/safe-redirect-path"
+import { hasPendingCard as checkHasPendingCard } from "@/lib/pending-card-storage"
 import {
-  hasPendingCard as checkHasPendingCard,
-  loadPendingCard,
-  clearPendingCard,
-} from "@/lib/pending-card-storage"
-import { apiPost } from "@/lib/api-client"
+  persistPendingCardAfterAuth,
+  persistPendingCardErrorMessage,
+} from "@/lib/persist-pending-card-after-auth"
 import { captureAuthEvent } from "@/lib/posthog-client"
 
 function LoginForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const supabase = createClient()
+  const [supabase] = useState(() => createClient())
 
   const urlError = searchParams.get("error")
   const urlMessage = searchParams.get("message")
@@ -44,21 +43,18 @@ function LoginForm() {
     return checkHasPendingCard()
   })
 
-  const savePendingCard = useCallback(async () => {
-    const cardData = loadPendingCard()
-    if (!cardData) return null
-    try {
-      const { card } = await apiPost<{ card: { id: string } }>(
-        "/api/cards",
-        cardData,
-      )
-      clearPendingCard()
-      return card.id
-    } catch (err) {
-      console.error("Error saving pending card:", err)
-      return null
+  const tryPersistPendingCard = useCallback(async () => {
+    const result = await persistPendingCardAfterAuth(supabase)
+    if (result.ok)
+      return { cardId: result.cardId, error: null as string | null }
+    if (result.reason === "none") {
+      return { cardId: null as string | null, error: null as string | null }
     }
-  }, [])
+    return {
+      cardId: null as string | null,
+      error: persistPendingCardErrorMessage(result),
+    }
+  }, [supabase])
 
   useEffect(() => {
     const oauthParam = searchParams.get("oauth")
@@ -68,6 +64,8 @@ function LoginForm() {
 
     const completeOAuthLogin = async () => {
       setLoading(true)
+      setError("")
+
       const {
         data: { user },
         error: userError,
@@ -86,13 +84,20 @@ function LoginForm() {
         return
       }
 
-      const savedCardId = await savePendingCard()
+      const { cardId, error: persistError } = await tryPersistPendingCard()
       if (cancelled) return
 
       captureAuthEvent("user_logged_in", { provider: oauthParam }, user)
 
-      if (savedCardId) {
-        router.replace(`/dashboard/cards/${savedCardId}`)
+      if (cardId) {
+        router.replace(`/dashboard/cards/${cardId}`)
+        return
+      }
+
+      if (persistError) {
+        setError(persistError)
+        setLoading(false)
+        router.replace("/create?action=save")
         return
       }
 
@@ -107,7 +112,7 @@ function LoginForm() {
     return () => {
       cancelled = true
     }
-  }, [router, savePendingCard, searchParams, supabase])
+  }, [router, searchParams, supabase, tryPersistPendingCard])
 
   const startOAuthLogin = async (provider: OAuthProviderId) => {
     setLoading(true)
@@ -117,11 +122,20 @@ function LoginForm() {
       searchParams.get("redirect"),
     )
     const action = searchParams.get("action")
-    const nextParams = new URLSearchParams({ oauth: provider, redirect })
-    if (action) nextParams.set("action", action)
 
     const callbackUrl = new URL("/callback", window.location.origin)
-    callbackUrl.searchParams.set("next", `/login?${nextParams.toString()}`)
+    const next =
+      action === "save"
+        ? "/create?action=save"
+        : (() => {
+            const nextParams = new URLSearchParams({
+              oauth: provider,
+              redirect,
+            })
+            if (action) nextParams.set("action", action)
+            return `/login?${nextParams.toString()}`
+          })()
+    callbackUrl.searchParams.set("next", next)
 
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
@@ -151,8 +165,7 @@ function LoginForm() {
         return
       }
 
-      // Check for pending card and save it
-      const savedCardId = await savePendingCard()
+      const { cardId, error: persistError } = await tryPersistPendingCard()
 
       const {
         data: { user },
@@ -161,11 +174,13 @@ function LoginForm() {
         captureAuthEvent("user_logged_in", { provider: "email" }, user)
       }
 
-      if (savedCardId) {
-        // Redirect to the saved card
-        router.push(`/dashboard/cards/${savedCardId}`)
+      if (cardId) {
+        router.push(`/dashboard/cards/${cardId}`)
+      } else if (persistError) {
+        setError(persistError)
+        setLoading(false)
+        router.push("/create?action=save")
       } else {
-        // Normal redirect
         const redirect = resolveSafePostAuthRedirectPath(
           searchParams.get("redirect"),
         )

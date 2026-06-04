@@ -39,6 +39,13 @@ describe("savePendingCard / loadPendingCard", () => {
     expect(localStorage.getItem("pendingCard")).toBeNull()
   })
 
+  it("accepts stored cards without copyMessage", () => {
+    const withoutMessage = { ...validCard }
+    delete (withoutMessage as { copyMessage?: string }).copyMessage
+    localStorage.setItem("pendingCard", JSON.stringify(withoutMessage))
+    expect(loadPendingCard()).toEqual({ ...withoutMessage, copyMessage: "" })
+  })
+
   it("returns null and clears storage when schema validation fails", () => {
     localStorage.setItem(
       "pendingCard",

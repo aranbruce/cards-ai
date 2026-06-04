@@ -5,7 +5,7 @@ const pendingCardSchema = z.object({
   recipientName: z.string(),
   senderName: z.string(),
   copyHeadline: z.string(),
-  copyMessage: z.string(),
+  copyMessage: z.string().default(""),
   imageUrl: z.string(),
   extraPages: z.number(),
 })
@@ -16,7 +16,11 @@ const KEY = "pendingCard"
 
 export function savePendingCard(card: PendingCard): void {
   if (typeof window === "undefined") return
-  localStorage.setItem(KEY, JSON.stringify(card))
+  try {
+    localStorage.setItem(KEY, JSON.stringify(card))
+  } catch {
+    // QuotaExceededError or private mode — guest draft cannot be restored after auth
+  }
 }
 
 /** Returns the stored card if present and valid, otherwise null. */

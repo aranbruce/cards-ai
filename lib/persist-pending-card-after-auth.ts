@@ -1,4 +1,8 @@
-import type { SupabaseClient } from "@supabase/supabase-js"
+import {
+  isAuthSessionMissingError,
+  type SupabaseClient,
+  type User,
+} from "@supabase/supabase-js"
 
 import { ApiError, apiPost } from "@/lib/api-client"
 import {
@@ -25,6 +29,9 @@ export function pendingCardToCreatePayload(card: PendingCard) {
   }
 }
 
+export const AUTH_SESSION_NOT_READY_MESSAGE =
+  "We couldn't finish signing you in yet. Please refresh the page or try again."
+
 /** Poll until OAuth callback cookies are visible to the browser client. */
 export async function waitForSession(
   supabase: SupabaseClient,
@@ -43,6 +50,28 @@ export async function waitForSession(
     }
   }
   return false
+}
+
+/** Poll until `getUser()` succeeds after an OAuth redirect. */
+export async function waitForAuthUser(
+  supabase: SupabaseClient,
+  options?: { maxAttempts?: number; delayMs?: number },
+): Promise<User | null> {
+  const maxAttempts = options?.maxAttempts ?? 8
+  const delayMs = options?.delayMs ?? 150
+
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser()
+    if (user) return user
+    if (error && !isAuthSessionMissingError(error)) return null
+    if (attempt < maxAttempts - 1) {
+      await new Promise((resolve) => setTimeout(resolve, delayMs))
+    }
+  }
+  return null
 }
 
 export function persistPendingCardErrorMessage(
@@ -76,6 +105,9 @@ export async function persistPendingCardAfterAuth(
     clearPendingCard()
     return { ok: true, cardId: card.id }
   } catch (err) {
+    if (err instanceof ApiError && err.status === 401) {
+      return { ok: false, reason: "session_timeout" }
+    }
     const message =
       err instanceof ApiError
         ? err.message

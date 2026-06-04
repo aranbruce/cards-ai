@@ -2,7 +2,6 @@
 
 import { Suspense, useCallback, useEffect, useState } from "react"
 import { createClient } from "@/lib/supabase/client"
-import { isAuthSessionMissingError } from "@supabase/supabase-js"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -16,8 +15,10 @@ import {
 import { resolveSafePostAuthRedirectPath } from "@/lib/safe-redirect-path"
 import { hasPendingCard as checkHasPendingCard } from "@/lib/pending-card-storage"
 import {
+  AUTH_SESSION_NOT_READY_MESSAGE,
   persistPendingCardAfterAuth,
   persistPendingCardErrorMessage,
+  waitForAuthUser,
 } from "@/lib/persist-pending-card-after-auth"
 import { captureAuthEvent } from "@/lib/posthog-client"
 
@@ -66,20 +67,15 @@ function LoginForm() {
       setLoading(true)
       setError("")
 
-      const {
-        data: { user },
-        error: userError,
-      } = await supabase.auth.getUser()
+      const user = await waitForAuthUser(supabase)
 
       if (cancelled) return
 
-      if (userError || !user) {
+      if (!user) {
         setLoading(false)
-        if (!isAuthSessionMissingError(userError)) {
-          setError(
-            userError?.message ??
-              `Could not complete ${oauthProviderLabel(oauthParam)} login.`,
-          )
+        setError(AUTH_SESSION_NOT_READY_MESSAGE)
+        if (hasPendingCard) {
+          router.replace("/create?action=save")
         }
         return
       }

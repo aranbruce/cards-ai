@@ -18,7 +18,10 @@ vi.mock("posthog-node", () => {
 })
 
 import { normalizePostHogDistinctId } from "./posthog-distinct-id"
-import { captureServerEvent, resetPostHogClientForTests } from "./posthog-server"
+import {
+  captureServerEvent,
+  resetPostHogClientForTests,
+} from "./posthog-server"
 
 describe("normalizePostHogDistinctId", () => {
   it("accepts non-empty strings", () => {

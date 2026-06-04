@@ -14,7 +14,15 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { Input } from "@/components/ui/input"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { AppHeader } from "@/components/app-header"
-import { savePendingCard, type PendingCard } from "@/lib/pending-card-storage"
+import {
+  hasPendingCard,
+  savePendingCard,
+  type PendingCard,
+} from "@/lib/pending-card-storage"
+import {
+  persistPendingCardAfterAuth,
+  persistPendingCardErrorMessage,
+} from "@/lib/persist-pending-card-after-auth"
 import { Paperclip, Sparkles, X } from "lucide-react"
 import { handleImageFileChange } from "@/lib/handle-image-file-change"
 import { sourceImageUrlForRefineRequest } from "@/lib/source-image-limits"
@@ -40,7 +48,7 @@ type Step = "select-type" | "details"
 
 export default function CreateCardPage() {
   const router = useRouter()
-  const supabase = createClient()
+  const [supabase] = useState(() => createClient())
   const [step, setStep] = useState<Step>("select-type")
   const [selectedType, setSelectedType] = useState("")
   const [senderName, setSenderName] = useState("")
@@ -59,6 +67,7 @@ export default function CreateCardPage() {
   >(null)
   const editImageFileRef = useRef<HTMLInputElement>(null)
   const editImageRequestRef = useRef(0)
+  const persistPendingAttemptedRef = useRef(false)
   const [isReadingImageFile, setIsReadingImageFile] = useState(false)
   const [error, setError] = useState("")
   const [editImageError, setEditImageError] = useState("")
@@ -77,6 +86,40 @@ export default function CreateCardPage() {
     }
     checkAuth()
   }, [supabase])
+
+  // OAuth safety net: persist guest draft after callback lands here with a session
+  useEffect(() => {
+    if (isGuest || persistPendingAttemptedRef.current || !hasPendingCard()) {
+      return
+    }
+
+    let cancelled = false
+    persistPendingAttemptedRef.current = true
+    setIsSaving(true)
+    setError("")
+
+    const persistDraft = async () => {
+      const result = await persistPendingCardAfterAuth(supabase)
+      if (cancelled) return
+
+      if (result.ok) {
+        router.replace(`/dashboard/cards/${result.cardId}`)
+        return
+      }
+
+      setIsSaving(false)
+      if (result.reason !== "none") {
+        setError(persistPendingCardErrorMessage(result))
+      }
+      // Ref stays true — effect deps won't change; refresh to retry persist.
+    }
+
+    void persistDraft()
+
+    return () => {
+      cancelled = true
+    }
+  }, [isGuest, router, supabase])
 
   const handleCardTypeSelect = (type: string) => {
     setSelectedType(type)

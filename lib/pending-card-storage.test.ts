@@ -1,5 +1,5 @@
 // @vitest-environment happy-dom
-import { beforeEach, describe, expect, it } from "vitest"
+import { beforeEach, describe, expect, it, vi } from "vitest"
 
 import {
   clearPendingCard,
@@ -39,6 +39,13 @@ describe("savePendingCard / loadPendingCard", () => {
     expect(localStorage.getItem("pendingCard")).toBeNull()
   })
 
+  it("accepts stored cards without copyMessage", () => {
+    const withoutMessage = { ...validCard }
+    delete (withoutMessage as { copyMessage?: string }).copyMessage
+    localStorage.setItem("pendingCard", JSON.stringify(withoutMessage))
+    expect(loadPendingCard()).toEqual({ ...withoutMessage, copyMessage: "" })
+  })
+
   it("returns null and clears storage when schema validation fails", () => {
     localStorage.setItem(
       "pendingCard",
@@ -66,5 +73,35 @@ describe("clearPendingCard", () => {
     clearPendingCard()
     expect(hasPendingCard()).toBe(false)
     expect(loadPendingCard()).toBeNull()
+  })
+
+  it("does not throw when localStorage.removeItem fails", () => {
+    savePendingCard(validCard)
+    const removeItemSpy = vi
+      .spyOn(Storage.prototype, "removeItem")
+      .mockImplementation(() => {
+        throw new Error("Storage disabled")
+      })
+    try {
+      expect(() => clearPendingCard()).not.toThrow()
+    } finally {
+      removeItemSpy.mockRestore()
+    }
+  })
+})
+
+describe("storage access failures", () => {
+  it("hasPendingCard and loadPendingCard return false/null when getItem throws", () => {
+    const getItemSpy = vi
+      .spyOn(Storage.prototype, "getItem")
+      .mockImplementation(() => {
+        throw new Error("Storage disabled")
+      })
+    try {
+      expect(hasPendingCard()).toBe(false)
+      expect(loadPendingCard()).toBeNull()
+    } finally {
+      getItemSpy.mockRestore()
+    }
   })
 })

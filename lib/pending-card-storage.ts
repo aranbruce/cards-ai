@@ -23,22 +23,29 @@ export function savePendingCard(card: PendingCard): void {
   }
 }
 
+function readPendingCardRaw(): string | null {
+  if (typeof window === "undefined") return null
+  try {
+    return localStorage.getItem(KEY)
+  } catch {
+    return null
+  }
+}
+
 /** Returns the stored card if present and valid, otherwise null. */
 export function loadPendingCard(): PendingCard | null {
-  if (typeof window === "undefined") return null
-  const raw = localStorage.getItem(KEY)
+  const raw = readPendingCardRaw()
   if (!raw) return null
   try {
     return pendingCardSchema.parse(JSON.parse(raw))
   } catch {
-    localStorage.removeItem(KEY)
+    clearPendingCard()
     return null
   }
 }
 
 export function hasPendingCard(): boolean {
-  if (typeof window === "undefined") return false
-  return localStorage.getItem(KEY) !== null
+  return readPendingCardRaw() !== null
 }
 
 export function clearPendingCard(): void {

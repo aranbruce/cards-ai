@@ -1,5 +1,5 @@
 // @vitest-environment happy-dom
-import { beforeEach, describe, expect, it, vi } from "vitest"
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { AuthSessionMissingError } from "@supabase/supabase-js"
 
 import { ApiError, apiPost } from "@/lib/api-client"
@@ -182,6 +182,14 @@ describe("persistPendingCardErrorMessage", () => {
 })
 
 describe("persistPendingCardAfterAuth", () => {
+  beforeEach(() => {
+    vi.useFakeTimers()
+  })
+
+  afterEach(() => {
+    vi.useRealTimers()
+  })
+
   it("returns none when no pending card", async () => {
     const supabase = mockSupabase([{ user: { id: "u1" } }])
     const result = await persistPendingCardAfterAuth(supabase as never)
@@ -206,14 +214,19 @@ describe("persistPendingCardAfterAuth", () => {
   it("returns success when localStorage cleanup fails after API success", async () => {
     savePendingCard(validCard)
     vi.mocked(apiPost).mockResolvedValue({ card: { id: "card-1" } })
-    vi.spyOn(Storage.prototype, "removeItem").mockImplementation(() => {
-      throw new Error("Storage disabled")
-    })
+    const removeItemSpy = vi
+      .spyOn(Storage.prototype, "removeItem")
+      .mockImplementation(() => {
+        throw new Error("Storage disabled")
+      })
 
-    const supabase = mockSupabase([{ user: { id: "u1" } }])
-    const result = await persistPendingCardAfterAuth(supabase as never)
-
-    expect(result).toEqual({ ok: true, cardId: "card-1" })
+    try {
+      const supabase = mockSupabase([{ user: { id: "u1" } }])
+      const result = await persistPendingCardAfterAuth(supabase as never)
+      expect(result).toEqual({ ok: true, cardId: "card-1" })
+    } finally {
+      removeItemSpy.mockRestore()
+    }
   })
 
   it("returns session_timeout when API responds with 401", async () => {
@@ -245,7 +258,9 @@ describe("persistPendingCardAfterAuth", () => {
   it("returns session_timeout when session is not ready", async () => {
     savePendingCard(validCard)
     const supabase = mockSupabase([null, null, null])
-    const result = await persistPendingCardAfterAuth(supabase as never)
+    const resultPromise = persistPendingCardAfterAuth(supabase as never)
+    await vi.runAllTimersAsync()
+    const result = await resultPromise
 
     expect(result).toEqual({ ok: false, reason: "session_timeout" })
     expect(apiPost).not.toHaveBeenCalled()

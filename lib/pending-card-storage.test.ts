@@ -77,9 +77,31 @@ describe("clearPendingCard", () => {
 
   it("does not throw when localStorage.removeItem fails", () => {
     savePendingCard(validCard)
-    vi.spyOn(Storage.prototype, "removeItem").mockImplementation(() => {
-      throw new Error("Storage disabled")
-    })
-    expect(() => clearPendingCard()).not.toThrow()
+    const removeItemSpy = vi
+      .spyOn(Storage.prototype, "removeItem")
+      .mockImplementation(() => {
+        throw new Error("Storage disabled")
+      })
+    try {
+      expect(() => clearPendingCard()).not.toThrow()
+    } finally {
+      removeItemSpy.mockRestore()
+    }
+  })
+})
+
+describe("storage access failures", () => {
+  it("hasPendingCard and loadPendingCard return false/null when getItem throws", () => {
+    const getItemSpy = vi
+      .spyOn(Storage.prototype, "getItem")
+      .mockImplementation(() => {
+        throw new Error("Storage disabled")
+      })
+    try {
+      expect(hasPendingCard()).toBe(false)
+      expect(loadPendingCard()).toBeNull()
+    } finally {
+      getItemSpy.mockRestore()
+    }
   })
 })

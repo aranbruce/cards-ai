@@ -59,18 +59,22 @@ export async function POST(request: NextRequest) {
         ? existingCardCoverImageUrl.trim()
         : undefined
 
+    const headline =
+      typeof coverHeadline === "string" ? coverHeadline.trim() : ""
+
     const hasAnyContext =
       trimmedPrompt ||
       trimmedCardType ||
       resolvedTone ||
       resolvedContext ||
+      headline ||
       sourceRaw ||
       previousRaw
     if (!hasAnyContext) {
       return NextResponse.json(
         {
           error:
-            "At least one of cardType, tone, userContext, userPrompt, attachedImageUrl, or existingCardCoverImageUrl is required",
+            "At least one of cardType, tone, userContext, coverHeadline, userPrompt, attachedImageUrl, or existingCardCoverImageUrl is required",
         },
         { status: 400, headers: rate.headers },
       )
@@ -101,9 +105,6 @@ export async function POST(request: NextRequest) {
     const previous: Uint8Array | undefined = previousResult?.ok
       ? previousResult.bytes
       : undefined
-
-    const headline =
-      typeof coverHeadline === "string" ? coverHeadline.trim() : ""
 
     const ctx = buildCardCoverArtContext({
       cardType: trimmedCardType,

@@ -26,6 +26,7 @@ export async function startPostHogAiOtel(): Promise<void> {
     resource: resourceFromAttributes({
       "service.name": "card-share-ai",
     }),
+    // NodeSDK ^0.218: spanProcessors (plural) is the supported option; spanProcessor is deprecated.
     spanProcessors: [
       new PostHogSpanProcessor({
         apiKey,

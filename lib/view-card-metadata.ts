@@ -1,5 +1,9 @@
 import type { Metadata } from "next"
-import { buildOpenGraph, DEFAULT_DESCRIPTION } from "@/lib/site-metadata"
+import {
+  buildOpenGraph,
+  DEFAULT_DESCRIPTION,
+  DEFAULT_OG_IMAGE_PATH,
+} from "@/lib/site-metadata"
 import {
   getContributeCardByLinkId,
   type ContributeCardRecord,
@@ -54,7 +58,7 @@ function cardLinkMetadata(
       card: "summary_large_image",
       title,
       description,
-      images: imageUrl ? [imageUrl] : undefined,
+      images: imageUrl ? [imageUrl] : [DEFAULT_OG_IMAGE_PATH],
     },
   }
 }

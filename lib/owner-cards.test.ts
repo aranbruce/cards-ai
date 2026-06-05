@@ -51,11 +51,27 @@ describe("listOwnerCards", () => {
 describe("getOwnerCardDetail", () => {
   it("returns null when the card is missing", async () => {
     const supabase = mockSupabase({
-      cardsSelect: () => ({ data: null, error: { message: "not found" } }),
+      cardsSelect: () => ({
+        data: null,
+        error: { code: "PGRST116", message: "not found" },
+      }),
     })
 
     const result = await getOwnerCardDetail(supabase, "user-1", "card-1")
     expect(result).toBeNull()
+  })
+
+  it("throws when the card query fails for reasons other than not found", async () => {
+    const supabase = mockSupabase({
+      cardsSelect: () => ({
+        data: null,
+        error: { code: "XX000", message: "db down" },
+      }),
+    })
+
+    await expect(
+      getOwnerCardDetail(supabase, "user-1", "card-1"),
+    ).rejects.toThrow("db down")
   })
 
   it("returns card with contributions when both queries succeed", async () => {

@@ -69,7 +69,10 @@ export async function getOwnerCardDetail(
     .single()
 
   if (error) {
-    return null
+    if (error.code === "PGRST116") {
+      return null
+    }
+    throw new Error(error.message)
   }
 
   const { data: contributions, error: contribErr } = await supabase

@@ -16,19 +16,14 @@ export function getAiGatewayAttributionHeaders(): Record<string, string> {
   }
 }
 
-let registered = false
-
 /**
  * Registers a gateway provider with attribution headers as the AI SDK default
  * so plain `provider/model` strings route through AI Gateway with attribution.
  */
 export function registerAiGatewayProvider(): void {
-  if (registered) return
-  registered = true
+  if (globalThis.AI_SDK_DEFAULT_PROVIDER) return
 
-  const gateway = createGateway({
+  globalThis.AI_SDK_DEFAULT_PROVIDER = createGateway({
     headers: getAiGatewayAttributionHeaders(),
   })
-
-  globalThis.AI_SDK_DEFAULT_PROVIDER = gateway
 }

@@ -32,12 +32,29 @@ describe("registerAiGatewayProvider", () => {
   it("sets the AI SDK default gateway provider once", () => {
     const original = globalThis.AI_SDK_DEFAULT_PROVIDER
     try {
+      globalThis.AI_SDK_DEFAULT_PROVIDER = undefined
       registerAiGatewayProvider()
       const first = globalThis.AI_SDK_DEFAULT_PROVIDER
       expect(first).toBeDefined()
 
       registerAiGatewayProvider()
       expect(globalThis.AI_SDK_DEFAULT_PROVIDER).toBe(first)
+    } finally {
+      globalThis.AI_SDK_DEFAULT_PROVIDER = original
+    }
+  })
+
+  it("re-registers after the global default is cleared", () => {
+    const original = globalThis.AI_SDK_DEFAULT_PROVIDER
+    try {
+      globalThis.AI_SDK_DEFAULT_PROVIDER = undefined
+      registerAiGatewayProvider()
+      const first = globalThis.AI_SDK_DEFAULT_PROVIDER
+
+      globalThis.AI_SDK_DEFAULT_PROVIDER = undefined
+      registerAiGatewayProvider()
+      expect(globalThis.AI_SDK_DEFAULT_PROVIDER).toBeDefined()
+      expect(globalThis.AI_SDK_DEFAULT_PROVIDER).not.toBe(first)
     } finally {
       globalThis.AI_SDK_DEFAULT_PROVIDER = original
     }

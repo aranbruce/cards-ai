@@ -12,6 +12,7 @@ import { normalizeContributionRotationDegrees } from "@/lib/contribution-rotatio
 import { normalizeContributionFontFamily } from "@/lib/contribution-font-family"
 import { randomPresetTextColor } from "@/lib/message-text-color-presets"
 import { compactCardPages } from "@/lib/compact-card-pages"
+import { getContributeCardByLinkId } from "@/lib/contribute-card"
 import { requireServiceRoleClient } from "@/lib/supabase/admin"
 
 function tokensMatch(stored: string, provided: string): boolean {
@@ -481,40 +482,13 @@ export async function GET(
 ) {
   try {
     const { linkId } = await params
-    const supabase = requireServiceRoleClient()
+    const result = await getContributeCardByLinkId(linkId)
 
-    // Get card by contributor link
-    const { data: cardData, error: cardError } = await supabase
-      .from("cards")
-      .select(
-        "id, sent_at, card_type, recipient_name, sender_name, copy_headline, copy_message, image_url, extra_pages",
-      )
-      .eq("contributor_link_id", linkId)
-      .maybeSingle()
-
-    if (cardError || !cardData) {
+    if (!result) {
       return NextResponse.json({ error: "Card not found" }, { status: 404 })
     }
 
-    // Get contributions for this card
-    const { data: contributions, error: contribError } = await supabase
-      .from("card_contributions")
-      .select(CONTRIBUTION_PUBLIC_COLUMNS)
-      .eq("card_id", cardData.id)
-      .order("created_at", { ascending: true })
-
-    if (contribError) {
-      console.error(
-        "[GET /api/contribute/[linkId]] contributions:",
-        contribError,
-      )
-      return NextResponse.json({ card: cardData, contributions: [] })
-    }
-
-    return NextResponse.json({
-      card: cardData,
-      contributions: contributions ?? [],
-    })
+    return NextResponse.json(result)
   } catch (error) {
     console.error("Error fetching card:", error)
     return NextResponse.json({ error: "Failed to fetch card" }, { status: 500 })

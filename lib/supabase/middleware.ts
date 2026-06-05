@@ -1,9 +1,16 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { createServerClient } from "@supabase/ssr"
+import { buildLoginRedirectUrl } from "@/lib/safe-redirect-path"
 
 export async function updateSession(request: NextRequest) {
+  const pathname = request.nextUrl.pathname + request.nextUrl.search
+  const requestHeaders = new Headers(request.headers)
+  requestHeaders.set("x-pathname", pathname)
+
   const supabaseResponse = NextResponse.next({
-    request,
+    request: {
+      headers: requestHeaders,
+    },
   })
 
   const supabase = createServerClient(
@@ -23,8 +30,19 @@ export async function updateSession(request: NextRequest) {
     },
   )
 
-  // refreshing the auth token
-  await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  if (!user && request.nextUrl.pathname.startsWith("/dashboard")) {
+    const redirectResponse = NextResponse.redirect(
+      new URL(buildLoginRedirectUrl(pathname), request.url),
+    )
+    supabaseResponse.cookies.getAll().forEach((cookie) => {
+      redirectResponse.cookies.set(cookie.name, cookie.value)
+    })
+    return redirectResponse
+  }
 
   return supabaseResponse
 }

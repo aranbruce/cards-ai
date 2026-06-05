@@ -47,7 +47,9 @@ describe("regenerateCardImage", () => {
     const { apiPost } = await import("@/lib/api-client")
     const posthog = (await import("posthog-js")).default
 
-    vi.mocked(apiPost).mockResolvedValue({ imageUrl: "https://cdn.example/a.png" })
+    vi.mocked(apiPost).mockResolvedValue({
+      imageUrl: "https://cdn.example/a.png",
+    })
 
     await regenerateCardImage({
       page: "create",
@@ -76,7 +78,9 @@ describe("regenerateCardImage", () => {
     const { apiPost } = await import("@/lib/api-client")
     const posthog = (await import("posthog-js")).default
 
-    vi.mocked(apiPost).mockResolvedValue({ imageUrl: "https://cdn.example/a.png" })
+    vi.mocked(apiPost).mockResolvedValue({
+      imageUrl: "https://cdn.example/a.png",
+    })
 
     await regenerateCardImage({
       page: "create",

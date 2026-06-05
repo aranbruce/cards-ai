@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import type { Contribution } from "@/lib/card-body"
 import type { OwnerCard } from "@/components/card-owner-studio"
 import { ApiError, apiFetch } from "@/lib/api-client"
@@ -8,6 +8,7 @@ import {
   type ApiContribution,
   normalizeContributionFromApi,
 } from "@/lib/contribution-layout"
+import type { OwnerCardDetail } from "@/lib/owner-cards"
 
 function contributionsFromApi(
   list: ApiContribution[] | undefined,
@@ -15,17 +16,36 @@ function contributionsFromApi(
   return (list ?? []).map(normalizeContributionFromApi)
 }
 
-export function useCardData(cardId: string, reloadNonce?: number) {
-  const [card, setCard] = useState<OwnerCard | null>(null)
-  const [contributions, setContributions] = useState<Contribution[]>([])
-  const [displayExtraPages, setDisplayExtraPages] = useState(0)
-  const [contributionsLoaded, setContributionsLoaded] = useState(true)
-  const [unusedExtraPagesDetected, setUnusedExtraPagesDetected] =
-    useState(false)
-  const [loading, setLoading] = useState(true)
+export function useCardData(
+  cardId: string,
+  reloadNonce?: number,
+  initialSnapshot?: OwnerCardDetail,
+) {
+  const skipInitialFetchRef = useRef(!!initialSnapshot)
+  const [card, setCard] = useState<OwnerCard | null>(
+    () => initialSnapshot?.card ?? null,
+  )
+  const [contributions, setContributions] = useState<Contribution[]>(() =>
+    initialSnapshot ? contributionsFromApi(initialSnapshot.contributions) : [],
+  )
+  const [displayExtraPages, setDisplayExtraPages] = useState(() =>
+    initialSnapshot ? initialSnapshot.displayExtraPages : 0,
+  )
+  const [contributionsLoaded, setContributionsLoaded] = useState(() =>
+    initialSnapshot ? initialSnapshot.contributionsLoaded : true,
+  )
+  const [unusedExtraPagesDetected, setUnusedExtraPagesDetected] = useState(
+    () => initialSnapshot?.unusedExtraPagesDetected ?? false,
+  )
+  const [loading, setLoading] = useState(!initialSnapshot)
   const [error, setError] = useState("")
 
   useEffect(() => {
+    if (skipInitialFetchRef.current && reloadNonce === undefined) {
+      skipInitialFetchRef.current = false
+      return
+    }
+
     let cancelled = false
     void (async () => {
       setLoading(true)

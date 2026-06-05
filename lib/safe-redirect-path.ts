@@ -12,3 +12,10 @@ export function resolveSafePostAuthRedirectPath(
   if (redirect.startsWith("//")) return fallback
   return redirect
 }
+
+export function buildLoginRedirectUrl(
+  requestedPath: string | null | undefined,
+): string {
+  const safePath = resolveSafePostAuthRedirectPath(requestedPath)
+  return `/login?redirect=${encodeURIComponent(safePath)}`
+}

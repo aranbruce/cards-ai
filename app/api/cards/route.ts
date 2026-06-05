@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { createClient } from "@/lib/supabase/server"
 import { createCardForUser } from "@/lib/create-card"
+import { listOwnerCards } from "@/lib/owner-cards"
 import { captureServerEvent } from "@/lib/posthog-server"
 
 export async function POST(request: NextRequest) {
@@ -66,17 +67,8 @@ export async function GET() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    const { data, error } = await supabase
-      .from("cards")
-      .select("*")
-      .eq("user_id", user.id)
-      .order("created_at", { ascending: false })
-
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 400 })
-    }
-
-    return NextResponse.json({ cards: data })
+    const cards = await listOwnerCards(supabase, user.id)
+    return NextResponse.json({ cards })
   } catch (error) {
     console.error("Error fetching cards:", error)
     return NextResponse.json(

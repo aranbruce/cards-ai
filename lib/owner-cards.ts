@@ -1,0 +1,108 @@
+import type { SupabaseClient } from "@supabase/supabase-js"
+import { CONTRIBUTION_PUBLIC_COLUMNS } from "@/lib/contribution-public-columns"
+import {
+  normalizeStoredExtraPages,
+  ownerExtraPagesForStudio,
+} from "@/lib/card-extra-pages"
+import type { ApiContribution } from "@/lib/contribution-layout"
+
+export type OwnerCardListItem = {
+  id: string
+  recipient_name: string
+  sender_name: string
+  card_type: string
+  copy_headline: string
+  image_url: string
+  created_at: string
+}
+
+export type OwnerCardDetailCard = {
+  id: string
+  card_type?: string
+  recipient_name: string
+  recipient_email?: string
+  sender_name: string
+  copy_headline: string
+  copy_message: string
+  copy_signoff?: string
+  image_url: string
+  extra_pages?: number
+  sent_at?: string | null
+  contributor_link_id: string
+}
+
+export type OwnerCardDetail = {
+  card: OwnerCardDetailCard
+  contributions: ApiContribution[]
+  contributionsLoaded: boolean
+  displayExtraPages: number
+  unusedExtraPagesDetected: boolean
+}
+
+export async function listOwnerCards(
+  supabase: SupabaseClient,
+  userId: string,
+): Promise<OwnerCardListItem[]> {
+  const { data, error } = await supabase
+    .from("cards")
+    .select("*")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false })
+
+  if (error) {
+    throw new Error(error.message)
+  }
+
+  return (data ?? []) as OwnerCardListItem[]
+}
+
+export async function getOwnerCardDetail(
+  supabase: SupabaseClient,
+  userId: string,
+  cardId: string,
+): Promise<OwnerCardDetail | null> {
+  const { data, error } = await supabase
+    .from("cards")
+    .select("*")
+    .eq("id", cardId)
+    .eq("user_id", userId)
+    .single()
+
+  if (error) {
+    return null
+  }
+
+  const { data: contributions, error: contribErr } = await supabase
+    .from("card_contributions")
+    .select(CONTRIBUTION_PUBLIC_COLUMNS)
+    .eq("card_id", cardId)
+    .order("created_at", { ascending: true })
+
+  const card = {
+    ...data,
+    extra_pages: normalizeStoredExtraPages(data.extra_pages),
+  } as OwnerCardDetailCard
+
+  if (contribErr) {
+    console.error("[getOwnerCardDetail] contributions:", contribErr)
+    return {
+      card,
+      contributions: [],
+      contributionsLoaded: false,
+      displayExtraPages: card.extra_pages ?? 0,
+      unusedExtraPagesDetected: false,
+    }
+  }
+
+  const rows = (contributions ?? []) as ApiContribution[]
+  const { displayExtraPages, unusedExtraPagesDetected } =
+    ownerExtraPagesForStudio(card.extra_pages ?? 0, rows, true)
+
+  return {
+    card,
+    contributions: rows,
+    contributionsLoaded: true,
+    displayExtraPages,
+    unusedExtraPagesDetected,
+  }
+}

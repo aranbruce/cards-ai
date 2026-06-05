@@ -170,6 +170,22 @@ function NavIcon({ name }: { name: string }) {
         <path d="M12 18v4" />
       </svg>
     )
+  if (name === "flower")
+    return (
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.75"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M12 7.5a4.5 4.5 0 1 1 4.5 4.5M12 7.5A4.5 4.5 0 1 0 7.5 12M12 7.5V9m-4.5 3a4.5 4.5 0 1 1 4.5 4.5m-4.5-4.5H9m3 4.5a4.5 4.5 0 1 1 4.5-4.5m-4.5 4.5V15m4.5-3h1.5" />
+        <circle cx="12" cy="12" r="3" />
+      </svg>
+    )
   if (name === "wand")
     return (
       <svg
@@ -279,6 +295,12 @@ export function DashboardHome({ initialCards, user }: DashboardHomeProps) {
               icon: "tree",
               label: "Holiday",
               count: typeCounts["holiday"] ?? 0,
+            },
+            {
+              key: "sympathy",
+              icon: "flower",
+              label: "Sympathy",
+              count: typeCounts["sympathy"] ?? 0,
             },
             {
               key: "custom",

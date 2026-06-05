@@ -14,10 +14,18 @@ function extractInterTightFontUrl(css: string): string | null {
  * @see https://nextjs.org/docs/app/api-reference/file-conventions/metadata/opengraph-image
  */
 export async function loadInterTight(weight: number): Promise<ArrayBuffer> {
-  const css = await fetch(
+  const cssRes = await fetch(
     `https://fonts.googleapis.com/css2?family=${INTER_TIGHT_FAMILY.replace(/ /g, "+")}:wght@${weight}`,
     { next: { revalidate: 60 * 60 * 24 * 7 } },
-  ).then((res) => res.text())
+  )
+
+  if (!cssRes.ok) {
+    throw new Error(
+      `Failed to fetch Inter Tight CSS for weight ${weight}: ${cssRes.status}`,
+    )
+  }
+
+  const css = await cssRes.text()
 
   const fontUrl = extractInterTightFontUrl(css)
 

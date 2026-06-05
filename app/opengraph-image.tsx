@@ -5,6 +5,8 @@ import {
 } from "@/lib/og-inter-tight-font"
 import { SITE_NAME, SITE_TAGLINE } from "@/lib/site-metadata"
 
+export const runtime = "nodejs"
+
 export const size = { width: 1200, height: 630 }
 export const contentType = "image/png"
 export const alt = SITE_NAME

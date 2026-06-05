@@ -20,6 +20,12 @@ function shareCardTitle(
   return "Your greeting card"
 }
 
+function shareableImageUrl(url: string | null | undefined): string | undefined {
+  const trimmed = url?.trim()
+  if (!trimmed || trimmed.startsWith("data:")) return undefined
+  return trimmed
+}
+
 function shareCardDescription(
   card: PublicCardViewRecord | ContributeCardRecord,
   intro: string,
@@ -37,16 +43,18 @@ function cardLinkMetadata(
   title: string,
   description: string,
 ): Metadata {
+  const imageUrl = shareableImageUrl(card.image_url)
+
   return {
     title,
     description,
     robots: { index: false, follow: false },
-    openGraph: buildOpenGraph(title, description, card.image_url),
+    openGraph: buildOpenGraph(title, description, imageUrl),
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: card.image_url ? [card.image_url] : undefined,
+      images: imageUrl ? [imageUrl] : undefined,
     },
   }
 }

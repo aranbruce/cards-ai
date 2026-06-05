@@ -20,6 +20,9 @@ export type OwnerCardListItem = {
 const OWNER_CARD_LIST_COLUMNS =
   "id, recipient_name, sender_name, card_type, copy_headline, image_url, created_at"
 
+const OWNER_CARD_DETAIL_COLUMNS =
+  "id, card_type, recipient_name, recipient_email, sender_name, copy_headline, copy_message, copy_signoff, image_url, extra_pages, sent_at, contributor_link_id"
+
 export type OwnerCardDetailCard = {
   id: string
   card_type?: string
@@ -69,7 +72,7 @@ export async function getOwnerCardDetail(
 
   const { data, error } = await supabase
     .from("cards")
-    .select("*")
+    .select(OWNER_CARD_DETAIL_COLUMNS)
     .eq("id", cardId)
     .eq("user_id", userId)
     .single()

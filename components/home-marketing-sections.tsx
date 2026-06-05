@@ -26,7 +26,7 @@ export function HomeMarketingSections({
 }) {
   return (
     <>
-      <section className="border-t border-border px-6 md:px-15">
+      <section className="border-t border-border px-6 md:px-16">
         <div className="mx-auto max-w-7xl py-20">
           <p className="font-mono text-[11px] tracking-[0.15em] text-brand uppercase">
             Built for group cards
@@ -52,7 +52,7 @@ export function HomeMarketingSections({
         </div>
       </section>
 
-      <section className="border-t border-border px-6 md:px-15">
+      <section className="border-t border-border px-6 md:px-16">
         <div className="mx-auto max-w-7xl py-20">
           <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-20">
             <div>
@@ -201,7 +201,7 @@ export function HomeMarketingSections({
         </div>
       </section>
 
-      <section className="border-t border-border bg-secondary/50 px-6 md:px-15">
+      <section className="border-t border-border bg-secondary/50 px-6 md:px-16">
         <div className="mx-auto max-w-4xl py-24 text-center">
           <h2 className="text-3xl font-semibold tracking-[-0.03em] md:text-4xl lg:text-5xl">
             Start the card. We&apos;ll handle the rest.

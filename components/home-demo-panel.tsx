@@ -61,7 +61,11 @@ export function HomeDemoPanel() {
   const [hasGenerated, setHasGenerated] = useState(false)
 
   const scheduleTimeout = (fn: () => void, ms: number) => {
-    const id = setTimeout(fn, ms)
+    const id = setTimeout(() => {
+      const idx = timeoutsRef.current.indexOf(id)
+      if (idx !== -1) timeoutsRef.current.splice(idx, 1)
+      fn()
+    }, ms)
     timeoutsRef.current.push(id)
   }
 

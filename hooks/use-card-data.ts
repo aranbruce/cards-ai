@@ -16,12 +16,19 @@ function contributionsFromApi(
   return (list ?? []).map(normalizeContributionFromApi)
 }
 
+function snapshotIsComplete(snapshot?: OwnerCardDetail): boolean {
+  return !!snapshot && snapshot.contributionsLoaded !== false
+}
+
 export function useCardData(
   cardId: string,
   reloadNonce?: number,
   initialSnapshot?: OwnerCardDetail,
 ) {
-  const skipInitialFetchRef = useRef(!!initialSnapshot)
+  const skipInitialFetchRef = useRef(snapshotIsComplete(initialSnapshot))
+  const hadPartialSnapshotRef = useRef(
+    !!initialSnapshot && initialSnapshot.contributionsLoaded === false,
+  )
   const [card, setCard] = useState<OwnerCard | null>(
     () => initialSnapshot?.card ?? null,
   )
@@ -37,7 +44,7 @@ export function useCardData(
   const [unusedExtraPagesDetected, setUnusedExtraPagesDetected] = useState(
     () => initialSnapshot?.unusedExtraPagesDetected ?? false,
   )
-  const [loading, setLoading] = useState(!initialSnapshot)
+  const [loading, setLoading] = useState(!snapshotIsComplete(initialSnapshot))
   const [error, setError] = useState("")
 
   useEffect(() => {
@@ -47,14 +54,22 @@ export function useCardData(
     }
 
     let cancelled = false
+    const refreshingPartialSnapshot =
+      reloadNonce === undefined && hadPartialSnapshotRef.current
+    if (hadPartialSnapshotRef.current) {
+      hadPartialSnapshotRef.current = false
+    }
+
     void (async () => {
       setLoading(true)
       setError("")
-      setCard(null)
-      setContributions([])
-      setDisplayExtraPages(0)
-      setContributionsLoaded(false)
-      setUnusedExtraPagesDetected(false)
+      if (!refreshingPartialSnapshot) {
+        setCard(null)
+        setContributions([])
+        setDisplayExtraPages(0)
+        setContributionsLoaded(false)
+        setUnusedExtraPagesDetected(false)
+      }
       try {
         const {
           card: c,

@@ -1,4 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js"
+import { validate as isValidUuid } from "uuid"
 import { CONTRIBUTION_PUBLIC_COLUMNS } from "@/lib/contribution-public-columns"
 import {
   normalizeStoredExtraPages,
@@ -64,6 +65,8 @@ export async function getOwnerCardDetail(
   userId: string,
   cardId: string,
 ): Promise<OwnerCardDetail | null> {
+  if (!isValidUuid(cardId)) return null
+
   const { data, error } = await supabase
     .from("cards")
     .select("*")

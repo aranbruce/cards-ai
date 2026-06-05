@@ -1,6 +1,8 @@
 import { describe, expect, it, vi } from "vitest"
 import { getOwnerCardDetail, listOwnerCards } from "@/lib/owner-cards"
 
+const CARD_ID = "550e8400-e29b-41d4-a716-446655440000"
+
 function mockSupabase(handlers: {
   cardsSelect?: () => unknown
   contributionsSelect?: () => unknown
@@ -49,6 +51,14 @@ describe("listOwnerCards", () => {
 })
 
 describe("getOwnerCardDetail", () => {
+  it("returns null for non-UUID card ids without querying", async () => {
+    const supabase = mockSupabase({})
+
+    const result = await getOwnerCardDetail(supabase, "user-1", "not-a-uuid")
+    expect(result).toBeNull()
+    expect(supabase.from).not.toHaveBeenCalled()
+  })
+
   it("returns null when the card is missing", async () => {
     const supabase = mockSupabase({
       cardsSelect: () => ({
@@ -57,7 +67,7 @@ describe("getOwnerCardDetail", () => {
       }),
     })
 
-    const result = await getOwnerCardDetail(supabase, "user-1", "card-1")
+    const result = await getOwnerCardDetail(supabase, "user-1", CARD_ID)
     expect(result).toBeNull()
   })
 
@@ -70,7 +80,7 @@ describe("getOwnerCardDetail", () => {
     })
 
     await expect(
-      getOwnerCardDetail(supabase, "user-1", "card-1"),
+      getOwnerCardDetail(supabase, "user-1", CARD_ID),
     ).rejects.toThrow("db down")
   })
 
@@ -78,7 +88,7 @@ describe("getOwnerCardDetail", () => {
     const supabase = mockSupabase({
       cardsSelect: () => ({
         data: {
-          id: "card-1",
+          id: CARD_ID,
           user_id: "user-1",
           recipient_name: "Sam",
           sender_name: "Alex",
@@ -94,7 +104,7 @@ describe("getOwnerCardDetail", () => {
         data: [
           {
             id: "contrib-1",
-            card_id: "card-1",
+            card_id: CARD_ID,
             message: "Note",
             is_creator: true,
             page_index: 0,
@@ -104,8 +114,8 @@ describe("getOwnerCardDetail", () => {
       }),
     })
 
-    const result = await getOwnerCardDetail(supabase, "user-1", "card-1")
-    expect(result?.card.id).toBe("card-1")
+    const result = await getOwnerCardDetail(supabase, "user-1", CARD_ID)
+    expect(result?.card.id).toBe(CARD_ID)
     expect(result?.contributions).toHaveLength(1)
     expect(result?.contributionsLoaded).toBe(true)
   })

@@ -450,8 +450,10 @@ export function CreateCardPageClient() {
                                   setIsReadingImageFile(false)
                                 },
                                 (msg) => {
-                                  if (reqId === editImageRequestRef.current)
-                                    setEditImageError(msg)
+                                  if (reqId !== editImageRequestRef.current)
+                                    return
+                                  setEditImageError(msg)
+                                  setIsReadingImageFile(false)
                                 },
                                 editImageError,
                               )

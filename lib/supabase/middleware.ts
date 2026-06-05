@@ -3,9 +3,12 @@ import { createServerClient } from "@supabase/ssr"
 import { buildLoginRedirectUrl } from "@/lib/safe-redirect-path"
 
 export async function updateSession(request: NextRequest) {
-  const pathname = request.nextUrl.pathname + request.nextUrl.search
+  const pathname = request.nextUrl.pathname
+  const pathnameWithSearch = pathname + request.nextUrl.search
   const requestHeaders = new Headers(request.headers)
-  requestHeaders.set("x-pathname", pathname)
+  if (pathname.startsWith("/dashboard")) {
+    requestHeaders.set("x-pathname", pathnameWithSearch)
+  }
 
   const supabaseResponse = NextResponse.next({
     request: {
@@ -36,7 +39,7 @@ export async function updateSession(request: NextRequest) {
 
   if (!user && request.nextUrl.pathname.startsWith("/dashboard")) {
     const redirectResponse = NextResponse.redirect(
-      new URL(buildLoginRedirectUrl(pathname), request.url),
+      new URL(buildLoginRedirectUrl(pathnameWithSearch), request.url),
     )
     supabaseResponse.cookies.getAll().forEach((cookie) => {
       redirectResponse.cookies.set(cookie)

@@ -132,7 +132,9 @@ export function CardDetailPageClient({
           setIsReadingImageFile(false)
         },
         (msg) => {
-          if (reqId === editImageRequestRef.current) setError(msg)
+          if (reqId !== editImageRequestRef.current) return
+          setError(msg)
+          setIsReadingImageFile(false)
         },
         error,
       )

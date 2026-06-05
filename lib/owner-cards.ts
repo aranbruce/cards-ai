@@ -16,6 +16,9 @@ export type OwnerCardListItem = {
   created_at: string
 }
 
+const OWNER_CARD_LIST_COLUMNS =
+  "id, recipient_name, sender_name, card_type, copy_headline, image_url, created_at"
+
 export type OwnerCardDetailCard = {
   id: string
   card_type?: string
@@ -45,7 +48,7 @@ export async function listOwnerCards(
 ): Promise<OwnerCardListItem[]> {
   const { data, error } = await supabase
     .from("cards")
-    .select("*")
+    .select(OWNER_CARD_LIST_COLUMNS)
     .eq("user_id", userId)
     .order("created_at", { ascending: false })
 

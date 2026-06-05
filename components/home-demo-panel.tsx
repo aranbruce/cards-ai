@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { ChipButton } from "@/components/ui/chip-button"
 import { Paperclip, Sparkles, X } from "lucide-react"
@@ -51,6 +51,7 @@ const DEMO_STATES = {
 } as const
 
 export function HomeDemoPanel() {
+  const timeoutsRef = useRef<ReturnType<typeof setTimeout>[]>([])
   const [demoKey, setDemoKey] = useState<keyof typeof DEMO_STATES>("Warm")
   const [isGenerating, setIsGenerating] = useState(false)
   const [showShimmer, setShowShimmer] = useState(false)
@@ -58,6 +59,21 @@ export function HomeDemoPanel() {
   const [displayedMessage, setDisplayedMessage] = useState("")
   const [photoAttached, setPhotoAttached] = useState(false)
   const [hasGenerated, setHasGenerated] = useState(false)
+
+  const scheduleTimeout = (fn: () => void, ms: number) => {
+    const id = setTimeout(fn, ms)
+    timeoutsRef.current.push(id)
+  }
+
+  useEffect(() => {
+    const timeouts = timeoutsRef.current
+    return () => {
+      for (const id of timeouts) {
+        clearTimeout(id)
+      }
+      timeouts.length = 0
+    }
+  }, [])
 
   const handleGenerate = () => {
     if (isGenerating) return
@@ -70,7 +86,7 @@ export function HomeDemoPanel() {
     setDisplayedImageUrl(variant.imageUrl)
     setDisplayedMessage("")
 
-    setTimeout(() => {
+    scheduleTimeout(() => {
       setShowShimmer(false)
 
       const newMessage = variant.message
@@ -79,12 +95,12 @@ export function HomeDemoPanel() {
         i++
         setDisplayedMessage(newMessage.slice(0, i))
         if (i < newMessage.length) {
-          setTimeout(type, 25)
+          scheduleTimeout(type, 25)
         } else {
           setIsGenerating(false)
         }
       }
-      setTimeout(type, 300)
+      scheduleTimeout(type, 300)
     }, 700)
   }
 

@@ -4,6 +4,8 @@ const INTER_TIGHT_FAMILY = "Inter Tight"
 const LEGACY_FONT_CSS_USER_AGENT =
   "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36"
 
+const FONT_CACHE_REVALIDATE = 60 * 60 * 24 * 7
+
 function extractInterTightFontUrl(css: string): string | null {
   const match = css.match(
     /src: url\(([^)]+)\) format\('(?:opentype|truetype)'\)/,
@@ -22,7 +24,7 @@ export async function loadInterTight(weight: number): Promise<ArrayBuffer> {
     `https://fonts.googleapis.com/css2?family=${INTER_TIGHT_FAMILY.replace(/ /g, "+")}:wght@${weight}`,
     {
       headers: { "User-Agent": LEGACY_FONT_CSS_USER_AGENT },
-      next: { revalidate: 60 * 60 * 24 * 7 },
+      next: { revalidate: FONT_CACHE_REVALIDATE },
     },
   )
 
@@ -42,7 +44,9 @@ export async function loadInterTight(weight: number): Promise<ArrayBuffer> {
     )
   }
 
-  const fontRes = await fetch(fontUrl)
+  const fontRes = await fetch(fontUrl, {
+    next: { revalidate: FONT_CACHE_REVALIDATE },
+  })
   if (!fontRes.ok) {
     throw new Error(`Failed to fetch Inter Tight weight ${weight}`)
   }

@@ -1,5 +1,7 @@
-import { notFound } from "next/navigation"
+import { headers } from "next/headers"
+import { notFound, redirect } from "next/navigation"
 import { CardDetailPageClient } from "@/components/dashboard/card-detail-page"
+import { buildLoginRedirectUrl } from "@/lib/safe-redirect-path"
 import { getOwnerCardDetail } from "@/lib/owner-cards"
 import { createClient } from "@/lib/supabase/server"
 
@@ -14,7 +16,12 @@ export default async function CardDetailPage({ params }: PageProps) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  const detail = await getOwnerCardDetail(supabase, user!.id, id)
+  if (!user) {
+    const headersList = await headers()
+    redirect(buildLoginRedirectUrl(headersList.get("x-pathname")))
+  }
+
+  const detail = await getOwnerCardDetail(supabase, user.id, id)
   if (!detail) {
     notFound()
   }

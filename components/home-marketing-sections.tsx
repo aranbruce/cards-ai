@@ -100,7 +100,7 @@ export function HomeMarketingSections({
                 ))}
               </ol>
               <div className="mt-8">
-                <a href="/slack/install">
+                <Link href="/slack/install">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     alt="Add to Slack"
@@ -109,7 +109,7 @@ export function HomeMarketingSections({
                     src="https://platform.slack-edge.com/img/add_to_slack.png"
                     srcSet="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x"
                   />
-                </a>
+                </Link>
               </div>
             </div>
 

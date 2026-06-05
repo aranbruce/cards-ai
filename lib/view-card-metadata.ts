@@ -20,7 +20,7 @@ function shareCardTitle(
   const headline = card.copy_headline?.trim()
   if (headline) return headline
   const recipient = card.recipient_name?.trim()
-  if (recipient) return fallback.replace("{name}", recipient)
+  if (recipient) return fallback.replace("{name}", () => recipient)
   return "Your greeting card"
 }
 
@@ -37,7 +37,7 @@ function shareCardDescription(
   const recipient = card.recipient_name?.trim()
   const sender = card.sender_name?.trim()
   if (recipient) {
-    return `${intro.replace("{name}", recipient)}${sender ? ` from ${sender}` : ""}.`
+    return `${intro.replace("{name}", () => recipient)}${sender ? ` from ${sender}` : ""}.`
   }
   return DEFAULT_DESCRIPTION
 }

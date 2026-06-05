@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef, type ReactNode } from "react"
+import { useState, useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
 import { createClient } from "@/lib/supabase/client"
 import { CardTypeSelector } from "@/components/card-type-selector"
@@ -49,7 +49,7 @@ interface CardData {
 
 type Step = "select-type" | "details"
 
-export function CreateCardPageClient({ intro }: { intro: ReactNode }) {
+export function CreateCardPageClient() {
   const router = useRouter()
   const [supabase] = useState(() => createClient())
   const [step, setStep] = useState<Step>("select-type")
@@ -365,7 +365,6 @@ export function CreateCardPageClient({ intro }: { intro: ReactNode }) {
       {/* Select type — constrained width */}
       {step === "select-type" && (
         <div className="mx-auto max-w-4xl p-6 md:p-10">
-          {intro}
           <CardTypeSelector onSelect={handleCardTypeSelect} isGuest={isGuest} />
         </div>
       )}

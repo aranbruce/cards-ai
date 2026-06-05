@@ -1,5 +1,4 @@
 import type { Metadata } from "next"
-import { CreatePageIntro } from "@/components/create-page-intro"
 import { buildPageMetadata } from "@/lib/site-metadata"
 import { CreateCardPageClient } from "./create-card-client"
 
@@ -11,5 +10,5 @@ export const metadata: Metadata = buildPageMetadata({
 })
 
 export default function CreatePage() {
-  return <CreateCardPageClient intro={<CreatePageIntro />} />
+  return <CreateCardPageClient />
 }

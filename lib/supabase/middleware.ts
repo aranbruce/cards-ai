@@ -39,7 +39,7 @@ export async function updateSession(request: NextRequest) {
       new URL(buildLoginRedirectUrl(pathname), request.url),
     )
     supabaseResponse.cookies.getAll().forEach((cookie) => {
-      redirectResponse.cookies.set(cookie.name, cookie.value)
+      redirectResponse.cookies.set(cookie)
     })
     return redirectResponse
   }

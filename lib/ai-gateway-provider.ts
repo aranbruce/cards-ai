@@ -1,8 +1,9 @@
 import { createGateway } from "@ai-sdk/gateway"
 import { getAppUrl } from "@/lib/app-url"
+import { SITE_NAME } from "@/lib/site-metadata"
 
 /** Human-readable app name for Vercel AI Gateway attribution (`x-title`). */
-export const AI_GATEWAY_APP_TITLE = "cardshareAI"
+export const AI_GATEWAY_APP_TITLE = SITE_NAME
 
 /**
  * Headers for Vercel AI Gateway app attribution.

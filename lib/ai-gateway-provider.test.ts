@@ -10,7 +10,7 @@ describe("getAiGatewayAttributionHeaders", () => {
     vi.unstubAllEnvs()
   })
 
-  it("uses NEXT_PUBLIC_APP_URL as http-referer and cardshareAI as x-title", () => {
+  it("uses NEXT_PUBLIC_APP_URL as http-referer and CardShareAI as x-title", () => {
     vi.stubEnv("NEXT_PUBLIC_APP_URL", "https://cardshare.ai")
 
     expect(getAiGatewayAttributionHeaders()).toEqual({

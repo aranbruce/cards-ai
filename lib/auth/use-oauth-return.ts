@@ -9,6 +9,7 @@ import {
   AUTH_SESSION_NOT_READY_MESSAGE,
   waitForAuthUser,
 } from "@/lib/persist-pending-card-after-auth"
+import { buildAuthPageUrlWithoutOAuth } from "@/lib/auth/oauth-return-url"
 import { resolveSafePostAuthRedirectPath } from "@/lib/safe-redirect-path"
 import { captureAuthEvent } from "@/lib/posthog-client"
 import type { OAuthReturnPath } from "@/lib/auth/oauth-sign-in"
@@ -61,12 +62,15 @@ export function useOAuthReturn({
         setLoading(false)
         if (authResult.reason === "error") {
           setError(authResult.error)
+          router.replace(buildAuthPageUrlWithoutOAuth(returnPath, searchParams))
           return
         }
-        setError(AUTH_SESSION_NOT_READY_MESSAGE)
         if (hasPendingCard) {
+          setError(AUTH_SESSION_NOT_READY_MESSAGE)
           router.replace("/create?action=save")
+          return
         }
+        router.replace(buildAuthPageUrlWithoutOAuth(returnPath, searchParams))
         return
       }
 

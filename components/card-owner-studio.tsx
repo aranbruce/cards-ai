@@ -9,7 +9,11 @@ import {
   useRef,
   useState,
 } from "react"
+import Link from "next/link"
+import { ChevronLeft } from "lucide-react"
+import { CardNotFoundPanel } from "@/components/card-not-found"
 import { Alert, AlertDescription } from "@/components/ui/alert"
+import { Button } from "@/components/ui/button"
 import { Card3D } from "@/components/card-3d"
 import type { Contribution } from "@/lib/card-body"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -563,19 +567,40 @@ export const CardOwnerStudio = forwardRef<
     return <Skeleton className="card-cover-skeleton" />
   }
 
+  if (!card) {
+    if (error && error !== "Card not found") {
+      return (
+        <Alert variant="destructive">
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )
+    }
+
+    return (
+      <CardNotFoundPanel
+        description="This card may have been deleted or you may not have permission to view it."
+        actions={
+          <div className="flex flex-col gap-2 sm:flex-row">
+            <Button asChild variant="outline">
+              <Link href="/dashboard">
+                <ChevronLeft />
+                Back to dashboard
+              </Link>
+            </Button>
+            <Button asChild>
+              <Link href="/create">Create a new card</Link>
+            </Button>
+          </div>
+        }
+      />
+    )
+  }
+
   if (error) {
     return (
       <Alert variant="destructive">
         <AlertDescription>{error}</AlertDescription>
       </Alert>
-    )
-  }
-
-  if (!card) {
-    return (
-      <div className="flex min-h-[320px] items-center justify-center">
-        <p className="text-sm text-muted-foreground">Card not found</p>
-      </div>
     )
   }
 

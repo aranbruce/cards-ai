@@ -129,6 +129,7 @@ export const CardOwnerStudio = forwardRef<
     unusedExtraPagesDetected,
     loading,
     error,
+    cardNotFound,
   } = useCardData(cardId, reloadNonce, initialSnapshot)
 
   const [isRegeneratingHeadline, setIsRegeneratingHeadline] = useState(false)
@@ -568,7 +569,7 @@ export const CardOwnerStudio = forwardRef<
   }
 
   if (!card) {
-    if (error && error !== "Card not found") {
+    if (error && !cardNotFound) {
       return (
         <Alert variant="destructive">
           <AlertDescription>{error}</AlertDescription>

@@ -46,6 +46,7 @@ export function useCardData(
   )
   const [loading, setLoading] = useState(!snapshotIsComplete(initialSnapshot))
   const [error, setError] = useState("")
+  const [cardNotFound, setCardNotFound] = useState(false)
 
   useEffect(() => {
     if (skipInitialFetchRef.current && reloadNonce === undefined) {
@@ -63,6 +64,7 @@ export function useCardData(
     void (async () => {
       setLoading(true)
       setError("")
+      setCardNotFound(false)
       if (!refreshingPartialSnapshot) {
         setCard(null)
         setContributions([])
@@ -85,6 +87,7 @@ export function useCardData(
           unusedExtraPagesDetected?: boolean
         }>(`/api/cards/${encodeURIComponent(cardId)}`, { cache: "no-store" })
         if (cancelled) return
+        setCardNotFound(false)
         setCard(c)
         setContributions(contributionsFromApi(list))
         setContributionsLoaded(contributionsLoaded !== false)
@@ -100,6 +103,11 @@ export function useCardData(
         setContributionsLoaded(false)
         setDisplayExtraPages(0)
         setUnusedExtraPagesDetected(false)
+        const notFound = e instanceof ApiError && e.status === 404
+        setCardNotFound(notFound)
+        if (notFound) {
+          setCard(null)
+        }
         const message =
           e instanceof ApiError && e.status === 401
             ? "You need to be signed in to open this card."
@@ -127,5 +135,6 @@ export function useCardData(
     unusedExtraPagesDetected,
     loading,
     error,
+    cardNotFound,
   }
 }

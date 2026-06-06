@@ -7,14 +7,16 @@ export default function ContributeCardNotFound() {
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <AppHeader />
-      <CardNotFoundPanel
-        description="This link may be invalid or the card is no longer collecting messages."
-        actions={
-          <Button asChild>
-            <Link href="/create">Create a card</Link>
-          </Button>
-        }
-      />
+      <main className="flex flex-1 flex-col">
+        <CardNotFoundPanel
+          description="This link may be invalid or the card is no longer collecting messages."
+          actions={
+            <Button asChild>
+              <Link href="/create">Create a card</Link>
+            </Button>
+          }
+        />
+      </main>
     </div>
   )
 }

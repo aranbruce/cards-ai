@@ -568,7 +568,7 @@ export const CardOwnerStudio = forwardRef<
     return <Skeleton className="card-cover-skeleton" />
   }
 
-  if (!card) {
+  if (cardNotFound || !card) {
     if (error && !cardNotFound) {
       return (
         <Alert variant="destructive">

@@ -103,7 +103,11 @@ export function useCardData(
         setContributionsLoaded(false)
         setDisplayExtraPages(0)
         setUnusedExtraPagesDetected(false)
-        setCardNotFound(e instanceof ApiError && e.status === 404)
+        const notFound = e instanceof ApiError && e.status === 404
+        setCardNotFound(notFound)
+        if (notFound) {
+          setCard(null)
+        }
         const message =
           e instanceof ApiError && e.status === 401
             ? "You need to be signed in to open this card."

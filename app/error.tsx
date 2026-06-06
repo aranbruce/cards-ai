@@ -1,7 +1,9 @@
 "use client"
 
+import { useEffect } from "react"
 import Link from "next/link"
 import { AlertCircle } from "lucide-react"
+import posthog from "posthog-js"
 import { EmptyContent } from "@/components/empty-content"
 import { MarketingHeader } from "@/components/marketing-header"
 import { SiteFooter } from "@/components/site-footer"
@@ -12,7 +14,15 @@ type ErrorPageProps = {
   reset: () => void
 }
 
-export default function ErrorPage({ reset }: ErrorPageProps) {
+export default function ErrorPage({ error, reset }: ErrorPageProps) {
+  useEffect(() => {
+    console.error(error)
+    posthog.captureException(
+      error,
+      error.digest ? { digest: error.digest } : undefined,
+    )
+  }, [error])
+
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <MarketingHeader />

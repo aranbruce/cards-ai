@@ -14,7 +14,9 @@ import { Card3D } from "@/components/card-3d"
 import type { Contribution } from "@/lib/card-body"
 import { Skeleton } from "@/components/ui/skeleton"
 import { GiphyPicker } from "@/components/card-3d/giphy-picker"
-import { randomPresetTextColor } from "@/lib/message-text-color-presets"
+import {
+  DEFAULT_PRESET_TEXT_COLOR,
+} from "@/lib/message-text-color-presets"
 import {
   storedFontFamilyFromPresetId,
   type MessageFontPresetId,
@@ -81,6 +83,8 @@ export type CardOwnerStudioProps = {
   reloadNonce?: number
   /** Server-prefetched card data; skips the initial client fetch when provided. */
   initialSnapshot?: OwnerCardDetail
+  /** Server-chosen ink color for new compose drafts (avoids hydration mismatch). */
+  initialDraftTextColor: string
   /** Fired when the active contribution formatting state changes (null = no note selected). */
   onActiveContributionChange?: (
     state: ActiveContributionFormattingState | null,
@@ -104,6 +108,7 @@ export const CardOwnerStudio = forwardRef<
     initialCardPage = 0,
     reloadNonce,
     initialSnapshot,
+    initialDraftTextColor,
     onActiveContributionChange,
     onRegeneratingImageChange,
     onRegeneratingHeadlineChange,
@@ -182,7 +187,7 @@ export const CardOwnerStudio = forwardRef<
     pageIndex: number
     giphyUrl: string | null
   }>(() => ({
-    textColor: randomPresetTextColor(),
+    textColor: initialDraftTextColor || DEFAULT_PRESET_TEXT_COLOR,
     fontSize: 16,
     fontFamily: null,
     rotationDegrees: 0,

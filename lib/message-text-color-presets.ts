@@ -17,6 +17,9 @@ export const MESSAGE_TEXT_COLOR_PRESETS = [
   "#a21caf",
 ] as const
 
+/** Stable default for client state before a server-provided color is available. */
+export const DEFAULT_PRESET_TEXT_COLOR = MESSAGE_TEXT_COLOR_PRESETS[0]
+
 export function randomPresetTextColor(): string {
   const i = Math.floor(Math.random() * MESSAGE_TEXT_COLOR_PRESETS.length)
   return MESSAGE_TEXT_COLOR_PRESETS[i]!

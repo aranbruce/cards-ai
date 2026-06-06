@@ -4,6 +4,7 @@ import { ContributeCardPageClient } from "@/app/contribute/[linkId]/contribute-c
 import { AppHeader } from "@/components/app-header"
 import { Button } from "@/components/ui/button"
 import { getContributeCardByLinkId } from "@/lib/contribute-card"
+import { randomPresetTextColor } from "@/lib/message-text-color-presets"
 import { FileX2 } from "lucide-react"
 
 type PageProps = {
@@ -44,5 +45,13 @@ export default async function ContributeCardPage({ params }: PageProps) {
     notFound()
   }
 
-  return <ContributeCardPageClient linkId={linkId} initialData={initialData} />
+  const initialComposeTextColor = randomPresetTextColor()
+
+  return (
+    <ContributeCardPageClient
+      linkId={linkId}
+      initialData={initialData}
+      initialComposeTextColor={initialComposeTextColor}
+    />
+  )
 }

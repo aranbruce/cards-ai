@@ -14,9 +14,7 @@ import { Card3D } from "@/components/card-3d"
 import type { Contribution } from "@/lib/card-body"
 import { Skeleton } from "@/components/ui/skeleton"
 import { GiphyPicker } from "@/components/card-3d/giphy-picker"
-import {
-  DEFAULT_PRESET_TEXT_COLOR,
-} from "@/lib/message-text-color-presets"
+import { DEFAULT_PRESET_TEXT_COLOR } from "@/lib/message-text-color-presets"
 import {
   storedFontFamilyFromPresetId,
   type MessageFontPresetId,

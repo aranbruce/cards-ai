@@ -1,11 +1,11 @@
 import Link from "next/link"
-import { CardNotFoundPanel } from "@/components/card-not-found"
+import { EmptyContent } from "@/components/empty-content"
 import { Button } from "@/components/ui/button"
 
 export default function ViewCardNotFound() {
   return (
     <main className="flex flex-1 flex-col">
-      <CardNotFoundPanel
+      <EmptyContent
         description="This card may have been deleted or the link may be invalid."
         actions={
           <Button asChild>

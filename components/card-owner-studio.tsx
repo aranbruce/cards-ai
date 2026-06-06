@@ -11,7 +11,7 @@ import {
 } from "react"
 import Link from "next/link"
 import { ChevronLeft } from "lucide-react"
-import { CardNotFoundPanel } from "@/components/card-not-found"
+import { EmptyContent } from "@/components/empty-content"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
 import { Card3D } from "@/components/card-3d"
@@ -578,7 +578,7 @@ export const CardOwnerStudio = forwardRef<
     }
 
     return (
-      <CardNotFoundPanel
+      <EmptyContent
         description="This card may have been deleted or you may not have permission to view it."
         actions={
           <div className="flex flex-col gap-2 sm:flex-row">

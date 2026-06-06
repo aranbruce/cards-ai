@@ -1,12 +1,12 @@
 import Link from "next/link"
 import { ChevronLeft } from "lucide-react"
-import { CardNotFoundPanel } from "@/components/card-not-found"
+import { EmptyContent } from "@/components/empty-content"
 import { Button } from "@/components/ui/button"
 
 export default function DashboardCardNotFound() {
   return (
     <main className="flex flex-1 flex-col">
-      <CardNotFoundPanel
+      <EmptyContent
         description="This card may have been deleted or you may not have permission to view it."
         actions={
           <div className="flex flex-col gap-2 sm:flex-row">

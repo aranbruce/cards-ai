@@ -20,6 +20,7 @@ import {
   type MessageFontPresetId,
 } from "@/lib/message-font-presets"
 import { useCardData } from "@/hooks/use-card-data"
+import type { OwnerCardDetail } from "@/lib/owner-cards"
 import { useContributions } from "@/hooks/use-contributions"
 import { useDebouncedSave } from "@/hooks/use-debounced-save"
 import { apiPatch } from "@/lib/api-client"
@@ -78,6 +79,8 @@ export type CardOwnerStudioProps = {
   initialCardPage?: number
   /** Increment to trigger CardOwnerStudio to re-fetch card data from the server. */
   reloadNonce?: number
+  /** Server-prefetched card data; skips the initial client fetch when provided. */
+  initialSnapshot?: OwnerCardDetail
   /** Fired when the active contribution formatting state changes (null = no note selected). */
   onActiveContributionChange?: (
     state: ActiveContributionFormattingState | null,
@@ -100,6 +103,7 @@ export const CardOwnerStudio = forwardRef<
     cardId,
     initialCardPage = 0,
     reloadNonce,
+    initialSnapshot,
     onActiveContributionChange,
     onRegeneratingImageChange,
     onRegeneratingHeadlineChange,
@@ -118,7 +122,7 @@ export const CardOwnerStudio = forwardRef<
     unusedExtraPagesDetected,
     loading,
     error,
-  } = useCardData(cardId, reloadNonce)
+  } = useCardData(cardId, reloadNonce, initialSnapshot)
 
   const [isRegeneratingHeadline, setIsRegeneratingHeadline] = useState(false)
   const [isRegeneratingImage, setIsRegeneratingImage] = useState(false)

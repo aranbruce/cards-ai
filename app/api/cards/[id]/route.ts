@@ -1,9 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import { CONTRIBUTION_PUBLIC_COLUMNS } from "@/lib/contribution-public-columns"
-import {
-  normalizeStoredExtraPages,
-  ownerExtraPagesForStudio,
-} from "@/lib/card-extra-pages"
+import { getOwnerCardDetail } from "@/lib/owner-cards"
 import { createClient } from "@/lib/supabase/server"
 
 function extractAllowedCardUpdates(raw: unknown): Record<string, unknown> {
@@ -55,53 +51,12 @@ export async function GET(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    // Use * so older DBs without newer columns still return the card; an explicit column
-    // list 400s when the schema lags migrations.
-    const { data, error } = await supabase
-      .from("cards")
-      .select("*")
-      .eq("id", id)
-      .eq("user_id", user.id)
-      .single()
-
-    if (error) {
+    const detail = await getOwnerCardDetail(supabase, user.id, id)
+    if (!detail) {
       return NextResponse.json({ error: "Card not found" }, { status: 404 })
     }
 
-    // Public columns only (omits edit_token). Requires migrations that add listed columns.
-    const { data: contributions, error: contribErr } = await supabase
-      .from("card_contributions")
-      .select(CONTRIBUTION_PUBLIC_COLUMNS)
-      .eq("card_id", id)
-      .order("created_at", { ascending: true })
-
-    const card = {
-      ...data,
-      extra_pages: normalizeStoredExtraPages(data.extra_pages),
-    }
-
-    if (contribErr) {
-      console.error("[GET /api/cards/[id]] contributions:", contribErr)
-      return NextResponse.json({
-        card,
-        contributions: [],
-        contributionsLoaded: false,
-        displayExtraPages: card.extra_pages,
-        unusedExtraPagesDetected: false,
-      })
-    }
-
-    const rows = contributions ?? []
-    const { displayExtraPages, unusedExtraPagesDetected } =
-      ownerExtraPagesForStudio(card.extra_pages, rows, true)
-
-    return NextResponse.json({
-      card,
-      contributions: rows,
-      contributionsLoaded: true,
-      displayExtraPages,
-      unusedExtraPagesDetected,
-    })
+    return NextResponse.json(detail)
   } catch (error) {
     console.error("Error fetching card:", error)
     return NextResponse.json({ error: "Failed to fetch card" }, { status: 500 })

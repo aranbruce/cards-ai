@@ -10,7 +10,7 @@ const CARD_TYPES = [
     label: "Birthday",
     hue: 18,
     emoji: "🎂",
-    desc: "Warm, celebratory copy. Often lands best with a signature collection.",
+    desc: "Warm, upbeat copy for another trip around the sun.",
     tag: "Most popular",
   },
   {
@@ -18,7 +18,7 @@ const CARD_TYPES = [
     label: "Thank You",
     hue: 40,
     emoji: "🙏",
-    desc: "Sincere without being saccharine. Great one-sender or group.",
+    desc: "Genuine appreciation without the corporate fluff.",
     tag: "Heartfelt",
   },
   {
@@ -26,7 +26,7 @@ const CARD_TYPES = [
     label: "Congratulations",
     hue: 70,
     emoji: "🎉",
-    desc: "For promotions, engagements, and new beginnings. Energetic and genuine.",
+    desc: "Celebrate promotions, engagements, new babies, and other milestones.",
     tag: "Celebratory",
   },
   {
@@ -34,15 +34,23 @@ const CARD_TYPES = [
     label: "Holiday",
     hue: 150,
     emoji: "🎄",
-    desc: "For the annual list. Each copy can be personalized by name.",
+    desc: "Season's greetings for colleagues, clients, or your annual list.",
     tag: "Seasonal",
+  },
+  {
+    id: "sympathy",
+    label: "Sympathy",
+    hue: 310,
+    emoji: "💐",
+    desc: "Compassionate words for loss or difficult moments.",
+    tag: "Thoughtful",
   },
   {
     id: "custom",
     label: "Custom",
     hue: 230,
     emoji: "✏️",
-    desc: "Describe it in one sentence. We figure out the tone.",
+    desc: "Anything else you can think of. Describe it and we'll handle the rest.",
     tag: "Flexible",
   },
 ]

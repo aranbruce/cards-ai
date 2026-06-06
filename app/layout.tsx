@@ -1,6 +1,14 @@
 import type { Metadata } from "next"
 import { Inter_Tight, JetBrains_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
+import { SiteJsonLd } from "@/components/json-ld"
+import {
+  DEFAULT_DESCRIPTION,
+  DEFAULT_OG_IMAGE_PATH,
+  getMetadataBase,
+  SITE_NAME,
+  SITE_TAGLINE,
+} from "@/lib/site-metadata"
 import "./globals.css"
 
 const interTight = Inter_Tight({
@@ -15,8 +23,26 @@ const jetBrainsMono = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
-  title: "CardShareAI",
-  description: "Create beautiful greeting cards with AI",
+  metadataBase: getMetadataBase(),
+  title: {
+    default: SITE_NAME,
+    template: `%s | ${SITE_NAME}`,
+  },
+  description: DEFAULT_DESCRIPTION,
+  applicationName: SITE_NAME,
+  openGraph: {
+    type: "website",
+    siteName: SITE_NAME,
+    title: SITE_NAME,
+    description: SITE_TAGLINE,
+    images: [{ url: DEFAULT_OG_IMAGE_PATH, alt: SITE_NAME }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_NAME,
+    description: SITE_TAGLINE,
+    images: [DEFAULT_OG_IMAGE_PATH],
+  },
   icons: {
     icon: [
       {
@@ -47,6 +73,7 @@ export default function RootLayout({
         className={`${interTight.variable} ${jetBrainsMono.variable} font-sans antialiased`}
         style={{ fontFamily: "var(--font-inter-tight), system-ui, sans-serif" }}
       >
+        <SiteJsonLd />
         {children}
         {process.env.NODE_ENV === "production" && <Analytics />}
       </body>

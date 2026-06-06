@@ -1,13 +1,16 @@
-"use client"
+import type { Metadata } from "next"
+import { privatePageMetadata } from "@/lib/site-metadata"
 
-import { useSearchParams } from "next/navigation"
-import { Suspense } from "react"
-import { AppHeader } from "@/components/app-header"
+export const metadata: Metadata = privatePageMetadata("Slack app installed")
 
-function InstalledContent() {
-  const searchParams = useSearchParams()
-  const team = searchParams.get("team")
-  const error = searchParams.get("error")
+type SlackInstalledPageProps = {
+  searchParams: Promise<{ team?: string; error?: string }>
+}
+
+export default async function SlackInstalledPage({
+  searchParams,
+}: SlackInstalledPageProps) {
+  const { team, error } = await searchParams
 
   if (error) {
     return (
@@ -62,16 +65,5 @@ function InstalledContent() {
         </a>
       </div>
     </main>
-  )
-}
-
-export default function SlackInstalledPage() {
-  return (
-    <div className="min-h-screen bg-background">
-      <AppHeader />
-      <Suspense fallback={null}>
-        <InstalledContent />
-      </Suspense>
-    </div>
   )
 }

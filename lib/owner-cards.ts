@@ -21,7 +21,7 @@ const OWNER_CARD_LIST_COLUMNS =
   "id, recipient_name, sender_name, card_type, copy_headline, image_url, created_at"
 
 const OWNER_CARD_DETAIL_COLUMNS =
-  "id, card_type, recipient_name, recipient_email, sender_name, copy_headline, copy_message, copy_signoff, image_url, extra_pages, sent_at, contributor_link_id"
+  "id, card_type, recipient_name, recipient_email, sender_name, copy_headline, copy_message, image_url, extra_pages, sent_at, contributor_link_id"
 
 export type OwnerCardDetailCard = {
   id: string
@@ -31,7 +31,6 @@ export type OwnerCardDetailCard = {
   sender_name: string
   copy_headline: string
   copy_message: string
-  copy_signoff?: string
   image_url: string
   extra_pages?: number
   sent_at?: string | null

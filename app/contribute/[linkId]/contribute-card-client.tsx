@@ -9,7 +9,7 @@ import { Card3D } from "@/components/card-3d"
 import { GiphyPicker } from "@/components/card-3d/giphy-picker"
 import { forCardDisplay } from "@/lib/card-body"
 import type { CardComposeDraft } from "@/lib/card-compose-draft"
-import { randomPresetTextColor } from "@/lib/message-text-color-presets"
+import { DEFAULT_PRESET_TEXT_COLOR } from "@/lib/message-text-color-presets"
 import type { Contribution } from "@/lib/card-body"
 import type { ContributeCardResult } from "@/lib/contribute-card"
 import Link from "next/link"
@@ -49,11 +49,19 @@ function readContributeTokensFromStorage(
 export function ContributeCardPageClient({
   linkId,
   initialData,
+  initialComposeTextColor,
 }: {
   linkId: string
   initialData: ContributeCardResult | null
+  initialComposeTextColor: string
 }) {
-  return <ContributeCardPageInner linkId={linkId} initialData={initialData} />
+  return (
+    <ContributeCardPageInner
+      linkId={linkId}
+      initialData={initialData}
+      initialComposeTextColor={initialComposeTextColor}
+    />
+  )
 }
 
 interface CardData {
@@ -71,9 +79,11 @@ interface CardData {
 function ContributeCardPageInner({
   linkId,
   initialData,
+  initialComposeTextColor,
 }: {
   linkId: string
   initialData: ContributeCardResult | null
+  initialComposeTextColor: string
 }) {
   const [card, setCard] = useState<CardData | null>(
     initialData?.card
@@ -103,7 +113,7 @@ function ContributeCardPageInner({
   const [preComposeDraft, setPreComposeDraft] = useState(() => ({
     message: "",
     giphyUrl: null as string | null,
-    textColor: randomPresetTextColor(),
+    textColor: initialComposeTextColor || DEFAULT_PRESET_TEXT_COLOR,
     fontSize: undefined as number | undefined,
     fontFamily: null as string | null,
     rotationDegrees: 0,

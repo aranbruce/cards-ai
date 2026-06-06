@@ -3,6 +3,7 @@ import { notFound, redirect } from "next/navigation"
 import { CardDetailPageClient } from "@/components/dashboard/card-detail-page"
 import { buildLoginRedirectUrl } from "@/lib/safe-redirect-path"
 import { getOwnerCardDetail } from "@/lib/owner-cards"
+import { randomPresetTextColor } from "@/lib/message-text-color-presets"
 import { createClient } from "@/lib/supabase/server"
 
 type PageProps = {
@@ -26,5 +27,13 @@ export default async function CardDetailPage({ params }: PageProps) {
     notFound()
   }
 
-  return <CardDetailPageClient cardId={id} initialData={detail} />
+  const initialDraftTextColor = randomPresetTextColor()
+
+  return (
+    <CardDetailPageClient
+      cardId={id}
+      initialData={detail}
+      initialDraftTextColor={initialDraftTextColor}
+    />
+  )
 }

@@ -67,11 +67,13 @@ function CardDetailLayout({
 export type CardDetailPageClientProps = {
   cardId: string
   initialData: OwnerCardDetail
+  initialDraftTextColor: string
 }
 
 export function CardDetailPageClient({
   cardId,
   initialData,
+  initialDraftTextColor,
 }: CardDetailPageClientProps) {
   const [card, setCard] = useState<OwnerCardDetailCard>(initialData.card)
   const [reloadNonce, setReloadNonce] = useState<number | undefined>(undefined)
@@ -408,6 +410,7 @@ export function CardDetailPageClient({
             initialCardPage={0}
             reloadNonce={reloadNonce}
             initialSnapshot={initialData}
+            initialDraftTextColor={initialDraftTextColor}
             onActiveContributionChange={setActiveContribution}
             onRegeneratingImageChange={setIsRegeneratingImage}
             onRegeneratingHeadlineChange={setIsRegeneratingHeadline}

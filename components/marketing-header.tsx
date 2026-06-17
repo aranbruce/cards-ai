@@ -37,7 +37,9 @@ export function MarketingHeader() {
           <Button asChild size="sm">
             <Link href="/create">
               Start a card
-              <ArrowRight aria-hidden />
+              <span className="inline-flex">
+                <ArrowRight aria-hidden />
+              </span>
             </Link>
           </Button>
         </div>

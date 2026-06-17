@@ -127,7 +127,7 @@ function LoginFormInner() {
   return (
     <>
       <AuthPageHeader
-        title="Welcome back."
+        title="Welcome back"
         description={
           <>
             New here?{" "}
@@ -141,7 +141,6 @@ function LoginFormInner() {
             >
               Create an account
             </Link>
-            .
           </>
         }
       />

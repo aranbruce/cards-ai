@@ -7,7 +7,8 @@ import { ChipButton } from "@/components/ui/chip-button"
 import { Input } from "@/components/ui/input"
 import { Spinner } from "@/components/ui/spinner"
 import { Textarea } from "@/components/ui/textarea"
-import { ChevronLeft, Paperclip, Sparkles, X } from "lucide-react"
+import { Logo } from "@/components/logo"
+import { ArrowLeft, Paperclip, Sparkles, X } from "lucide-react"
 import { handleImageFileChange } from "@/lib/handle-image-file-change"
 
 const TONES = ["Warm", "Playful", "Dry", "Sincere", "Short"]
@@ -95,15 +96,15 @@ export function CardDetailsForm({
   }
 
   return (
-    <aside className="flex flex-col border-r border-border bg-card px-7 py-8">
-      {/* Back link */}
+    <aside className="flex flex-col border-r border-line bg-card px-7 py-4">
+      <Logo className="self-start" />
       <Button
         variant="ghost"
         size="sm"
         onClick={onBack}
-        className="-ml-2 self-start text-muted-foreground"
+        className="mt-6 -ml-4 self-start text-muted-foreground"
       >
-        <ChevronLeft />
+        <ArrowLeft />
         Back to occasions
       </Button>
 
@@ -113,13 +114,13 @@ export function CardDetailsForm({
           Tell us
           <br />
           {recipientName ? (
-            <>about {recipientName}.</>
+            <>about {recipientName}</>
           ) : (
-            <span className="text-muted-foreground">about who.</span>
+            <span className="text-muted-foreground">about who</span>
           )}
         </h2>
         <p className="mt-2.5 text-sm text-muted-foreground">
-          You can regenerate anything after this step.
+          You can regenerate anything after this step
         </p>
       </div>
 
@@ -181,7 +182,7 @@ export function CardDetailsForm({
             id="context"
             value={userContext}
             onChange={(e) => setUserContext(e.target.value)}
-            placeholder="Any details to personalise the card? e.g. loves botanical illustration, just got promoted, turning 30."
+            placeholder="Any details to personalise the card? e.g. loves botanical illustration, just got promoted, turning 30"
             disabled={isLoading}
             variant="card"
           />
@@ -331,10 +332,7 @@ export function CardDetailsForm({
                   Generating…
                 </>
               ) : (
-                <>
-                  <Sparkles />
-                  Generate card
-                </>
+                <>Generate card</>
               )}
             </Button>
           )}

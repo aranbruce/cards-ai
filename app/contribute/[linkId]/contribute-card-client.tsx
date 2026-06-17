@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState, useCallback, useRef, useMemo } from "react"
-import { ArrowUp, ChevronLeft, FileX2 } from "lucide-react"
+import { ArrowLeft, ArrowUp, FileX2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Spinner } from "@/components/ui/spinner"
@@ -729,7 +729,7 @@ function ContributeCardPageInner({
         </div>
         <Button asChild variant="outline">
           <Link href="/">
-            <ChevronLeft />
+            <ArrowLeft />
             Go home
           </Link>
         </Button>
@@ -738,10 +738,10 @@ function ContributeCardPageInner({
   }
 
   const instructionLine = card.sent_at
-    ? "The card may already be with the recipient. You can still edit your note from this device."
+    ? "The card may already be with the recipient. You can still edit your note from this device"
     : canPlaceNewGuestMessage
-      ? "Flip to the inside and click anywhere to place your note."
-      : "Flip to the inside to find and edit your note."
+      ? "Flip to the inside and click anywhere to place your note"
+      : "Flip to the inside to find and edit your note"
 
   return (
     <MessageFontVariables className="flex min-h-screen flex-col bg-background">
@@ -762,8 +762,8 @@ function ContributeCardPageInner({
               </p>
               <h1 className="mt-1.5 text-[34px] leading-none font-semibold tracking-[-0.03em]">
                 {card.sent_at
-                  ? "Add your note."
-                  : `Sign ${card.recipient_name}'s card.`}
+                  ? "Add your note"
+                  : `Sign ${card.recipient_name}'s card`}
               </h1>
               <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
                 {instructionLine}
@@ -827,8 +827,8 @@ function ContributeCardPageInner({
         <NotePanel
           title={
             editableContrib !== null
-              ? "Edit your note."
-              : "Write something real."
+              ? "Edit your note"
+              : "Write something real"
           }
           values={
             editableContrib !== null

@@ -194,7 +194,7 @@ export function RecipientShareModal({
         onEmailUpdate?.(email)
         setPendingSentAt(response.sentAt ?? new Date().toISOString())
         setRecipientPersistenceWarning(
-          "Email was sent. We could not save the card status — use Save card status below.",
+          "Email was sent. We could not save the card status. Use Save card status below.",
         )
         setRecipientEmailSent(true)
         return
@@ -438,7 +438,7 @@ export function ContributorShareModal({
           response.failedEmails.map((entry) => entry.email).join(", "),
         )
         setContributorPartialNotice(
-          `Sent ${response.sentCount ?? 0} invite(s). ${response.failedEmails.length} could not be sent — update and retry below.`,
+          `Sent ${response.sentCount ?? 0} invite(s). ${response.failedEmails.length} could not be sent. Update and retry below.`,
         )
         return
       }

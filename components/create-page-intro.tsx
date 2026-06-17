@@ -9,8 +9,8 @@ export function CreatePageIntro() {
       </h1>
       <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground md:mx-0">
         Pick an occasion, describe the vibe, and let AI draft the cover and
-        headline. Share one link so everyone can add a note or GIF — no account
-        required to begin.
+        headline. Share one link so everyone can add a note or GIF. No account
+        required to begin
       </p>
     </header>
   )

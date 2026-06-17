@@ -135,7 +135,7 @@ function SignUpFormInner() {
   return (
     <>
       <AuthPageHeader
-        title="Create an account."
+        title="Create an account"
         description={
           <>
             Already have one?{" "}
@@ -149,7 +149,6 @@ function SignUpFormInner() {
             >
               Sign in
             </Link>
-            .
           </>
         }
       />

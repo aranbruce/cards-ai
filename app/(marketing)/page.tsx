@@ -28,20 +28,20 @@ export default async function HomePage() {
 
   return (
     <>
-      <section className="mx-auto items-center gap-12 px-6 py-20 md:px-15 lg:gap-16 lg:py-20">
-        <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-x-12 lg:grid-cols-[1.15fr_1fr]">
+      <section className="py-20">
+        <div className="mx-auto grid max-w-[1440px] grid-cols-1 items-center gap-x-12 px-6 md:px-15 lg:grid-cols-[1fr_1.15fr]">
           <div>
             <h1 className="mt-5 text-4xl leading-[0.95] font-semibold tracking-[-0.04em] text-balance sm:text-5xl md:text-6xl">
               Greeting cards,
               <br />
               <span className="text-muted-foreground">
-                generated in seconds,{" "}
+                generated in seconds, <br />
               </span>
-              <span className="text-brand">signed in minutes.</span>
+              <span className="text-brand">signed in minutes</span>
             </h1>
             <p className="mt-6 max-w-[520px] text-lg leading-relaxed text-muted-foreground">
               Describe the card or upload a photo. We design the cover, draft
-              the message, and pass it around for the whole team to sign.
+              the message, and pass it around for the whole team to sign
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button asChild size="lg">

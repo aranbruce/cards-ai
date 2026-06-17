@@ -33,7 +33,7 @@ import { getMessageFontFamily } from "@/lib/message-font-presets"
 import { GiphyPicker } from "./giphy-picker"
 import { GiphyCanvasGif } from "./giphy-canvas-gif"
 import Image from "next/image"
-import { ChevronLeft, ChevronRight } from "lucide-react"
+import { ArrowLeft, ArrowRight } from "lucide-react"
 import {
   useState,
   useRef,
@@ -627,7 +627,7 @@ export function Card3D({
             onClick={() => goToPage(currentPage - 1)}
             disabled={currentPage === 0}
           >
-            <ChevronLeft />
+            <ArrowLeft />
           </Button>
 
           <div className="flex items-center gap-2">
@@ -657,7 +657,7 @@ export function Card3D({
             disabled={!canGoRight}
             title={isLastPage && onAddPage ? "Add a new page" : "Next page"}
           >
-            <ChevronRight />
+            <ArrowRight />
           </Button>
         </div>
       ) : null}

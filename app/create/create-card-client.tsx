@@ -13,7 +13,9 @@ import { Spinner } from "@/components/ui/spinner"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Input } from "@/components/ui/input"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { AppHeader } from "@/components/app-header"
+import Link from "next/link"
+import { Logo } from "@/components/logo"
+import { ArrowLeft } from "lucide-react"
 import {
   hasPendingCard,
   savePendingCard,
@@ -341,37 +343,34 @@ export function CreateCardPageClient() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header — shown for select-type and preview, hidden in studio (which has its own back link) */}
-      {step !== "details" && (
-        <AppHeader
-          right={
-            !isGuest ? (
-              <Button
-                variant="ghost"
-                size="sm"
-                className="text-muted-foreground"
-                onClick={async () => {
-                  await supabase.auth.signOut()
-                  router.push("/")
-                }}
-              >
-                Sign out
-              </Button>
-            ) : undefined
-          }
-        />
-      )}
-
-      {/* Select type — constrained width */}
+      {/* Select type — logo + back above content, no sidebar */}
       {step === "select-type" && (
-        <div className="mx-auto max-w-4xl p-6 md:p-10">
-          <CardTypeSelector onSelect={handleCardTypeSelect} isGuest={isGuest} />
+        <div className="mx-auto max-w-[1440px] px-6 md:px-15">
+          {/* /mx-auto flex h-16 max-w-[1440px] items-center justify-between px-6 md:px-15 */}
+          <div className="flex h-16 items-center justify-between">
+            <Logo className="" />
+          </div>
+
+          <div className="mx-auto mt-10 max-w-4xl space-y-4">
+            <Button
+              asChild
+              variant="outline"
+              size="sm"
+              className="self-start text-muted-foreground"
+            >
+              <Link href={isGuest ? "/" : "/dashboard"}>
+                <ArrowLeft />
+                {isGuest ? "Back" : "Back to dashboard"}
+              </Link>
+            </Button>
+            <CardTypeSelector onSelect={handleCardTypeSelect} />
+          </div>
         </div>
       )}
 
       {/* Studio — full-width two-column layout */}
       {step === "details" && (
-        <div className="grid min-h-dvh grid-cols-1 md:grid-cols-[320px_1fr] lg:grid-cols-[420px_1fr]">
+        <div className="grid min-h-screen grid-cols-1 md:grid-cols-[320px_1fr] lg:grid-cols-[420px_1fr]">
           <CardDetailsForm
             cardType={selectedType}
             onSubmit={handleDetailsSubmit}

@@ -20,7 +20,6 @@ export default function SlackInstallPage() {
           <code className="rounded bg-muted px-1 py-0.5 text-sm">
             /cardshareai
           </code>
-          .
         </p>
       </div>
 

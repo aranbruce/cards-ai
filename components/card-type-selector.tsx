@@ -1,16 +1,12 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
-import { ChevronLeft } from "lucide-react"
-import Link from "next/link"
-
 const CARD_TYPES = [
   {
     id: "birthday",
     label: "Birthday",
     hue: 18,
     emoji: "🎂",
-    desc: "Warm, upbeat copy for another trip around the sun.",
+    desc: "Warm, upbeat copy for another trip around the sun",
     tag: "Most popular",
   },
   {
@@ -18,7 +14,7 @@ const CARD_TYPES = [
     label: "Thank You",
     hue: 40,
     emoji: "🙏",
-    desc: "Genuine appreciation without the corporate fluff.",
+    desc: "Genuine appreciation without the corporate fluff",
     tag: "Heartfelt",
   },
   {
@@ -26,7 +22,7 @@ const CARD_TYPES = [
     label: "Congratulations",
     hue: 70,
     emoji: "🎉",
-    desc: "Celebrate promotions, engagements, new babies, and other milestones.",
+    desc: "Celebrate promotions, engagements, new babies, and other milestones",
     tag: "Celebratory",
   },
   {
@@ -34,7 +30,7 @@ const CARD_TYPES = [
     label: "Holiday",
     hue: 150,
     emoji: "🎄",
-    desc: "Season's greetings for colleagues, clients, or your annual list.",
+    desc: "Season's greetings for colleagues, clients, or your annual list",
     tag: "Seasonal",
   },
   {
@@ -42,7 +38,7 @@ const CARD_TYPES = [
     label: "Sympathy",
     hue: 310,
     emoji: "💐",
-    desc: "Compassionate words for loss or difficult moments.",
+    desc: "Compassionate words for loss or difficult moments",
     tag: "Thoughtful",
   },
   {
@@ -50,7 +46,7 @@ const CARD_TYPES = [
     label: "Custom",
     hue: 230,
     emoji: "✏️",
-    desc: "Anything else you can think of. Describe it and we'll handle the rest.",
+    desc: "Anything else you can think of. Describe it and we'll handle the rest",
     tag: "Flexible",
   },
 ]
@@ -65,23 +61,12 @@ export function CardTypeSelector({
   return (
     <div className="mx-auto max-w-4xl">
       <div className="mb-10">
-        <Button asChild variant="outline" size="default">
-          <Link href={isGuest ? "/" : "/dashboard"}>
-            <ChevronLeft />
-            {isGuest ? "Back" : "Back to dashboard"}
-          </Link>
-        </Button>
-      </div>
-      <div className="mb-10">
-        <p className="font-mono text-[11px] tracking-[0.15em] text-muted-foreground uppercase">
-          Step 1 / 3
-        </p>
         <h2 className="mt-2.5 text-4xl font-semibold tracking-[-0.03em] md:text-5xl">
           What kind of card?
         </h2>
         <p className="mt-3 max-w-md text-base text-muted-foreground">
           Pick an occasion to set the tone. Everything is editable. This just
-          gives the AI a starting point.
+          gives the AI a starting point
         </p>
       </div>
 

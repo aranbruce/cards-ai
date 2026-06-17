@@ -948,8 +948,7 @@ export const CATEGORY_CONFIGS: Record<string, CategoryConfig> = {
     label: "Promotion cards",
     shortDesc: "New title, new chapter. Celebrate it as a group",
 
-    metaTitle:
-      "Group Promotion & Congratulations Cards Online: Everyone Signs",
+    metaTitle: "Group Promotion & Congratulations Cards Online: Everyone Signs",
     metaDescription:
       "Create a group promotion or congratulations card online. Share one link so the whole team signs, AI drafts the cover and note. Free to start.",
 
@@ -1122,8 +1121,7 @@ export const CATEGORY_CONFIGS: Record<string, CategoryConfig> = {
     label: "Kudos cards",
     shortDesc: "Recognition that's worth more than a thumbs-up",
 
-    metaTitle:
-      "Group Kudos Cards Online: Team Recognition That Actually Lands",
+    metaTitle: "Group Kudos Cards Online: Team Recognition That Actually Lands",
     metaDescription:
       "Create a group kudos card online for employee recognition and appreciation. Share one link so the whole team signs. AI drafts the cover and note. Free to start.",
 

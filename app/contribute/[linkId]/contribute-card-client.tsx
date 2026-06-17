@@ -826,9 +826,7 @@ function ContributeCardPageInner({
         {/* ── Right: writing panel ── */}
         <NotePanel
           title={
-            editableContrib !== null
-              ? "Edit your note"
-              : "Write something real"
+            editableContrib !== null ? "Edit your note" : "Write something real"
           }
           values={
             editableContrib !== null

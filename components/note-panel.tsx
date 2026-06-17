@@ -204,9 +204,7 @@ export function NotePanel(props: NotePanelProps) {
                 style={{
                   backgroundColor: color,
                   borderColor:
-                    values.textColor === color
-                      ? "var(--brand)"
-                      : "transparent",
+                    values.textColor === color ? "var(--brand)" : "transparent",
                   boxShadow:
                     values.textColor === color
                       ? "0 0 0 2px var(--background), 0 0 0 4px var(--brand)"

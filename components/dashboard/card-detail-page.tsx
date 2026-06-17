@@ -22,14 +22,7 @@ import {
   type ActiveContributionFormattingState,
   type CardOwnerStudioHandle,
 } from "@/components/card-owner-studio"
-import {
-  ArrowLeft,
-  Paperclip,
-  Send,
-  Sparkles,
-  UserPlus,
-  X,
-} from "lucide-react"
+import { ArrowLeft, Paperclip, Send, Sparkles, UserPlus, X } from "lucide-react"
 import { handleImageFileChange } from "@/lib/handle-image-file-change"
 import { NotePanel } from "@/components/note-panel"
 import { MessageFontVariables } from "@/components/message-font-variables"

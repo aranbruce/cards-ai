@@ -9,8 +9,16 @@ export const DEFAULT_DESCRIPTION =
 /** Default social preview (`app/opengraph-image.tsx`). */
 export const DEFAULT_OG_IMAGE_PATH = "/opengraph-image"
 
+function getCanonicalOrigin(): string {
+  const url = new URL(getAppUrl())
+
+  if (url.hostname === "cardshare.ai") url.hostname = "www.cardshare.ai"
+
+  return url.origin
+}
+
 export function getMetadataBase(): URL {
-  return new URL(`${getAppUrl()}/`)
+  return new URL(`${getCanonicalOrigin()}/`)
 }
 
 const noIndexRobots: Metadata["robots"] = {
@@ -56,7 +64,7 @@ export function buildPageMetadata({
   imageUrl?: string | null
   robots?: Metadata["robots"]
 }): Metadata {
-  const canonical = path ? `${getAppUrl()}${path}` : undefined
+  const canonical = path ? `${getCanonicalOrigin()}${path}` : undefined
 
   return {
     title,

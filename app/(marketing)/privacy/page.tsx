@@ -36,33 +36,33 @@ export default function PrivacyPage() {
       <h2>Information we collect</h2>
       <ul>
         <li>
-          <strong>Account information</strong> — such as your email address and
+          <strong>Account information</strong>: Such as your email address and
           sign-in details when you register or use Google or GitHub login.
         </li>
         <li>
-          <strong>Card content</strong> — recipient and sender names, headlines,
+          <strong>Card content</strong>: Recipient and sender names, headlines,
           messages, uploaded photos, GIFs, layout choices, and contributions
           from people who sign your card.
         </li>
         <li>
-          <strong>Link and session data</strong> — contributor links are
-          unlisted but not secret; anyone with the link can view or sign the
-          card depending on the page. We may store edit tokens in your browser
-          so you can update your own contribution from the same device.
+          <strong>Link and session data</strong>: Contributor links are unlisted
+          but not secret; anyone with the link can view or sign the card
+          depending on the page. We may store edit tokens in your browser so you
+          can update your own contribution from the same device.
         </li>
         <li>
-          <strong>Usage and diagnostics</strong> — pages visited, feature use,
+          <strong>Usage and diagnostics</strong>: Pages visited, feature use,
           and similar product analytics (for example via PostHog) to understand
           what works and fix problems.
         </li>
         <li>
-          <strong>AI processing</strong> — prompts and context you provide for
+          <strong>AI processing</strong>: Prompts and context you provide for
           headlines, messages, or cover art, plus the outputs our AI partners
           return. Do not include sensitive personal data you do not want
           processed for generation.
         </li>
         <li>
-          <strong>Slack integration</strong> — if you install our Slack app, we
+          <strong>Slack integration</strong>: If you install our Slack app, we
           receive workspace and user identifiers needed to run slash commands
           and deliver card links in Slack.
         </li>
@@ -84,7 +84,7 @@ export default function PrivacyPage() {
         We use trusted service providers for hosting, databases, authentication,
         email, analytics, AI, and (if you use it) Slack. They process data on
         our instructions to operate CardShareAI. When you share a card link, you
-        control who receives it — we do not publish cards in a public directory.
+        control who receives it. We do not publish cards in a public directory.
       </p>
 
       <h2>Retention</h2>

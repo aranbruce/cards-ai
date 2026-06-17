@@ -178,7 +178,7 @@ function registerHandlers(bot: Chat<BotAdapters>): void {
           })
         } catch (ephemeralErr) {
           console.error(
-            `[cardshareai] ephemeral FAIL: ${ephemeralErr instanceof Error ? ephemeralErr.message : String(ephemeralErr)} — falling back to DM`,
+            `[cardshareai] ephemeral FAIL: ${ephemeralErr instanceof Error ? ephemeralErr.message : String(ephemeralErr)}. Falling back to DM`,
           )
           const dm = await bot.openDM(event.user)
           await dm.post(msg)
@@ -257,7 +257,7 @@ function registerHandlers(bot: Chat<BotAdapters>): void {
             id: "context",
             label: "Context",
             placeholder:
-              "Any details to personalise the card? e.g. loves botanical illustration, just got promoted, turning 30.",
+              "Any details to personalise the card? e.g. loves botanical illustration, just got promoted, turning 30",
             multiline: true,
             optional: true,
           },

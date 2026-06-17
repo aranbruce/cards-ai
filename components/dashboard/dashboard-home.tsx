@@ -263,7 +263,7 @@ export function DashboardHome({ initialCards, user }: DashboardHomeProps) {
 
   return (
     <div className="flex flex-1">
-      <aside className="sticky top-14 hidden h-[calc(100dvh-56px)] w-[240px] shrink-0 flex-col border-r border-border bg-background md:flex">
+      <aside className="sticky top-14 hidden h-[calc(100dvh-56px)] w-[240px] shrink-0 flex-col border-r border-line bg-background md:flex">
         <div className="flex-1 overflow-y-auto px-5 py-7">
           {[
             {
@@ -345,7 +345,7 @@ export function DashboardHome({ initialCards, user }: DashboardHomeProps) {
         </div>
       </aside>
 
-      <main className="flex-1 overflow-y-auto px-6 py-9 *:mx-auto *:max-w-7xl md:px-10">
+      <main className="flex-1 overflow-y-auto px-6 py-9 *:mx-auto *:max-w-[1440px] md:px-10">
         <div className="mb-7 flex items-end justify-between">
           <div>
             <h1 className="text-[40px] leading-none font-semibold tracking-[-0.03em]">
@@ -359,7 +359,7 @@ export function DashboardHome({ initialCards, user }: DashboardHomeProps) {
             </p>
           </div>
           <div className="flex items-center gap-2.5">
-            <Button asChild size="default">
+            <Button asChild size="default" className="pr-4">
               <Link href="/create">
                 <Plus />
                 New card
@@ -384,8 +384,8 @@ export function DashboardHome({ initialCards, user }: DashboardHomeProps) {
             </h2>
             <p className="mx-auto mb-8 max-w-xs text-sm leading-relaxed text-muted-foreground">
               {activeFilter === "all"
-                ? "Create your first greeting card. It only takes a sentence."
-                : `You don't have any ${TYPE_LABEL[activeFilter]?.toLowerCase() ?? activeFilter} cards yet.`}
+                ? "Create your first greeting card. It only takes a sentence"
+                : `You don't have any ${TYPE_LABEL[activeFilter]?.toLowerCase() ?? activeFilter} cards yet`}
             </p>
             <Button asChild size="lg">
               <Link href="/create">Create your first card</Link>

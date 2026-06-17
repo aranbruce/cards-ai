@@ -10,7 +10,7 @@ import {
   useState,
 } from "react"
 import Link from "next/link"
-import { ChevronLeft } from "lucide-react"
+import { ArrowLeft } from "lucide-react"
 import { EmptyContent } from "@/components/empty-content"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
@@ -584,7 +584,7 @@ export const CardOwnerStudio = forwardRef<
           <div className="flex flex-col gap-2 sm:flex-row">
             <Button asChild variant="outline">
               <Link href="/dashboard">
-                <ChevronLeft />
+                <ArrowLeft />
                 Back to dashboard
               </Link>
             </Button>

@@ -33,7 +33,7 @@ export function buildRecipientCardEmail({
   return {
     subject: `${sanitizeEmailHeaderValue(senderName)} sent you a card`,
     html: buildEmailLayout({
-      preheader: `${senderName} sent you a card — open it now`,
+      preheader: `${senderName} sent you a card. Open it now`,
       heading,
       bodyHtml,
       ctaLabel: "Open your card",

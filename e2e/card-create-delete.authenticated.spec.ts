@@ -45,7 +45,7 @@ test.describe("card create and delete", () => {
     ).toBeVisible()
 
     await page.getByRole("button", { name: /Birthday/i }).click()
-    // Step 2 heading is dynamic: "Tell us about who." before name is filled
+    // Step 2 heading is dynamic: "Tell us about who" before name is filled
     await expect(page.getByRole("heading", { name: /Tell us/i })).toBeVisible()
 
     await page.getByRole("textbox", { name: "To" }).fill(recipient)

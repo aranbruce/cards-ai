@@ -20,7 +20,7 @@ function LinkChatFormInner() {
   )
   const [platform, setPlatform] = useState<string>("")
   const [errorMessage, setErrorMessage] = useState<string>(
-    token ? "" : "Invalid link — no token provided.",
+    token ? "" : "Invalid link. No token provided.",
   )
 
   useEffect(() => {

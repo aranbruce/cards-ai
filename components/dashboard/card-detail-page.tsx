@@ -22,14 +22,7 @@ import {
   type ActiveContributionFormattingState,
   type CardOwnerStudioHandle,
 } from "@/components/card-owner-studio"
-import {
-  ChevronLeft,
-  Paperclip,
-  Send,
-  Sparkles,
-  UserPlus,
-  X,
-} from "lucide-react"
+import { ArrowLeft, Paperclip, Send, Sparkles, UserPlus, X } from "lucide-react"
 import { handleImageFileChange } from "@/lib/handle-image-file-change"
 import { NotePanel } from "@/components/note-panel"
 import { MessageFontVariables } from "@/components/message-font-variables"
@@ -53,7 +46,7 @@ function CardDetailLayout({
           className="w-fit self-start"
         >
           <Link href="/dashboard">
-            <ChevronLeft />
+            <ArrowLeft />
             Dashboard
           </Link>
         </Button>
@@ -172,7 +165,7 @@ export function CardDetailPageClient({
       <CardDetailLayout
         panel={
           <NotePanel
-            title="Format your note."
+            title="Format your note"
             values={{
               textColor: activeContribution?.textColor,
               giphyUrl: activeContribution?.giphyUrl,
@@ -212,7 +205,7 @@ export function CardDetailPageClient({
                   </p>
                   <p className="mb-4 text-sm leading-relaxed text-muted-foreground">
                     Invite contributors with a link, or send the finished card
-                    directly to {card.recipient_name}.
+                    directly to {card.recipient_name}
                   </p>
                   <div className="flex flex-col gap-2">
                     <Button
@@ -254,7 +247,7 @@ export function CardDetailPageClient({
             The card
           </p>
           <h1 className="mt-1.5 text-[34px] leading-none font-semibold tracking-[-0.03em]">
-            The message to {card.recipient_name}.
+            The message to {card.recipient_name}
           </h1>
         </div>
         {error && (

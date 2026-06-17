@@ -4,7 +4,7 @@ import { getAppUrl } from "@/lib/app-url"
 export const SITE_NAME = "CardShareAI"
 export const SITE_TAGLINE = "AI group greeting cards, signed in one link"
 export const DEFAULT_DESCRIPTION =
-  "Create AI greeting cards in seconds. Share one link so your team adds notes, GIFs, and signatures — or send from Slack."
+  "Create AI greeting cards in seconds. Share one link so your team adds notes, GIFs, and signatures, or send from Slack."
 
 /** Default social preview (`app/opengraph-image.tsx`). */
 export const DEFAULT_OG_IMAGE_PATH = "/opengraph-image"

@@ -5,12 +5,13 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-all cursor-pointer disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
+  "inline-flex items-center justify-center whitespace-nowrap font-medium transition-all cursor-pointer active:translate-y-px disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
   {
     variants: {
       variant: {
         primary: "bg-primary text-primary-foreground hover:bg-primary/90",
-        brand: "bg-brand text-brand-foreground hover:bg-brand/90",
+        brand:
+          "bg-brand text-brand-foreground shadow-[0_10px_24px_-12px_rgba(255,90,74,0.7)] hover:bg-brand/90",
         destructive:
           "bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
         outline:
@@ -21,10 +22,11 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
-        sm: "h-8 gap-1 px-3 has-[>svg]:px-2.5 rounded-md",
-        default: "h-9 px-4 gap-1.5 py-2 has-[>svg]:px-3 rounded-lg",
-        lg: "h-10 gap-1 px-6 has-[>svg]:px-4 rounded-xl",
-        xl: "h-12 gap-1.5 px-8 text-base shadow-sm has-[>svg]:px-6 rounded-xl",
+        sm: "h-10 gap-1 pl-3 pr-3 text-sm has-[>svg]:pl-2 rounded-lg",
+        default:
+          "h-11 pl-4 pr-4 gap-1.5 py-2 text-sm has-[>svg]:pl-3 rounded-xl",
+        lg: "h-12 gap-2 pl-5 pr-5 text-sm has-[>svg]:pl-4 rounded-xl",
+        xl: "h-[54px] gap-2 pl-6 pr-6 text-base has-[>svg]:pl-5 rounded-[13px]",
         icon: "size-9 rounded-xl",
         "icon-sm": "size-8 rounded-xl",
         "icon-lg": "size-10 rounded-xl",

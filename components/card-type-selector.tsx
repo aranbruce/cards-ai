@@ -53,10 +53,8 @@ const CARD_TYPES = [
 
 export function CardTypeSelector({
   onSelect,
-  isGuest = false,
 }: {
   onSelect: (type: string) => void
-  isGuest?: boolean
 }) {
   return (
     <div className="mx-auto max-w-4xl">

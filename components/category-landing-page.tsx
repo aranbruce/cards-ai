@@ -10,6 +10,7 @@ function PlusIcon() {
       stroke="currentColor"
       strokeWidth="1.8"
       strokeLinecap="round"
+      className="size-3"
       aria-hidden
     >
       <path d="M12 5v14M5 12h14" />

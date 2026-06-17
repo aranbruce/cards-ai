@@ -16,7 +16,7 @@
   --secondary: oklch(0.958 0.008 83); /* #f2f0ea — warm chip bg */
   --secondary-foreground: oklch(0.142 0.004 49);
   --muted: oklch(0.958 0.008 83);
-  --muted-foreground: #11111080;
+  --muted-foreground: oklch(0.48 0.003 49); /* ink2 ~62% opacity */
   --accent: oklch(0.958 0.008 83); /* subtle hover state */
   --accent-foreground: oklch(0.142 0.004 49);
   --brand: #ff5a4a;

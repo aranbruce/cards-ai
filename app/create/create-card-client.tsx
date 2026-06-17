@@ -346,7 +346,6 @@ export function CreateCardPageClient() {
       {/* Select type — logo + back above content, no sidebar */}
       {step === "select-type" && (
         <div className="mx-auto max-w-[1440px] px-6 md:px-15">
-          {/* /mx-auto flex h-16 max-w-[1440px] items-center justify-between px-6 md:px-15 */}
           <div className="flex h-16 items-center justify-between">
             <Logo className="" />
           </div>

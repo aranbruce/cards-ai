@@ -60,6 +60,7 @@ function PlusIcon() {
       stroke="currentColor"
       strokeWidth="1.8"
       strokeLinecap="round"
+      className="size-3"
       aria-hidden
     >
       <path d="M12 5v14M5 12h14" />
@@ -179,155 +180,26 @@ function HeroFan() {
 export default function CardsPage() {
   return (
     <main>
-        {/* ===== HERO ===== */}
-        <section className="py-20">
-          <div className="mx-auto grid max-w-[1440px] grid-cols-1 items-center gap-x-12 px-6 md:px-15 lg:grid-cols-[1.15fr_1fr]">
-            <div>
-              <p className="font-mono text-[11px] tracking-[0.15em] text-brand uppercase">
-                A card for every occasion
-              </p>
-              <h1 className="mt-5 text-4xl leading-[0.95] font-semibold tracking-[-0.04em] text-balance sm:text-5xl md:text-6xl">
-                A group card for
-                <br />
-                <span className="text-muted-foreground">every moment</span>
-                <br />
-                <span className="text-brand">worth marking</span>
-              </h1>
-              <p className="mt-6 max-w-[520px] text-lg leading-relaxed text-muted-foreground">
-                Pick the occasion, share one link, and the whole group signs
-                from their own phone. AI designs the cover and drafts the
-                opening note. You just say who it&apos;s for
-              </p>
-              <div className="mt-8 flex flex-wrap gap-3">
-                <Button asChild size="lg">
-                  <Link href="/create">
-                    Start a card
-                    <span className="rounded-full bg-white/20 px-2 py-0.5 text-xs font-semibold">
-                      Free
-                    </span>
-                  </Link>
-                </Button>
-                <Button asChild variant="outline" size="lg">
-                  <a href="#occasions">Browse occasions</a>
-                </Button>
-              </div>
-            </div>
-
-            <div className="hidden lg:block">
-              <HeroFan />
-            </div>
-          </div>
-        </section>
-
-        {/* ===== OCCASIONS ===== */}
-        <section id="occasions" className="border-t border-border">
-          <div className="mx-auto max-w-[1440px] px-6 py-20 md:px-15">
+      {/* ===== HERO ===== */}
+      <section className="py-20">
+        <div className="mx-auto grid max-w-[1440px] grid-cols-1 items-center gap-x-12 px-6 md:px-15 lg:grid-cols-[1.15fr_1fr]">
+          <div>
             <p className="font-mono text-[11px] tracking-[0.15em] text-brand uppercase">
-              Browse occasions
+              A card for every occasion
             </p>
-            <h2 className="mt-4 text-3xl leading-[1.02] font-semibold tracking-[-0.03em] md:text-4xl">
-              Pick the moment worth marking together
-            </h2>
-
-            <div className="relative mt-10 w-full overflow-scroll">
-              <div className="flex touch-pan-x snap-x snap-mandatory scroll-px-6 gap-4 overflow-x-auto overscroll-x-contain scroll-smooth pb-2 [-webkit-overflow-scrolling:touch] md:scroll-px-15">
-                {getBrowseCategories().map((cat) => (
-                  <Link
-                    key={cat.slug}
-                    href={`/browse/${cat.slug}`}
-                    className="group w-[180px] shrink-0 snap-start snap-always sm:w-[200px] md:w-[220px]"
-                  >
-                    <div
-                      className="relative aspect-4/5 w-full overflow-hidden rounded-2xl transition-all duration-200 group-hover:translate-y-[-3px] group-hover:shadow-[0_26px_48px_-28px_rgba(20,14,6,0.32)]"
-                      style={{ background: cat.frontGradient }}
-                    >
-                      <div className="absolute right-3 bottom-3 flex size-7 translate-y-[6px] items-center justify-center rounded-full bg-white/90 opacity-0 transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100">
-                        <ArrowIcon />
-                      </div>
-                    </div>
-                    <div className="mt-2.5 text-sm font-medium tracking-[-0.01em]">
-                      {cat.label}
-                    </div>
-                    <div className="mt-0.5 text-xs leading-relaxed text-muted-foreground">
-                      {cat.shortDesc}
-                    </div>
-                  </Link>
-                ))}
-                <div aria-hidden className="w-6 shrink-0 md:w-15" />
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ===== HOW IT WORKS ===== */}
-        <section id="how" className="border-t border-border">
-          <div className="mx-auto max-w-[1440px] px-6 py-20 md:px-15">
-            <p className="font-mono text-[11px] tracking-[0.15em] text-brand uppercase">
-              How it works
+            <h1 className="mt-5 text-4xl leading-[0.95] font-semibold tracking-[-0.04em] text-balance sm:text-5xl md:text-6xl">
+              A group card for
+              <br />
+              <span className="text-muted-foreground">every moment</span>
+              <br />
+              <span className="text-brand">worth marking</span>
+            </h1>
+            <p className="mt-6 max-w-[520px] text-lg leading-relaxed text-muted-foreground">
+              Pick the occasion, share one link, and the whole group signs from
+              their own phone. AI designs the cover and drafts the opening note.
+              You just say who it&apos;s for
             </p>
-            <h2 className="mt-4 max-w-3xl text-3xl leading-[1.02] font-semibold tracking-[-0.03em] md:text-4xl lg:text-5xl">
-              From one sentence to a signed group card
-            </h2>
-            <p className="mt-4 max-w-2xl text-lg leading-relaxed text-muted-foreground">
-              The whole flow in three steps: cover, signatures, delivery. Takes
-              about two minutes to set up
-            </p>
-            <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-3">
-              {STEPS.map((step) => (
-                <div key={step.n}>
-                  <div className="font-mono text-sm text-muted-foreground/60">
-                    {step.n}
-                  </div>
-                  <h3 className="mt-2 text-lg font-semibold tracking-[-0.015em]">
-                    {step.title}
-                  </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                    {step.desc}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ===== FAQ ===== */}
-        <section id="faq" className="border-t border-border">
-          <div className="mx-auto max-w-[1440px] px-6 py-20 md:px-15">
-            <p className="font-mono text-[11px] tracking-[0.15em] text-brand uppercase">
-              FAQs
-            </p>
-            <h2 className="mt-4 text-3xl leading-[1.02] font-semibold tracking-[-0.03em] md:text-4xl lg:text-5xl">
-              Everything about group cards
-            </h2>
-            <div className="mt-10">
-              {FAQS.map((faq, i) => (
-                <details key={i} className="group border-b border-border py-5">
-                  <summary className="flex cursor-pointer list-none items-center justify-between gap-6 text-base font-medium tracking-[-0.015em]">
-                    {faq.q}
-                    <span className="grid size-6 shrink-0 place-items-center rounded-full border border-border transition-transform group-open:rotate-45 group-open:border-foreground group-open:bg-foreground group-open:text-background">
-                      <PlusIcon />
-                    </span>
-                  </summary>
-                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                    {faq.a}
-                  </p>
-                </details>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ===== CTA BAND ===== */}
-        <section className="border-t border-border bg-secondary/50">
-          <div className="mx-auto max-w-[1440px] px-6 py-24 text-center md:px-15">
-            <h2 className="text-3xl font-semibold tracking-[-0.03em] md:text-4xl lg:text-5xl">
-              What&apos;s the occasion?
-            </h2>
-            <p className="mx-auto mt-4 max-w-md text-lg leading-relaxed text-muted-foreground">
-              Pick the occasion, describe who it&apos;s for, and share one link.
-              The whole group signs, we handle the rest
-            </p>
-            <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <div className="mt-8 flex flex-wrap gap-3">
               <Button asChild size="lg">
                 <Link href="/create">
                   Start a card
@@ -341,7 +213,136 @@ export default function CardsPage() {
               </Button>
             </div>
           </div>
-        </section>
-      </main>
+
+          <div className="hidden lg:block">
+            <HeroFan />
+          </div>
+        </div>
+      </section>
+
+      {/* ===== OCCASIONS ===== */}
+      <section id="occasions" className="border-t border-border">
+        <div className="mx-auto max-w-[1440px] px-6 py-20 md:px-15">
+          <p className="font-mono text-[11px] tracking-[0.15em] text-brand uppercase">
+            Browse occasions
+          </p>
+          <h2 className="mt-4 text-3xl leading-[1.02] font-semibold tracking-[-0.03em] md:text-4xl">
+            Pick the moment worth marking together
+          </h2>
+
+          <div className="relative mt-10 w-full overflow-scroll">
+            <div className="flex touch-pan-x snap-x snap-mandatory scroll-px-6 gap-4 overflow-x-auto overscroll-x-contain scroll-smooth pb-2 [-webkit-overflow-scrolling:touch] md:scroll-px-15">
+              {getBrowseCategories().map((cat) => (
+                <Link
+                  key={cat.slug}
+                  href={`/browse/${cat.slug}`}
+                  className="group w-[180px] shrink-0 snap-start snap-always sm:w-[200px] md:w-[220px]"
+                >
+                  <div
+                    className="relative aspect-4/5 w-full overflow-hidden rounded-2xl transition-all duration-200 group-hover:translate-y-[-3px] group-hover:shadow-[0_26px_48px_-28px_rgba(20,14,6,0.32)]"
+                    style={{ background: cat.frontGradient }}
+                  >
+                    <div className="absolute right-3 bottom-3 flex size-7 translate-y-[6px] items-center justify-center rounded-full bg-white/90 opacity-0 transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100">
+                      <ArrowIcon />
+                    </div>
+                  </div>
+                  <div className="mt-2.5 text-sm font-medium tracking-[-0.01em]">
+                    {cat.label}
+                  </div>
+                  <div className="mt-0.5 text-xs leading-relaxed text-muted-foreground">
+                    {cat.shortDesc}
+                  </div>
+                </Link>
+              ))}
+              <div aria-hidden className="w-6 shrink-0 md:w-15" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ===== HOW IT WORKS ===== */}
+      <section id="how" className="border-t border-border">
+        <div className="mx-auto max-w-[1440px] px-6 py-20 md:px-15">
+          <p className="font-mono text-[11px] tracking-[0.15em] text-brand uppercase">
+            How it works
+          </p>
+          <h2 className="mt-4 max-w-3xl text-3xl leading-[1.02] font-semibold tracking-[-0.03em] md:text-4xl lg:text-5xl">
+            From one sentence to a signed group card
+          </h2>
+          <p className="mt-4 max-w-2xl text-lg leading-relaxed text-muted-foreground">
+            The whole flow in three steps: cover, signatures, delivery. Takes
+            about two minutes to set up
+          </p>
+          <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-3">
+            {STEPS.map((step) => (
+              <div key={step.n}>
+                <div className="font-mono text-sm text-muted-foreground/60">
+                  {step.n}
+                </div>
+                <h3 className="mt-2 text-lg font-semibold tracking-[-0.015em]">
+                  {step.title}
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                  {step.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ===== FAQ ===== */}
+      <section id="faq" className="border-t border-border">
+        <div className="mx-auto max-w-[1440px] px-6 py-20 md:px-15">
+          <p className="font-mono text-[11px] tracking-[0.15em] text-brand uppercase">
+            FAQs
+          </p>
+          <h2 className="mt-4 text-3xl leading-[1.02] font-semibold tracking-[-0.03em] md:text-4xl lg:text-5xl">
+            Everything about group cards
+          </h2>
+          <div className="mt-10">
+            {FAQS.map((faq, i) => (
+              <details key={i} className="group border-b border-border py-5">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-6 text-base font-medium tracking-[-0.015em]">
+                  {faq.q}
+                  <span className="grid size-6 shrink-0 place-items-center rounded-full border border-border transition-transform group-open:rotate-45 group-open:border-foreground group-open:bg-foreground group-open:text-background">
+                    <PlusIcon />
+                  </span>
+                </summary>
+                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                  {faq.a}
+                </p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ===== CTA BAND ===== */}
+      <section className="border-t border-border bg-secondary/50">
+        <div className="mx-auto max-w-[1440px] px-6 py-24 text-center md:px-15">
+          <h2 className="text-3xl font-semibold tracking-[-0.03em] md:text-4xl lg:text-5xl">
+            What&apos;s the occasion?
+          </h2>
+          <p className="mx-auto mt-4 max-w-md text-lg leading-relaxed text-muted-foreground">
+            Pick the occasion, describe who it&apos;s for, and share one link.
+            The whole group signs, we handle the rest
+          </p>
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <Button asChild size="lg">
+              <Link href="/create">
+                Start a card
+                <span className="rounded-full bg-white/20 px-2 py-0.5 text-xs font-semibold">
+                  Free
+                </span>
+              </Link>
+            </Button>
+            <Button asChild variant="outline" size="lg">
+              <a href="#occasions">Browse occasions</a>
+            </Button>
+          </div>
+        </div>
+      </section>
+    </main>
   )
 }

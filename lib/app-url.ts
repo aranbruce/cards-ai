@@ -25,7 +25,7 @@ export function getAppUrl(): string {
     logAppUrlResolution("NEXT_PUBLIC_APP_URL", resolvedUrl)
     return resolvedUrl
   }
-  if (process.env.VERCEL_ENV === "preview" && process.env.VERCEL_URL) {
+  if (process.env.VERCEL_ENV !== "production" && process.env.VERCEL_URL) {
     const resolvedUrl = `https://${process.env.VERCEL_URL}`
     logAppUrlResolution("VERCEL_URL", resolvedUrl)
     return resolvedUrl

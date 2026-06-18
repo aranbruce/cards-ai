@@ -1,9 +1,9 @@
 import type { MetadataRoute } from "next"
-import { getAppUrl } from "@/lib/app-url"
+import { getMetadataBase } from "@/lib/site-metadata"
 import { ALL_CATEGORY_SLUGS } from "@/lib/category-pages"
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base = getAppUrl()
+  const base = getMetadataBase().origin
 
   const categoryPages: MetadataRoute.Sitemap = ALL_CATEGORY_SLUGS.map(
     (slug) => ({

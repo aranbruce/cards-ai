@@ -1,4 +1,4 @@
-import { afterAll, afterEach, describe, expect, it, vi } from "vitest"
+import { afterAll, afterEach, describe, expect, it } from "vitest"
 import { getAppUrl } from "./app-url"
 
 const originalNextPublicAppUrl = process.env.NEXT_PUBLIC_APP_URL
@@ -6,8 +6,6 @@ const originalVercelProjectProductionUrl =
   process.env.VERCEL_PROJECT_PRODUCTION_URL
 const originalVercelUrl = process.env.VERCEL_URL
 const originalVercelEnv = process.env.VERCEL_ENV
-
-const consoleInfoSpy = vi.spyOn(console, "info").mockImplementation(() => {})
 
 afterEach(() => {
   delete process.env.NEXT_PUBLIC_APP_URL
@@ -40,8 +38,6 @@ afterAll(() => {
   } else {
     process.env.VERCEL_ENV = originalVercelEnv
   }
-
-  consoleInfoSpy.mockRestore()
 })
 
 describe("getAppUrl", () => {

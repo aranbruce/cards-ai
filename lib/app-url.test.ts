@@ -62,6 +62,14 @@ describe("getAppUrl", () => {
     expect(getAppUrl()).toBe("https://card-share-preview.vercel.app")
   })
 
+  it("uses VERCEL_URL before production URL in development", () => {
+    process.env.VERCEL_ENV = "development"
+    process.env.VERCEL_URL = "card-share-dev.vercel.app"
+    process.env.VERCEL_PROJECT_PRODUCTION_URL = "www.cardshare.ai"
+
+    expect(getAppUrl()).toBe("https://card-share-dev.vercel.app")
+  })
+
   it("uses VERCEL_PROJECT_PRODUCTION_URL in production", () => {
     process.env.VERCEL_ENV = "production"
     process.env.VERCEL_URL = "card-share-preview.vercel.app"

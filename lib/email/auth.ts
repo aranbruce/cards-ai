@@ -32,53 +32,53 @@ export type AuthEmailDelivery = {
 
 const SECURITY_NOTIFICATIONS = {
   password_changed_notification: {
-    subject: "Your CardShareAI password was changed",
+    subject: "Your CardShare.ai password was changed",
     heading: "Password changed",
-    body: "Your CardShareAI password was recently changed. If you made this change, no action is needed. If you did not change your password, reset it or contact support immediately.",
+    body: "Your CardShare.ai password was recently changed. If you made this change, no action is needed. If you did not change your password, reset it or contact support immediately.",
     footerNote:
-      "You received this because the password on your CardShareAI account was changed.",
+      "You received this because the password on your CardShare.ai account was changed.",
   },
   email_changed_notification: {
-    subject: "Your CardShareAI email was changed",
+    subject: "Your CardShare.ai email was changed",
     heading: "Email address changed",
-    body: "The email address on your CardShareAI account was recently changed. If you made this change, no action is needed.",
+    body: "The email address on your CardShare.ai account was recently changed. If you made this change, no action is needed.",
     footerNote:
-      "You received this because the email address on your CardShareAI account was changed.",
+      "You received this because the email address on your CardShare.ai account was changed.",
   },
   phone_changed_notification: {
-    subject: "Your CardShareAI phone number was changed",
+    subject: "Your CardShare.ai phone number was changed",
     heading: "Phone number changed",
-    body: "The phone number on your CardShareAI account was recently changed. If you made this change, no action is needed.",
+    body: "The phone number on your CardShare.ai account was recently changed. If you made this change, no action is needed.",
     footerNote:
-      "You received this because the phone number on your CardShareAI account was changed.",
+      "You received this because the phone number on your CardShare.ai account was changed.",
   },
   identity_linked_notification: {
-    subject: "A sign-in method was linked to CardShareAI",
+    subject: "A sign-in method was linked to CardShare.ai",
     heading: "Sign-in method linked",
-    body: "A new sign-in method was linked to your CardShareAI account. If you made this change, no action is needed.",
+    body: "A new sign-in method was linked to your CardShare.ai account. If you made this change, no action is needed.",
     footerNote:
-      "You received this because a sign-in method was linked to your CardShareAI account.",
+      "You received this because a sign-in method was linked to your CardShare.ai account.",
   },
   identity_unlinked_notification: {
-    subject: "A sign-in method was removed from CardShareAI",
+    subject: "A sign-in method was removed from CardShare.ai",
     heading: "Sign-in method removed",
-    body: "A sign-in method was removed from your CardShareAI account. If you made this change, no action is needed.",
+    body: "A sign-in method was removed from your CardShare.ai account. If you made this change, no action is needed.",
     footerNote:
-      "You received this because a sign-in method was removed from your CardShareAI account.",
+      "You received this because a sign-in method was removed from your CardShare.ai account.",
   },
   mfa_factor_enrolled_notification: {
     subject: "Multi-factor authentication enabled",
     heading: "MFA enabled",
-    body: "Multi-factor authentication was enabled on your CardShareAI account. If you made this change, no action is needed.",
+    body: "Multi-factor authentication was enabled on your CardShare.ai account. If you made this change, no action is needed.",
     footerNote:
-      "You received this because multi-factor authentication was enabled on your CardShareAI account.",
+      "You received this because multi-factor authentication was enabled on your CardShare.ai account.",
   },
   mfa_factor_unenrolled_notification: {
     subject: "Multi-factor authentication disabled",
     heading: "MFA disabled",
-    body: "Multi-factor authentication was disabled on your CardShareAI account. If you did not make this change, secure your account immediately.",
+    body: "Multi-factor authentication was disabled on your CardShare.ai account. If you did not make this change, secure your account immediately.",
     footerNote:
-      "You received this because multi-factor authentication was disabled on your CardShareAI account.",
+      "You received this because multi-factor authentication was disabled on your CardShare.ai account.",
   },
 } as const
 

@@ -5,7 +5,7 @@ import { buildPageMetadata } from "@/lib/site-metadata"
 export const metadata: Metadata = buildPageMetadata({
   title: "Terms of use",
   description:
-    "Terms for using CardShareAI to create, share, and sign group greeting cards.",
+    "Terms for using CardShare.ai to create, share, and sign group greeting cards.",
   path: "/terms",
   robots: { index: true, follow: true },
 })
@@ -19,7 +19,7 @@ export default function TermsPage() {
         <strong>Last updated:</strong> 4 June 2026
       </p>
       <p>
-        These terms are a contract between you and CardShareAI (&quot;we&quot;,
+        These terms are a contract between you and CardShare.ai (&quot;we&quot;,
         &quot;us&quot;). By using cardshare.ai, our apps, or integrations (such
         as Slack), you agree to them. If you do not agree, do not use the
         service.
@@ -27,7 +27,7 @@ export default function TermsPage() {
 
       <h2>The service</h2>
       <p>
-        CardShareAI helps you create digital greeting cards, invite others to
+        CardShare.ai helps you create digital greeting cards, invite others to
         add messages and GIFs through a single link, and share the finished card
         with a recipient. Features, pricing, and availability may change. We try
         to keep the service running smoothly but do not promise uninterrupted or

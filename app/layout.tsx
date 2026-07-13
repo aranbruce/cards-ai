@@ -7,7 +7,6 @@ import {
   DEFAULT_OG_IMAGE_PATH,
   getMetadataBase,
   SITE_NAME,
-  SITE_TAGLINE,
 } from "@/lib/site-metadata"
 import "./globals.css"
 
@@ -34,13 +33,13 @@ export const metadata: Metadata = {
     type: "website",
     siteName: SITE_NAME,
     title: SITE_NAME,
-    description: SITE_TAGLINE,
+    description: DEFAULT_DESCRIPTION,
     images: [{ url: DEFAULT_OG_IMAGE_PATH, alt: SITE_NAME }],
   },
   twitter: {
     card: "summary_large_image",
     title: SITE_NAME,
-    description: SITE_TAGLINE,
+    description: DEFAULT_DESCRIPTION,
     images: [DEFAULT_OG_IMAGE_PATH],
   },
   icons: {

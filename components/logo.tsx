@@ -13,7 +13,7 @@ export function Logo({
   return (
     <Link
       href="/"
-      aria-label="Home"
+      aria-label="CardShare.ai home"
       className={cn(
         "flex shrink-0 items-center gap-2 self-center text-foreground transition-opacity hover:opacity-80",
         className,

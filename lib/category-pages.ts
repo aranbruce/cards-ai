@@ -83,7 +83,7 @@ export const CATEGORY_CONFIGS: Record<string, CategoryConfig> = {
     shortDesc:
       "For the team, the family group chat, and the one they won't forget",
 
-    metaTitle: "Group Birthday Cards Online - Everyone Signs, One Link",
+    metaTitle: "Group Birthday Cards for Coworkers",
     metaDescription:
       "Create a group birthday card online in seconds. Everyone signs from one link, AI drafts the cover and note, and it arrives as one beautiful card, by email or text. Free to start.",
 
@@ -115,7 +115,7 @@ export const CATEGORY_CONFIGS: Record<string, CategoryConfig> = {
     galleryEyebrow: "Birthday card examples",
     galleryTitle: "Birthday cards people actually kept",
     gallerySub:
-      "Every cover is generated from a single sentence, then edited until it's right. Here are real birthday cards sent through CardShareAI for coworkers, parents, best friends, and the group chat",
+      "Every cover is generated from a single sentence, then edited until it's right. Here are real birthday cards sent through CardShare.ai for coworkers, parents, best friends, and the group chat",
     gallery: [
       {
         gradient:
@@ -229,7 +229,7 @@ export const CATEGORY_CONFIGS: Record<string, CategoryConfig> = {
         a: "Yes. There's no limit on signers. Each person places their message anywhere on the page, picks an ink colour, and can add a photo or GIF. The card stays completely private until you send it.",
       },
       {
-        q: "Is CardShareAI free?",
+        q: "Is CardShare.ai free?",
         a: "Yes, you can design a card, collect signatures, and send it for free. Paid plans add team features, scheduled sends, and a saved archive of every card you've organised.",
       },
       {
@@ -238,7 +238,7 @@ export const CATEGORY_CONFIGS: Record<string, CategoryConfig> = {
       },
       {
         q: "Can I schedule the card to arrive on their birthday?",
-        a: "Yes. Pick the date and time and CardShareAI delivers it then, so the card lands right on the morning of the birthday, even if you set it up weeks ahead.",
+        a: "Yes. Pick the date and time and CardShare.ai delivers it then, so the card lands right on the morning of the birthday, even if you set it up weeks ahead.",
       },
       {
         q: "Can I add photos, GIFs, or a group message?",
@@ -256,7 +256,7 @@ export const CATEGORY_CONFIGS: Record<string, CategoryConfig> = {
     label: "Thank you cards",
     shortDesc: "For the team, the mentor, the neighbour who watched the dog",
 
-    metaTitle: "Group Thank You Cards Online: Everyone Signs, One Link",
+    metaTitle: "Group Thank You Cards for Coworkers",
     metaDescription:
       "Create a group thank you card online in seconds. Share one link so the whole team signs, AI drafts the cover and opening note. Delivered beautifully by email or text. Free to start.",
 
@@ -288,7 +288,7 @@ export const CATEGORY_CONFIGS: Record<string, CategoryConfig> = {
     galleryEyebrow: "Thank you card examples",
     galleryTitle: "Thank you cards worth reading twice",
     gallerySub:
-      "From mentor appreciation to team shout-outs, these are real thank you cards sent through CardShareAI. Every cover generated from one sentence, every note from the heart",
+      "From mentor appreciation to team shout-outs, these are real thank you cards sent through CardShare.ai. Every cover generated from one sentence, every note from the heart",
     gallery: [
       {
         gradient:
@@ -429,7 +429,7 @@ export const CATEGORY_CONFIGS: Record<string, CategoryConfig> = {
     label: "Work anniversary cards",
     shortDesc: "One year or ten, mark the milestone with the whole team",
 
-    metaTitle: "Group Work Anniversary Cards Online: Everyone Signs, One Link",
+    metaTitle: "Group Work Anniversary Cards for Coworkers",
     metaDescription:
       "Create a group work anniversary card online. Share one link so the whole team signs, AI crafts the cover and note for 1, 5, or 10+ year milestones. Free to start.",
 
@@ -461,7 +461,7 @@ export const CATEGORY_CONFIGS: Record<string, CategoryConfig> = {
     galleryEyebrow: "Work anniversary card examples",
     galleryTitle: "Anniversary cards that mark the moment properly",
     gallerySub:
-      "From one-year welcomes to decade-long tributes, these are work anniversary cards sent through CardShareAI: milestone-worthy covers, notes from the whole team",
+      "From one-year welcomes to decade-long tributes, these are work anniversary cards sent through CardShare.ai: milestone-worthy covers, notes from the whole team",
     gallery: [
       {
         gradient:
@@ -572,7 +572,7 @@ export const CATEGORY_CONFIGS: Record<string, CategoryConfig> = {
       },
       {
         q: "Can I set it up in advance and schedule the delivery?",
-        a: "Yes. Create the card, collect signatures at your own pace, and schedule it to land on the exact anniversary date. CardShareAI delivers it then. No manual reminder needed.",
+        a: "Yes. Create the card, collect signatures at your own pace, and schedule it to land on the exact anniversary date. CardShare.ai delivers it then. No manual reminder needed.",
       },
       {
         q: "What should I write in a work anniversary card?",
@@ -602,7 +602,7 @@ export const CATEGORY_CONFIGS: Record<string, CategoryConfig> = {
     label: "Farewell cards",
     shortDesc: "Send someone off with notes from everyone they worked with",
 
-    metaTitle: "Group Farewell Cards Online: Everyone Signs, One Link",
+    metaTitle: "Group Farewell Cards for Coworkers",
     metaDescription:
       "Create a group farewell card online. Share one link so the whole team signs a leaving card, goodbye card, or retirement card. AI crafts the cover. Free to start.",
 
@@ -634,7 +634,7 @@ export const CATEGORY_CONFIGS: Record<string, CategoryConfig> = {
     galleryEyebrow: "Farewell card examples",
     galleryTitle: "Goodbye cards people actually treasure",
     gallerySub:
-      "From leaving the company to heading into retirement, these are farewell cards sent through CardShareAI: covers that mark the moment, notes from everyone who'll miss them",
+      "From leaving the company to heading into retirement, these are farewell cards sent through CardShare.ai: covers that mark the moment, notes from everyone who'll miss them",
     gallery: [
       {
         gradient:
@@ -761,7 +761,7 @@ export const CATEGORY_CONFIGS: Record<string, CategoryConfig> = {
       },
       {
         q: "Can I schedule it to arrive at a specific time?",
-        a: "Yes. Set the delivery time to land right when their last day ends, or whenever feels right. CardShareAI handles the delivery.",
+        a: "Yes. Set the delivery time to land right when their last day ends, or whenever feels right. CardShare.ai handles the delivery.",
       },
     ],
 
@@ -775,7 +775,7 @@ export const CATEGORY_CONFIGS: Record<string, CategoryConfig> = {
     label: "Wedding cards",
     shortDesc: "Collect warm words from the whole guest list in one keepsake",
 
-    metaTitle: "Group Wedding Cards Online: Everyone Signs, One Keepsake",
+    metaTitle: "Group Wedding Cards for Guests",
     metaDescription:
       "Create a group wedding card online. Share one link so every guest signs. AI designs the cover and sets the tone. Delivered beautifully before the big day. Free to start.",
 
@@ -807,7 +807,7 @@ export const CATEGORY_CONFIGS: Record<string, CategoryConfig> = {
     galleryEyebrow: "Wedding card examples",
     galleryTitle: "Wedding cards they'll keep forever",
     gallerySub:
-      "From intimate weddings to guest lists of hundreds, these are wedding cards created with CardShareAI: beautiful covers, every guest's note in one keepsake",
+      "From intimate weddings to guest lists of hundreds, these are wedding cards created with CardShare.ai: beautiful covers, every guest's note in one keepsake",
     gallery: [
       {
         gradient:
@@ -934,7 +934,7 @@ export const CATEGORY_CONFIGS: Record<string, CategoryConfig> = {
       },
       {
         q: "Can I send a wedding card by email?",
-        a: "Yes. Enter the recipient's email address and CardShareAI delivers it directly. Or copy a shareable link to send via text or any other channel.",
+        a: "Yes. Enter the recipient's email address and CardShare.ai delivers it directly. Or copy a shareable link to send via text or any other channel.",
       },
     ],
 
@@ -948,7 +948,7 @@ export const CATEGORY_CONFIGS: Record<string, CategoryConfig> = {
     label: "Promotion cards",
     shortDesc: "New title, new chapter. Celebrate it as a group",
 
-    metaTitle: "Group Promotion & Congratulations Cards Online: Everyone Signs",
+    metaTitle: "Group Promotion Cards for Coworkers",
     metaDescription:
       "Create a group promotion or congratulations card online. Share one link so the whole team signs, AI drafts the cover and note. Free to start.",
 
@@ -980,7 +980,7 @@ export const CATEGORY_CONFIGS: Record<string, CategoryConfig> = {
     galleryEyebrow: "Congratulations card examples",
     galleryTitle: "Cards for the moments worth celebrating",
     gallerySub:
-      "Promotions, new jobs, graduations, new homes: these are congratulations cards sent through CardShareAI. Every cover designed to mark the moment, every note from the people who mean it",
+      "Promotions, new jobs, graduations, new homes: these are congratulations cards sent through CardShare.ai. Every cover designed to mark the moment, every note from the people who mean it",
     gallery: [
       {
         gradient:
@@ -1121,7 +1121,7 @@ export const CATEGORY_CONFIGS: Record<string, CategoryConfig> = {
     label: "Kudos cards",
     shortDesc: "Recognition that's worth more than a thumbs-up",
 
-    metaTitle: "Group Kudos Cards Online: Team Recognition That Actually Lands",
+    metaTitle: "Group Kudos Cards for Coworkers",
     metaDescription:
       "Create a group kudos card online for employee recognition and appreciation. Share one link so the whole team signs. AI drafts the cover and note. Free to start.",
 
@@ -1153,7 +1153,7 @@ export const CATEGORY_CONFIGS: Record<string, CategoryConfig> = {
     galleryEyebrow: "Kudos card examples",
     galleryTitle: "Recognition cards that actually mean something",
     gallerySub:
-      "From project wins to peer-to-peer shoutouts, these are kudos cards created with CardShareAI: specific, sincere, and signed by the people who watched them do the work",
+      "From project wins to peer-to-peer shoutouts, these are kudos cards created with CardShare.ai: specific, sincere, and signed by the people who watched them do the work",
     gallery: [
       {
         gradient:

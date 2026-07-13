@@ -2,9 +2,9 @@ import type { Metadata } from "next"
 import { buildPageMetadata } from "@/lib/site-metadata"
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "Add CardShareAI to Slack",
+  title: "Add CardShare.ai to Slack",
   description:
-    "Install the CardShareAI Slack app to create AI greeting cards with /cardshareai and share links in your workspace.",
+    "Install the CardShare.ai Slack app to create AI greeting cards with /cardshareai and share links in your workspace.",
   path: "/slack/install",
 })
 

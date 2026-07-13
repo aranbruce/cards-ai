@@ -35,7 +35,7 @@ export function buildPlainTextEmail({
   ctaUrl,
   footerNote,
 }: PlainTextEmailInput): string {
-  return `${heading}\n\n${body}\n\n${ctaLabel}: ${ctaUrl}\n\n${footerNote}\n\n— CardShareAI`
+  return `${heading}\n\n${body}\n\n${ctaLabel}: ${ctaUrl}\n\n${footerNote}\n\n— CardShare.ai`
 }
 
 export function buildEmailLayout({
@@ -78,7 +78,7 @@ export function buildEmailLayout({
                     <img src="${logoUrl}" alt="" width="32" height="32" style="display:block;border-radius:8px;" />
                   </td>
                   <td style="vertical-align:middle;font-size:18px;font-weight:700;color:${foreground};letter-spacing:-0.02em;">
-                    CardShareAI
+                    CardShare.ai
                   </td>
                 </tr>
               </table>

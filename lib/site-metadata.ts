@@ -1,10 +1,13 @@
 import type { Metadata } from "next"
 import { getAppUrl } from "@/lib/app-url"
 
-export const SITE_NAME = "CardShareAI"
-export const SITE_TAGLINE = "AI group greeting cards, signed in one link"
+export const SITE_NAME = "CardShare.ai"
+/** Short line for OG image and social previews. */
+export const SITE_TAGLINE =
+  "AI group greeting cards your whole team signs from one link"
+/** Full meta description — fills SERP snippet space. */
 export const DEFAULT_DESCRIPTION =
-  "Create AI greeting cards in seconds. Share one link so your team adds notes, GIFs, and signatures, or send from Slack."
+  "Create AI-generated group greeting cards your whole team signs from one link. Works in Slack. Birthdays, farewells, work anniversaries and more. Free to start."
 
 /** Default social preview (`app/opengraph-image.tsx`). */
 export const DEFAULT_OG_IMAGE_PATH = "/opengraph-image"

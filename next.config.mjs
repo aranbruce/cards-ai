@@ -8,6 +8,20 @@ const nextConfig = {
   },
   // PostHog proxy is handled in proxy.ts (Host header required for /static/* scripts).
   skipTrailingSlashRedirect: true,
+  // Belt-and-braces with robots.txt: if a card URL is linked publicly, Google
+  // can still discover it — noindex drops it instead of indexing a bare URL.
+  async headers() {
+    return [
+      {
+        source: "/view/:path*",
+        headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
+      },
+      {
+        source: "/contribute/:path*",
+        headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
+      },
+    ]
+  },
 }
 
 export default nextConfig

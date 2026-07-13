@@ -5,7 +5,7 @@ import { buildPageMetadata } from "@/lib/site-metadata"
 export const metadata: Metadata = buildPageMetadata({
   title: "Privacy policy",
   description:
-    "How CardShareAI collects, uses, and protects your data when you create and share greeting cards.",
+    "How CardShare.ai collects, uses, and protects your data when you create and share greeting cards.",
   path: "/privacy",
   robots: { index: true, follow: true },
 })
@@ -19,7 +19,7 @@ export default function PrivacyPage() {
         <strong>Last updated:</strong> 4 June 2026
       </p>
       <p>
-        CardShareAI (&quot;we&quot;, &quot;us&quot;) runs cardshare.ai and
+        CardShare.ai (&quot;we&quot;, &quot;us&quot;) runs cardshare.ai and
         related services that let you create group greeting cards, collect
         messages from others, and share finished cards. This policy explains
         what information we collect, why we use it, and the choices you have.
@@ -83,7 +83,7 @@ export default function PrivacyPage() {
       <p>
         We use trusted service providers for hosting, databases, authentication,
         email, analytics, AI, and (if you use it) Slack. They process data on
-        our instructions to operate CardShareAI. When you share a card link, you
+        our instructions to operate CardShare.ai. When you share a card link, you
         control who receives it. We do not publish cards in a public directory.
       </p>
 
@@ -123,7 +123,7 @@ export default function PrivacyPage() {
 
       <h2>Children</h2>
       <p>
-        CardShareAI is not directed at children under 13, and we do not
+        CardShare.ai is not directed at children under 13, and we do not
         knowingly collect their personal information. Contact us if you believe
         we have done so and we will take appropriate steps.
       </p>

@@ -5,12 +5,12 @@ import { Button } from "@/components/ui/button"
 import { HomeDemoPanel } from "@/components/home-demo-panel"
 import { HomeMarketingSections } from "@/components/home-marketing-sections"
 import { getAppUrl } from "@/lib/app-url"
-import { buildPageMetadata, SITE_TAGLINE } from "@/lib/site-metadata"
+import { buildPageMetadata, DEFAULT_DESCRIPTION } from "@/lib/site-metadata"
 import { createClient } from "@/lib/supabase/server"
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "AI group greeting cards",
-  description: SITE_TAGLINE,
+  title: "AI Group Greeting Cards for Teams & Slack",
+  description: DEFAULT_DESCRIPTION,
   path: "/",
 })
 

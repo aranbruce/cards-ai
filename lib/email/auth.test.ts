@@ -110,7 +110,7 @@ describe("resolveAuthEmailDeliveries", () => {
     expect(deliveries).toHaveLength(1)
     expect(deliveries?.[0]?.to).toBe("user@example.com")
     expect(deliveries?.[0]?.content.subject).toBe(
-      "Your CardShareAI password was changed",
+      "Your CardShare.ai password was changed",
     )
   })
 
@@ -181,7 +181,7 @@ describe("sendAuthEmail", () => {
     expect(mockSend).toHaveBeenCalledWith(
       expect.objectContaining({
         to: "user@example.com",
-        subject: "Your CardShareAI password was changed",
+        subject: "Your CardShare.ai password was changed",
       }),
     )
   })
@@ -201,7 +201,7 @@ describe("sendAuthEmail", () => {
     expect(mockSend).toHaveBeenCalledWith(
       expect.objectContaining({
         to: "user@example.com",
-        subject: "Verify your CardShareAI email",
+        subject: "Verify your CardShare.ai email",
         text: expect.stringContaining("Verify email"),
       }),
     )
@@ -222,7 +222,7 @@ describe("sendAuthEmail", () => {
 
     expect(mockSend).toHaveBeenCalledWith(
       expect.objectContaining({
-        subject: "Reset your CardShareAI password",
+        subject: "Reset your CardShare.ai password",
         text: expect.stringContaining("Reset password"),
       }),
     )

@@ -95,7 +95,7 @@ describe("sendRecipientCardEmail", () => {
 
   it("returns an error when RESEND_API_KEY is missing", async () => {
     delete process.env.RESEND_API_KEY
-    process.env.RESEND_FROM_EMAIL = "CardShareAI <noreply@example.com>"
+    process.env.RESEND_FROM_EMAIL = "CardShare.ai <noreply@example.com>"
 
     const result = await sendRecipientCardEmail({
       to: "friend@example.com",

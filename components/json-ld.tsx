@@ -50,7 +50,9 @@ export function SiteJsonLd() {
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareApplication) }}
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(softwareApplication),
+        }}
       />
     </>
   )

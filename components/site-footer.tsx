@@ -76,6 +76,14 @@ export function SiteFooter() {
               </li>
               <li>
                 <Link
+                  href="/support"
+                  className="text-sm text-muted-foreground hover:text-foreground"
+                >
+                  Support
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/privacy"
                   className="text-sm text-muted-foreground hover:text-foreground"
                 >
